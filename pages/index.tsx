@@ -14,7 +14,7 @@ const LoginPage = () => {
   const [newPassword, setNewPassword] = useState('');
   const [error, setError] = useState<string>('');
   const [step, setStep] = useState<'SIGN_IN' | 'NEW_PASSWORD_REQUIRED'>('SIGN_IN');
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<unknown>(null);
   const router = useRouter();  // Inicializamos useRouter
 
   const handleLogin = async () => {
