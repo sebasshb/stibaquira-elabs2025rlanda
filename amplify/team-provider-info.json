@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-educatelabs-dev-6edf6-authRole",
+      "UnauthRoleArn": "arn:aws:iam::147997125454:role/amplify-educatelabs-dev-6edf6-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::147997125454:role/amplify-educatelabs-dev-6edf6-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-educatelabs-dev-6edf6-deployment",
+      "UnauthRoleName": "amplify-educatelabs-dev-6edf6-unauthRole",
+      "StackName": "amplify-educatelabs-dev-6edf6",
+      "StackId": "arn:aws:cloudformation:us-east-1:147997125454:stack/amplify-educatelabs-dev-6edf6/ed95e120-0e84-11f0-ad1b-0ea18184ac3f",
+      "AmplifyAppId": "d2i6nfqsw2mbvr"
+    },
+    "categories": {
+      "auth": {
+        "educatelabs673e18d9": {}
+      }
+    }
+  }
+}

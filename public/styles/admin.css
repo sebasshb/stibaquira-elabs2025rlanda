@@ -1,0 +1,116 @@
+/* Estilos generales */
+.admin-container {
+  width: 80%;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Encabezado */
+.admin-header {
+  background: #002147;  /* Azul oscuro */
+  color: white;
+  padding: 15px;
+  border-radius: 8px 8px 0 0;
+  text-align: center;
+}
+
+.admin-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Menú */
+.admin-nav {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.nav-item {
+  background: #0056b3;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.nav-item:hover {
+  background: #003580;
+}
+
+/* Botón de cierre de sesión */
+.admin-logout-button {
+  background: #d9534f;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.admin-logout-button:hover {
+  background: #c9302c;
+}
+
+/* Contenido principal */
+.admin-main {
+  padding: 20px;
+  text-align: center;
+}
+
+.admin-main h2 {
+  font-size: 22px;
+  color: #002147;
+}
+
+/* Input y botón */
+.input-text {
+  width: 80%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.button-primary {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.button-primary:hover {
+  background: #218838;
+}
+
+/* Lista de anuncios */
+.announcement-list {
+  list-style: none;
+  padding: 0;
+}
+
+.announcement-item {
+  background: #f8f9fa;
+  border-left: 5px solid #0056b3;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  text-align: left;
+}
