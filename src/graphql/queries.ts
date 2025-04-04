@@ -9,13 +9,4 @@ export const getTodo = /* GraphQL */ `
 }
 `;
 
-// mutations.js
-export const createTodo = /* GraphQL */ `
-  mutation CreateTodo($input: CreateTodoInput!) {
-    createTodo(input: $input) {
-      id
-      description
-      createdAt
-    }
-  }
-`;
+
