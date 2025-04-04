@@ -1,21 +1,55 @@
 /* tslint:disable */
 /* eslint-disable */
-// Este archivo contiene las suscripciones de GraphQL
+// this is an auto generated file. This will be overwritten
 
 import * as APITypes from "../API";
-
-type GeneratedSubscription<OutputType> = string & {
+type GeneratedSubscription<InputType, OutputType> = string & {
+  __generatedSubscriptionInput: InputType;
   __generatedSubscriptionOutput: OutputType;
 };
 
-// Suscripción a nuevos anuncios en tiempo real
-export const newAnnouncement = /* GraphQL */ `subscription NewAnnouncement {
-  newAnnouncement {
+export const onCreateAnnouncement = /* GraphQL */ `subscription OnCreateAnnouncement(
+  $filter: ModelSubscriptionAnnouncementFilterInput
+) {
+  onCreateAnnouncement(filter: $filter) {
     id
     content
     createdAt
+    updatedAt
+    __typename
   }
 }
 ` as GeneratedSubscription<
-  { newAnnouncement: { id: string; content: string; createdAt: string } }
+  APITypes.OnCreateAnnouncementSubscriptionVariables,
+  APITypes.OnCreateAnnouncementSubscription
+>;
+export const onUpdateAnnouncement = /* GraphQL */ `subscription OnUpdateAnnouncement(
+  $filter: ModelSubscriptionAnnouncementFilterInput
+) {
+  onUpdateAnnouncement(filter: $filter) {
+    id
+    content
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateAnnouncementSubscriptionVariables,
+  APITypes.OnUpdateAnnouncementSubscription
+>;
+export const onDeleteAnnouncement = /* GraphQL */ `subscription OnDeleteAnnouncement(
+  $filter: ModelSubscriptionAnnouncementFilterInput
+) {
+  onDeleteAnnouncement(filter: $filter) {
+    id
+    content
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteAnnouncementSubscriptionVariables,
+  APITypes.OnDeleteAnnouncementSubscription
 >;

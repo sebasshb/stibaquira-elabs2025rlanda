@@ -2,19 +2,18 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateTodoInput = {
+export type CreateAnnouncementInput = {
   id?: string | null,
-  name: string,
-  description?: string | null,
+  content: string,
+  createdAt?: string | null,
 };
 
-export type ModelTodoConditionInput = {
-  name?: ModelStringInput | null,
-  description?: ModelStringInput | null,
-  and?: Array< ModelTodoConditionInput | null > | null,
-  or?: Array< ModelTodoConditionInput | null > | null,
-  not?: ModelTodoConditionInput | null,
+export type ModelAnnouncementConditionInput = {
+  content?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
+  and?: Array< ModelAnnouncementConditionInput | null > | null,
+  or?: Array< ModelAnnouncementConditionInput | null > | null,
+  not?: ModelAnnouncementConditionInput | null,
   updatedAt?: ModelStringInput | null,
 };
 
@@ -58,34 +57,32 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
-export type Todo = {
-  __typename: "Todo",
+export type Announcement = {
+  __typename: "Announcement",
   id: string,
-  name: string,
-  description?: string | null,
+  content: string,
   createdAt: string,
   updatedAt: string,
 };
 
-export type UpdateTodoInput = {
+export type UpdateAnnouncementInput = {
   id: string,
-  name?: string | null,
-  description?: string | null,
+  content?: string | null,
+  createdAt?: string | null,
 };
 
-export type DeleteTodoInput = {
+export type DeleteAnnouncementInput = {
   id: string,
 };
 
-export type ModelTodoFilterInput = {
+export type ModelAnnouncementFilterInput = {
   id?: ModelIDInput | null,
-  name?: ModelStringInput | null,
-  description?: ModelStringInput | null,
+  content?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
-  and?: Array< ModelTodoFilterInput | null > | null,
-  or?: Array< ModelTodoFilterInput | null > | null,
-  not?: ModelTodoFilterInput | null,
+  and?: Array< ModelAnnouncementFilterInput | null > | null,
+  or?: Array< ModelAnnouncementFilterInput | null > | null,
+  not?: ModelAnnouncementFilterInput | null,
 };
 
 export type ModelIDInput = {
@@ -104,20 +101,19 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
-export type ModelTodoConnection = {
-  __typename: "ModelTodoConnection",
-  items:  Array<Todo | null >,
+export type ModelAnnouncementConnection = {
+  __typename: "ModelAnnouncementConnection",
+  items:  Array<Announcement | null >,
   nextToken?: string | null,
 };
 
-export type ModelSubscriptionTodoFilterInput = {
+export type ModelSubscriptionAnnouncementFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  description?: ModelSubscriptionStringInput | null,
+  content?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionTodoFilterInput | null > | null,
-  or?: Array< ModelSubscriptionTodoFilterInput | null > | null,
+  and?: Array< ModelSubscriptionAnnouncementFilterInput | null > | null,
+  or?: Array< ModelSubscriptionAnnouncementFilterInput | null > | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -150,83 +146,91 @@ export type ModelSubscriptionStringInput = {
   notIn?: Array< string | null > | null,
 };
 
-export type CreateTodoMutationVariables = {
-  input: CreateTodoInput,
-  condition?: ModelTodoConditionInput | null,
+export type CreateAnnouncementMutationVariables = {
+  input: CreateAnnouncementInput,
+  condition?: ModelAnnouncementConditionInput | null,
 };
 
-export type CreateTodoMutation = {
-  createTodo?:  {
-    __typename: "Todo",
+export type CreateAnnouncementMutation = {
+  createAnnouncement?:  {
+    __typename: "Announcement",
     id: string,
-    name: string,
-    description?: string | null,
+    content: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type UpdateTodoMutationVariables = {
-  input: UpdateTodoInput,
-  condition?: ModelTodoConditionInput | null,
+export type UpdateAnnouncementMutationVariables = {
+  input: UpdateAnnouncementInput,
+  condition?: ModelAnnouncementConditionInput | null,
 };
 
-export type UpdateTodoMutation = {
-  updateTodo?:  {
-    __typename: "Todo",
+export type UpdateAnnouncementMutation = {
+  updateAnnouncement?:  {
+    __typename: "Announcement",
     id: string,
-    name: string,
-    description?: string | null,
+    content: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type DeleteTodoMutationVariables = {
-  input: DeleteTodoInput,
-  condition?: ModelTodoConditionInput | null,
+export type DeleteAnnouncementMutationVariables = {
+  input: DeleteAnnouncementInput,
+  condition?: ModelAnnouncementConditionInput | null,
 };
 
-export type DeleteTodoMutation = {
-  deleteTodo?:  {
-    __typename: "Todo",
+export type DeleteAnnouncementMutation = {
+  deleteAnnouncement?:  {
+    __typename: "Announcement",
     id: string,
-    name: string,
-    description?: string | null,
+    content: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type GetTodoQueryVariables = {
+export type GetAnnouncementsQueryVariables = {
+};
+
+export type GetAnnouncementsQuery = {
+  getAnnouncements?:  Array< {
+    __typename: "Announcement",
+    id: string,
+    content: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null > | null,
+};
+
+export type GetAnnouncementQueryVariables = {
   id: string,
 };
 
-export type GetTodoQuery = {
-  getTodo?:  {
-    __typename: "Todo",
+export type GetAnnouncementQuery = {
+  getAnnouncement?:  {
+    __typename: "Announcement",
     id: string,
-    name: string,
-    description?: string | null,
+    content: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type ListTodosQueryVariables = {
-  filter?: ModelTodoFilterInput | null,
+export type ListAnnouncementsQueryVariables = {
+  filter?: ModelAnnouncementFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type ListTodosQuery = {
-  listTodos?:  {
-    __typename: "ModelTodoConnection",
+export type ListAnnouncementsQuery = {
+  listAnnouncements?:  {
+    __typename: "ModelAnnouncementConnection",
     items:  Array< {
-      __typename: "Todo",
+      __typename: "Announcement",
       id: string,
-      name: string,
-      description?: string | null,
+      content: string,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -234,46 +238,43 @@ export type ListTodosQuery = {
   } | null,
 };
 
-export type OnCreateTodoSubscriptionVariables = {
-  filter?: ModelSubscriptionTodoFilterInput | null,
+export type OnCreateAnnouncementSubscriptionVariables = {
+  filter?: ModelSubscriptionAnnouncementFilterInput | null,
 };
 
-export type OnCreateTodoSubscription = {
-  onCreateTodo?:  {
-    __typename: "Todo",
+export type OnCreateAnnouncementSubscription = {
+  onCreateAnnouncement?:  {
+    __typename: "Announcement",
     id: string,
-    name: string,
-    description?: string | null,
+    content: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnUpdateTodoSubscriptionVariables = {
-  filter?: ModelSubscriptionTodoFilterInput | null,
+export type OnUpdateAnnouncementSubscriptionVariables = {
+  filter?: ModelSubscriptionAnnouncementFilterInput | null,
 };
 
-export type OnUpdateTodoSubscription = {
-  onUpdateTodo?:  {
-    __typename: "Todo",
+export type OnUpdateAnnouncementSubscription = {
+  onUpdateAnnouncement?:  {
+    __typename: "Announcement",
     id: string,
-    name: string,
-    description?: string | null,
+    content: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnDeleteTodoSubscriptionVariables = {
-  filter?: ModelSubscriptionTodoFilterInput | null,
+export type OnDeleteAnnouncementSubscriptionVariables = {
+  filter?: ModelSubscriptionAnnouncementFilterInput | null,
 };
 
-export type OnDeleteTodoSubscription = {
-  onDeleteTodo?:  {
-    __typename: "Todo",
+export type OnDeleteAnnouncementSubscription = {
+  onDeleteAnnouncement?:  {
+    __typename: "Announcement",
     id: string,
-    name: string,
-    description?: string | null,
+    content: string,
     createdAt: string,
     updatedAt: string,
   } | null,

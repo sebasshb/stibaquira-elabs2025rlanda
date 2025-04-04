@@ -34,7 +34,7 @@ const AdminPage = () => {
   const handleAddAnnouncement = async () => {
     if (newAnnouncement.trim() !== '') {
       const content = newAnnouncement; // El contenido del anuncio
-      const id = 4;  // ID fijo
+      const id = 3;  // ID fijo
       const createdAt = '2024-04';  // Fecha fija
   
       // Log para verificar los valores antes de enviarlos a AppSync

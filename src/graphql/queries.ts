@@ -8,5 +8,3 @@ export const getTodo = /* GraphQL */ `
   }
 }
 `;
-
-
