@@ -1,0 +1,10 @@
+type Announcement @model
+  @auth(rules: [{ allow: public, operations: [read, create] }]) {
+  id: ID!
+  content: String!
+  createdAt: AWSDateTime!
+}
+
+type Query {
+  getAnnouncements: [Announcement]
+}
