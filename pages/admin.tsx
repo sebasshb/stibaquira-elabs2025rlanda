@@ -2,30 +2,32 @@
 import React, { useState } from 'react';
 import { signOut } from 'aws-amplify/auth';
 import { Amplify } from 'aws-amplify';
-import awsconfig from '../src/aws-exports'; // Asegúrate de que la ruta sea correcta
+import awsconfig from '../src/aws-exports';
 import { generateClient } from 'aws-amplify/api';
-import { createAnuncios } from '../src/graphql/mutations'; // Importamos la mutación 'createAnuncios'
+import { createAnuncios } from '../src/graphql/mutations';
 import '../public/styles/admin.css';
-import { ToastContainer, toast } from 'react-toastify'; // Importamos ToastContainer y toast
-import 'react-toastify/dist/ReactToastify.css'; // Importamos el estilo para las notificaciones
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import '../src/testAmplify';
 
-Amplify.configure(awsconfig); // Configura Amplify
+Amplify.configure(awsconfig);
 const client = generateClient();
 
-// Log para verificar la configuración de AWS
-console.log("awsconfig:", awsconfig);  // Verifica la configuración que se está utilizando
-
-// Log para verificar que la mutación está bien definida
-console.log("Mutación createAnuncios:", JSON.stringify(createAnuncios, null, 2)); // Mostrar la mutación en formato JSON
-
 const AdminPage = () => {
-  const [activeSection, setActiveSection] = useState('inicio'); // Manejo de secciones
-  const [newAnnouncement, setNewAnnouncement] = useState(''); // Variable para el contenido del anuncio
+  const [activeSection, setActiveSection] = useState('inicio');
+  const [newAnnouncement, setNewAnnouncement] = useState('');
+  
+  const [newUser, setNewUser] = useState({
+    firstName: '',
+    lastName: '',
+    email: ''
+  });
+  const [isCreatingUser, setIsCreatingUser] = useState(false);
 
   const handleSignOut = async () => {
     try {
       await signOut();
-      window.location.href = '/'; // Redirige a la página de inicio
+      window.location.href = '/';
     } catch (err) {
       console.error('Error al cerrar sesión:', err);
     }
@@ -33,50 +35,80 @@ const AdminPage = () => {
 
   const handleAddAnnouncement = async () => {
     if (newAnnouncement.trim() !== '') {
-      const content = newAnnouncement; // El contenido del anuncio
-      const id = 3;  // ID fijo
-      const createdAt = '2024-04';  // Fecha fija
-  
-      // Log para verificar los valores antes de enviarlos a AppSync
-      console.log('Nuevo anuncio:', { content, id, createdAt });
+      const content = newAnnouncement;
+      const id = 16;
+      const createdAt = '2024-04';
   
       const input = {
-        id: id.toString(),  // El ID debe ser string
-        content: content,  // Usamos el contenido del anuncio
-        createdAt: createdAt,  // Fecha de creación (en formato adecuado)
+        id: id.toString(),
+        content: content,
+        createdAt: createdAt,
       };
   
       try {
-        // Ejecutamos la mutación para crear el anuncio en AppSync
-        const response = await client.graphql({
+        await client.graphql({
           query: createAnuncios,
           variables: { input }
         });
-  
-        // Log de la respuesta de la mutación
-        console.log("✅ Mutación createAnuncios exitosa:", response);
         
-        // Mostrar la notificación de éxito
         toast.success("¡Anuncio creado con éxito!");
-        
-        // Limpiar el input después de guardar
         setNewAnnouncement('');
       } catch (error: unknown) {
-        // Verificar que el error sea de tipo 'Error'
         if (error instanceof Error) {
-          console.error("❌ Error al conectar con AppSync:", error);
-          console.error("Detalles completos del error:", error.message);
-          if (error.stack) {
-            console.error("Detalles de los errores:", error.stack);
-          }
-        } else {
-          // En caso de que el error no sea una instancia de 'Error'
-          console.error("❌ Error desconocido:", error);
+          console.error("Error al conectar con AppSync:", error);
         }
+        toast.error("Error al crear el anuncio");
       }
     }
   };
-  
+
+  const handleCreateUser = async () => {
+    if (!newUser.firstName || !newUser.lastName || !newUser.email) {
+      toast.warn('Por favor completa todos los campos');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newUser.email)) {
+      toast.warn('Por favor ingresa un email válido');
+      return;
+    }
+
+    setIsCreatingUser(true);
+    
+    try {
+      const response = await fetch('https://l04dgc4a87.execute-api.us-east-1.amazonaws.com/create-user', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          first_name: newUser.firstName,
+          last_name: newUser.lastName,
+          email: newUser.email
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Error HTTP: ${response.status}`);
+      }
+
+      const data = await response.json();
+      toast.success(`Usuario creado: ${data.identity_center.username}`);
+      setNewUser({
+        firstName: '',
+        lastName: '',
+        email: ''
+      });
+      
+    } catch (error) {
+      console.error('Error detallado:', error);
+      toast.error(error instanceof Error ? error.message : 'Error desconocido al crear usuario');
+    } finally {
+      setIsCreatingUser(false);
+    }
+  };
 
   return (
     <div className="admin-container">
@@ -86,6 +118,7 @@ const AdminPage = () => {
           <button onClick={() => setActiveSection('inicio')} className="nav-item">🏠 Inicio</button>
           <button onClick={() => setActiveSection('anuncios')} className="nav-item">📢 Anuncios</button>
           <button onClick={() => setActiveSection('archivos')} className="nav-item">📂 Archivos</button>
+          <button onClick={() => setActiveSection('usuarios')} className="nav-item">👥 Crear Usuarios</button>
           <button onClick={handleSignOut} className="admin-logout-button">🚪 Salir</button>
         </nav>
       </header>
@@ -94,7 +127,7 @@ const AdminPage = () => {
         {activeSection === 'inicio' && (
           <div>
             <h2>🏫 Bienvenido al Panel Administrativo</h2>
-            <p>Desde aquí puedes gestionar anuncios y archivos para los estudiantes.</p>
+            <p>Desde aquí puedes gestionar anuncios, archivos y usuarios.</p>
           </div>
         )}
 
@@ -119,10 +152,65 @@ const AdminPage = () => {
             <button className="button-primary" disabled>Subir</button>
           </div>
         )}
+
+        {activeSection === 'usuarios' && (
+          <div className="user-form-container">
+            <h2>👥 Crear Nuevo Usuario</h2>
+            <div className="form-group">
+              <label>Nombre:</label>
+              <input
+                type="text"
+                value={newUser.firstName}
+                onChange={(e) => setNewUser({...newUser, firstName: e.target.value})}
+                className="input-text"
+                placeholder="Ej: Roberto"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Apellido:</label>
+              <input
+                type="text"
+                value={newUser.lastName}
+                onChange={(e) => setNewUser({...newUser, lastName: e.target.value})}
+                className="input-text"
+                placeholder="Ej: Ejemplo"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Email:</label>
+              <input
+                type="email"
+                value={newUser.email}
+                onChange={(e) => setNewUser({...newUser, email: e.target.value})}
+                className="input-text"
+                placeholder="Ej: test@example.com"
+                required
+              />
+            </div>
+            <button 
+              onClick={handleCreateUser} 
+              className="button-primary"
+              disabled={isCreatingUser}
+            >
+              {isCreatingUser ? 'Creando...' : 'Crear Usuario'}
+            </button>
+          </div>
+        )}
       </main>
 
-      {/* Agregar el contenedor de Toast en el fondo */}
-      <ToastContainer />
+      <ToastContainer 
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

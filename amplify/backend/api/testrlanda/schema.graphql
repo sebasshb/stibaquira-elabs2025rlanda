@@ -1,0 +1,95 @@
+# Define the structure of an Anuncio
+type Anuncios {
+	id: String!
+	content: String
+	createdAt: String
+}
+
+# Define the connection structure for listing multiple Anuncios
+type AnunciosConnection {
+	items: [Anuncios]
+	nextToken: String
+}
+
+# Input for creating an Anuncio
+input CreateAnunciosInput {
+	id: String!
+	content: String
+	createdAt: String
+}
+
+# Input for deleting an Anuncio
+input DeleteAnunciosInput {
+	id: String!
+}
+
+# Filter inputs for querying Anuncios
+input TableAnunciosFilterInput {
+	id: TableStringFilterInput
+	content: TableStringFilterInput
+	createdAt: TableStringFilterInput
+}
+
+input TableBooleanFilterInput {
+	ne: Boolean
+	eq: Boolean
+}
+
+input TableIDFilterInput {
+	eq: ID
+	ne: ID
+}
+
+input TableIntFilterInput {
+	eq: Int
+	ne: Int
+	lt: Int
+	le: Int
+	gt: Int
+	ge: Int
+	between: [Int]
+}
+
+# Filter inputs for different data types used in filtering
+input TableStringFilterInput {
+	ne: String
+	eq: String
+	le: String
+	lt: String
+	ge: String
+	gt: String
+	contains: String
+	notContains: String
+	between: [String]
+	beginsWith: String
+}
+
+# Input for updating an Anuncio
+input UpdateAnunciosInput {
+	id: String!
+	content: String
+	createdAt: String
+}
+
+# The root Mutation for creating, updating, and deleting Anuncios
+type Mutation {
+	createAnuncios(input: CreateAnunciosInput!): Anuncios
+	updateAnuncios(input: UpdateAnunciosInput!): Anuncios
+	deleteAnuncios(input: DeleteAnunciosInput!): Anuncios
+}
+
+# The root Query for getting a single Anuncio or listing multiple
+type Query {
+	getAnuncios(id: String!): Anuncios
+	listAnuncios(filter: TableAnunciosFilterInput, limit: Int, nextToken: String): AnunciosConnection
+}
+
+# Subscriptions to get real-time updates on Anuncios
+type Subscription {
+	onCreateAnuncios(id: String, content: String, createdAt: String): Anuncios
+		@aws_subscribe(mutations: ["createAnuncios"])
+	onUpdateAnuncios(id: String, content: String, createdAt: String): Anuncios
+		@aws_subscribe(mutations: ["updateAnuncios"])
+	onDeleteAnuncios(id: String, content: String, createdAt: String): Anuncios
+		@aws_subscribe(mutations: ["deleteAnuncios"])
+}

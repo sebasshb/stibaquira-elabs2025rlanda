@@ -22,7 +22,7 @@ async function testAppSyncConnection() {
     const input = {
       id: "5",  // El ID que deseas asignar al nuevo anuncio
       content: contenido,  // Usamos la variable 'contenido'
-      createdAt: "2023-04-04",  // Fecha de creación (en formato adecuado)
+      createdAt: "2023-04-03",  // Fecha de creación (en formato adecuado)
     };
 
     // Log para verificar los datos que estamos enviando
