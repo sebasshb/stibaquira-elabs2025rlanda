@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { signOut } from 'aws-amplify/auth';
 import { Amplify } from 'aws-amplify';
 import awsconfig from '../src/aws-exports';
@@ -9,15 +9,13 @@ import '../public/styles/admin.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// Configura Amplify solo en el cliente
-if (typeof window !== 'undefined') {
-  Amplify.configure(awsconfig);;
-}
+Amplify.configure(awsconfig);
+const client = generateClient();
 
 const AdminPage = () => {
-  const [client, setClient] = useState<any>(null);
   const [activeSection, setActiveSection] = useState('inicio');
   const [newAnnouncement, setNewAnnouncement] = useState('');
+  
   const [newUser, setNewUser] = useState({
     firstName: '',
     lastName: '',
@@ -25,31 +23,20 @@ const AdminPage = () => {
   });
   const [isCreatingUser, setIsCreatingUser] = useState(false);
 
-  // Inicializa el cliente después de montar el componente
-  useEffect(() => {
-    setClient(generateClient());
-  }, []);
-
   const handleSignOut = async () => {
     try {
       await signOut();
       window.location.href = '/';
     } catch (err) {
       console.error('Error al cerrar sesión:', err);
-      toast.error('Error al cerrar sesión');
     }
   };
 
   const handleAddAnnouncement = async () => {
-    if (!client) {
-      toast.warn('El sistema está iniciando, por favor espera...');
-      return;
-    }
-
     if (newAnnouncement.trim() !== '') {
       const content = newAnnouncement;
       const now = new Date();
-      const id = `${now.toLocaleDateString('es-PE')} ${now.toTimeString().slice(0,5)}`; 
+      const id = now.toLocaleDateString('es-PE') + ' ' + now.toTimeString().slice(0,5); 
       const createdAt = now.toISOString().split('T')[0];
   
       const input = {
@@ -67,8 +54,10 @@ const AdminPage = () => {
         toast.success("¡Anuncio creado con éxito!");
         setNewAnnouncement('');
       } catch (error: unknown) {
-        console.error("Error al crear anuncio:", error);
-        toast.error(error instanceof Error ? error.message : "Error al crear el anuncio");
+        if (error instanceof Error) {
+          console.error("Error al conectar con AppSync:", error);
+        }
+        toast.error("Error al crear el anuncio");
       }
     }
   };
@@ -89,6 +78,7 @@ const AdminPage = () => {
     try {
       const response = await fetch('https://l04dgc4a87.execute-api.us-east-1.amazonaws.com/create-user', {
         method: 'POST',
+        mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -113,8 +103,8 @@ const AdminPage = () => {
       });
       
     } catch (error) {
-      console.error('Error al crear usuario:', error);
-      toast.error(error instanceof Error ? error.message : 'Error al crear usuario');
+      console.error('Error detallado:', error);
+      toast.error(error instanceof Error ? error.message : 'Error desconocido al crear usuario');
     } finally {
       setIsCreatingUser(false);
     }
