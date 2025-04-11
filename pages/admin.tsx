@@ -1,27 +1,45 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { signOut } from 'aws-amplify/auth';
-import { generateClient } from 'aws-amplify/api';
 import { createAnuncios } from '../src/graphql/mutations';
+import { getClient, checkAmplifyConfig } from '../src/lib/amplifyClient';
 import '../public/styles/admin.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+interface AnnouncementInput {
+  id: string;
+  content: string;
+  createdAt: string;
+}
+
 const AdminPage = () => {
   const [activeSection, setActiveSection] = useState('inicio');
   const [newAnnouncement, setNewAnnouncement] = useState('');
-  const [client, setClient] = useState<any>(null);
+  const [isCreatingUser, setIsCreatingUser] = useState(false);
+  const [amplifyReady, setAmplifyReady] = useState(false);
   
   const [newUser, setNewUser] = useState({
     firstName: '',
     lastName: '',
     email: ''
   });
-  const [isCreatingUser, setIsCreatingUser] = useState(false);
 
   useEffect(() => {
-    // Inicializamos el cliente de Amplify
-    setClient(generateClient());
+    const initAmplify = async () => {
+      try {
+        const status = await checkAmplifyConfig();
+        if (!status.configured || !status.hasGraphQLConfig) {
+          await getClient();
+        }
+        setAmplifyReady(true);
+      } catch (error) {
+        console.error('Error inicializando Amplify:', error);
+        toast.error('Error al inicializar el sistema. Recargue la página.');
+      }
+    };
+
+    initAmplify();
   }, []);
 
   const handleSignOut = async () => {
@@ -35,39 +53,37 @@ const AdminPage = () => {
   };
 
   const handleAddAnnouncement = async () => {
-    if (!client) {
-      toast.warn('El sistema no está listo todavía. Por favor, intente nuevamente.');
+    if (!amplifyReady) {
+      toast.warn('El sistema aún no está listo. Por favor espere...');
       return;
     }
 
-    if (newAnnouncement.trim() !== '') {
-      const content = newAnnouncement;
+    const content = newAnnouncement.trim();
+    if (!content) {
+      toast.warn('El anuncio no puede estar vacío');
+      return;
+    }
+
+    try {
+      const client = await getClient();
       const now = new Date();
-      const id = now.toLocaleDateString('es-PE') + ' ' + now.toTimeString().slice(0,5); 
-      const createdAt = now.toISOString().split('T')[0];
-  
-      const input = {
-        id: id.toString(),
-        content: content,
-        createdAt: createdAt,
+      const input: AnnouncementInput = {
+        id: `announce-${now.getTime()}`,
+        content,
+        createdAt: now.toISOString()
       };
-  
-      try {
-        await client.graphql({
-          query: createAnuncios,
-          variables: { input }
-        });
-        
-        toast.success("¡Anuncio creado con éxito!");
-        setNewAnnouncement('');
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          console.error("Error al conectar con AppSync:", error);
-          toast.error(`Error al crear el anuncio: ${error.message}`);
-        } else {
-          toast.error("Error desconocido al crear el anuncio");
-        }
-      }
+      
+      // Solución compatible con Amplify v6
+      await client.graphql({
+        query: createAnuncios,
+        variables: { input }
+      } as any); // Usamos 'as any' temporalmente para evitar el error de tipos
+      
+      toast.success("¡Anuncio creado con éxito!");
+      setNewAnnouncement('');
+    } catch (error) {
+      console.error("Error al crear anuncio:", error);
+      toast.error(error instanceof Error ? error.message : "Error al crear el anuncio");
     }
   };
 
@@ -150,7 +166,13 @@ const AdminPage = () => {
               onChange={(e) => setNewAnnouncement(e.target.value)}
               className="input-text"
             />
-            <button onClick={handleAddAnnouncement} className="button-primary">Publicar</button>
+            <button 
+              onClick={handleAddAnnouncement} 
+              className="button-primary"
+              disabled={!amplifyReady}
+            >
+              {amplifyReady ? 'Publicar' : 'Inicializando sistema...'}
+            </button>
           </div>
         )}
 
@@ -201,7 +223,7 @@ const AdminPage = () => {
             <button 
               onClick={handleCreateUser} 
               className="button-primary"
-              disabled={isCreatingUser}
+              disabled={isCreatingUser || !amplifyReady}
             >
               {isCreatingUser ? 'Creando...' : 'Crear Usuario'}
             </button>
