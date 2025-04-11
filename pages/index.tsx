@@ -46,7 +46,7 @@ const LoginPage = () => {
         // Redirección basada en el tipo de usuario
         const userType = attributes['custom:tipo'];
         if (userType === 'admin') {
-          router.push(`/test?email=${encodeURIComponent(email)}`);
+          router.push(`/admin?email=${encodeURIComponent(email)}`);
         } else if (userType === 'student') {
           router.push(`/student?email=${encodeURIComponent(email)}`);
         } else {
