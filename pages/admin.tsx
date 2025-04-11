@@ -8,7 +8,6 @@ import { createAnuncios } from '../src/graphql/mutations';
 import '../public/styles/admin.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import '../src/testAmplify';
 
 Amplify.configure(awsconfig);
 const client = generateClient();
