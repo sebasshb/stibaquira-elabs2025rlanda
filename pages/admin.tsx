@@ -36,8 +36,9 @@ const AdminPage = () => {
   const handleAddAnnouncement = async () => {
     if (newAnnouncement.trim() !== '') {
       const content = newAnnouncement;
-      const id = 16;
-      const createdAt = '2024-04';
+      const now = new Date();
+      const id = now.toLocaleDateString('es-PE') + ' ' + now.toTimeString().slice(0,5); 
+      const createdAt = now.toISOString().split('T')[0];
   
       const input = {
         id: id.toString(),
