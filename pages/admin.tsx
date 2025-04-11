@@ -20,7 +20,7 @@ const AdminPage = () => {
 
   const [isCreatingUser, setIsCreatingUser] = useState(false);
 
-  // Asegura que Amplify ya esté configurado antes de generar el client
+  // Solo generamos el cliente
   useEffect(() => {
     const generatedClient = generateClient();
     setClient(generatedClient);
@@ -224,4 +224,3 @@ const AdminPage = () => {
 };
 
 export default AdminPage;
- 
