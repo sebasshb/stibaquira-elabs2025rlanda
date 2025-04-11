@@ -4,6 +4,7 @@ import { signIn, fetchUserAttributes, confirmSignIn } from 'aws-amplify/auth';
 import { Amplify } from 'aws-amplify';
 import awsExports from '../src/aws-exports';
 import { useRouter } from 'next/router';  // Importamos useRouter
+import '../public/styles/admin.css';
 
 Amplify.configure(awsExports);
 

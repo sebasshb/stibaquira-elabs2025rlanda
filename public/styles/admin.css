@@ -175,3 +175,66 @@
   margin-bottom: 0.5rem;
   font-weight: bold;
 }
+
+/* login.css */
+
+.login-container {
+  width: 90%;
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+}
+
+.login-title {
+  font-size: 26px;
+  color: #002147;
+  margin-bottom: 20px;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-field {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.submit-btn {
+  background: #0056b3;
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.submit-btn:hover {
+  background: #003580;
+}
+
+.error-msg {
+  color: #d9534f;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+.user-info {
+  margin-top: 20px;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 6px;
+  text-align: left;
+  font-size: 14px;
+}
