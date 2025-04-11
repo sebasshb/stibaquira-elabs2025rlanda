@@ -1,20 +1,16 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { signOut } from 'aws-amplify/auth';
-import { Amplify } from 'aws-amplify';
-import awsconfig from '../src/aws-exports';
 import { generateClient } from 'aws-amplify/api';
 import { createAnuncios } from '../src/graphql/mutations';
 import '../public/styles/admin.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-Amplify.configure(awsconfig);
-const client = generateClient();
-
 const AdminPage = () => {
   const [activeSection, setActiveSection] = useState('inicio');
   const [newAnnouncement, setNewAnnouncement] = useState('');
+  const [client, setClient] = useState<any>(null);
   
   const [newUser, setNewUser] = useState({
     firstName: '',
@@ -23,16 +19,27 @@ const AdminPage = () => {
   });
   const [isCreatingUser, setIsCreatingUser] = useState(false);
 
+  useEffect(() => {
+    // Inicializamos el cliente de Amplify
+    setClient(generateClient());
+  }, []);
+
   const handleSignOut = async () => {
     try {
       await signOut();
       window.location.href = '/';
     } catch (err) {
       console.error('Error al cerrar sesión:', err);
+      toast.error('Error al cerrar sesión');
     }
   };
 
   const handleAddAnnouncement = async () => {
+    if (!client) {
+      toast.warn('El sistema no está listo todavía. Por favor, intente nuevamente.');
+      return;
+    }
+
     if (newAnnouncement.trim() !== '') {
       const content = newAnnouncement;
       const now = new Date();
@@ -56,8 +63,10 @@ const AdminPage = () => {
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.error("Error al conectar con AppSync:", error);
+          toast.error(`Error al crear el anuncio: ${error.message}`);
+        } else {
+          toast.error("Error desconocido al crear el anuncio");
         }
-        toast.error("Error al crear el anuncio");
       }
     }
   };
@@ -215,4 +224,4 @@ const AdminPage = () => {
   );
 };
 
-export default AdminPage
+export default AdminPage;
