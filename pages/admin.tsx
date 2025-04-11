@@ -1,30 +1,27 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { signOut } from 'aws-amplify/auth';
+import { Amplify } from 'aws-amplify';
+import awsconfig from '../src/aws-exports';
 import { generateClient } from 'aws-amplify/api';
 import { createAnuncios } from '../src/graphql/mutations';
 import '../public/styles/admin.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+Amplify.configure(awsconfig);
+const client = generateClient();
+
 const AdminPage = () => {
   const [activeSection, setActiveSection] = useState('inicio');
   const [newAnnouncement, setNewAnnouncement] = useState('');
-  const [client, setClient] = useState<any>(null);
-
+  
   const [newUser, setNewUser] = useState({
     firstName: '',
     lastName: '',
     email: ''
   });
-
   const [isCreatingUser, setIsCreatingUser] = useState(false);
-
-  // Solo generamos el cliente
-  useEffect(() => {
-    const generatedClient = generateClient();
-    setClient(generatedClient);
-  }, []);
 
   const handleSignOut = async () => {
     try {
@@ -36,29 +33,24 @@ const AdminPage = () => {
   };
 
   const handleAddAnnouncement = async () => {
-    if (!client) {
-      toast.error("Cliente no disponible. Espera unos segundos.");
-      return;
-    }
-
     if (newAnnouncement.trim() !== '') {
       const content = newAnnouncement;
       const now = new Date();
-      const id = now.toLocaleDateString('es-PE') + ' ' + now.toTimeString().slice(0, 5);
+      const id = now.toLocaleDateString('es-PE') + ' ' + now.toTimeString().slice(0,5); 
       const createdAt = now.toISOString().split('T')[0];
-
+  
       const input = {
         id: id.toString(),
         content: content,
         createdAt: createdAt,
       };
-
+  
       try {
         await client.graphql({
           query: createAnuncios,
           variables: { input }
         });
-
+        
         toast.success("¡Anuncio creado con éxito!");
         setNewAnnouncement('');
       } catch (error: unknown) {
@@ -82,7 +74,7 @@ const AdminPage = () => {
     }
 
     setIsCreatingUser(true);
-
+    
     try {
       const response = await fetch('https://l04dgc4a87.execute-api.us-east-1.amazonaws.com/create-user', {
         method: 'POST',
@@ -109,7 +101,7 @@ const AdminPage = () => {
         lastName: '',
         email: ''
       });
-
+      
     } catch (error) {
       console.error('Error detallado:', error);
       toast.error(error instanceof Error ? error.message : 'Error desconocido al crear usuario');
@@ -142,9 +134,9 @@ const AdminPage = () => {
         {activeSection === 'anuncios' && (
           <div>
             <h2>📢 Gestionar Anuncios</h2>
-            <input
-              type="text"
-              placeholder="Escribe un anuncio..."
+            <input 
+              type="text" 
+              placeholder="Escribe un anuncio..." 
               value={newAnnouncement}
               onChange={(e) => setNewAnnouncement(e.target.value)}
               className="input-text"
@@ -169,7 +161,7 @@ const AdminPage = () => {
               <input
                 type="text"
                 value={newUser.firstName}
-                onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })}
+                onChange={(e) => setNewUser({...newUser, firstName: e.target.value})}
                 className="input-text"
                 placeholder="Ej: Roberto"
                 required
@@ -180,7 +172,7 @@ const AdminPage = () => {
               <input
                 type="text"
                 value={newUser.lastName}
-                onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })}
+                onChange={(e) => setNewUser({...newUser, lastName: e.target.value})}
                 className="input-text"
                 placeholder="Ej: Ejemplo"
                 required
@@ -191,14 +183,14 @@ const AdminPage = () => {
               <input
                 type="email"
                 value={newUser.email}
-                onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                onChange={(e) => setNewUser({...newUser, email: e.target.value})}
                 className="input-text"
                 placeholder="Ej: test@example.com"
                 required
               />
             </div>
-            <button
-              onClick={handleCreateUser}
+            <button 
+              onClick={handleCreateUser} 
               className="button-primary"
               disabled={isCreatingUser}
             >
@@ -208,7 +200,7 @@ const AdminPage = () => {
         )}
       </main>
 
-      <ToastContainer
+      <ToastContainer 
         position="top-right"
         autoClose={5000}
         hideProgressBar={false}
@@ -223,4 +215,4 @@ const AdminPage = () => {
   );
 };
 
-export default AdminPage;
+export default AdminPage
