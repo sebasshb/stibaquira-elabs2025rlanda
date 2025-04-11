@@ -1,12 +1,10 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { signIn, fetchUserAttributes, confirmSignIn } from 'aws-amplify/auth';
 import { Amplify } from 'aws-amplify';
 import awsExports from '../src/aws-exports';
-import { useRouter } from 'next/router';  // Importamos useRouter
+import { useRouter } from 'next/router';
 import '../public/styles/admin.css';
-
-Amplify.configure(awsExports);
 
 const LoginPage = () => {
   const [user, setUser] = useState<Partial<Record<string, string>> | null>(null);
@@ -15,71 +13,85 @@ const LoginPage = () => {
   const [newPassword, setNewPassword] = useState('');
   const [error, setError] = useState<string>('');
   const [step, setStep] = useState<'SIGN_IN' | 'NEW_PASSWORD_REQUIRED'>('SIGN_IN');
-  const [session, setSession] = useState<unknown>(null);
-  const router = useRouter();  // Inicializamos useRouter
+  const [session, setSession] = useState<any>(null);
+  const router = useRouter();
+
+  // Configuración segura de Amplify
+  useEffect(() => {
+    const config = { 
+      ...awsExports,
+      ssr: true // Mantén esto solo si es absolutamente necesario
+    };
+    
+    // Elimina la propiedad ssr si existe para evitar errores de tipos
+    if ('ssr' in config) {
+      delete (config as any).ssr;
+    }
+
+    Amplify.configure(config);
+    console.log('Amplify configurado en Login');
+  }, []);
 
   const handleLogin = async () => {
     try {
-      const userData = await signIn({ username: email, password });
-
-      console.log("Usuario autenticado correctamente:", userData);
+      setError('');
+      const userData = await signIn({ 
+        username: email, 
+        password 
+      });
 
       if (userData.isSignedIn) {
         const attributes = await fetchUserAttributes();
-        console.log('Atributos del usuario:', attributes);
         setUser(attributes);
-        setError('');
-
-        // Verifica el tipo de usuario y redirige
-        const userType = attributes['custom:tipo']; // Obtén el tipo de usuario
+        
+        // Redirección basada en el tipo de usuario
+        const userType = attributes['custom:tipo'];
         if (userType === 'admin') {
-          router.push(`/admin?email=${email}`); // Usamos router.push para redirigir
+          router.push(`/admin?email=${encodeURIComponent(email)}`);
         } else if (userType === 'student') {
-          router.push(`/student?email=${email}`); // Usamos router.push para redirigir
+          router.push(`/student?email=${encodeURIComponent(email)}`);
         } else {
-          setError('No se encontró un rol válido para el usuario.');
+          setError('Rol de usuario no reconocido');
         }
       } else if (userData.nextStep.signInStep === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED') {
-        console.warn('Se requiere nueva contraseña.');
         setSession(userData);
         setStep('NEW_PASSWORD_REQUIRED');
-      } else {
-        console.warn('Autenticación incompleta:', userData.nextStep);
-        setError('Debes completar la autenticación. Revisa tu correo o configura MFA.');
       }
     } catch (err) {
-      if (err instanceof Error && err.name === 'NotAuthorizedException') {
-        console.warn('Credenciales incorrectas:', err.message);
-        setError('Usuario o contraseña incorrectos.');
-      } else {
-        console.error('Error al iniciar sesión:', err);
-        setError(err instanceof Error ? err.message : 'Error desconocido al iniciar sesión');
-      }
+      console.error('Error en login:', err);
+      setError(
+        err instanceof Error ? 
+          (err.name === 'NotAuthorizedException' ? 
+            'Credenciales incorrectas' : err.message) : 
+          'Error desconocido'
+      );
     }
   };
 
   const handleNewPasswordSubmit = async () => {
     try {
-      if (!session) {
-        setError('No hay sesión activa.');
-        return;
-      }
-
-      await confirmSignIn({ challengeResponse: newPassword });
-
-      console.log('Contraseña cambiada con éxito. Inicia sesión nuevamente.');
+      if (!session) throw new Error('Sesión no disponible');
+      
+      await confirmSignIn({ 
+        challengeResponse: newPassword 
+      });
+      
       setStep('SIGN_IN');
       setNewPassword('');
-      setError('Contraseña cambiada. Inicia sesión nuevamente.');
+      setError('Contraseña actualizada. Inicia sesión nuevamente.');
     } catch (err) {
-      console.error('Error al cambiar la contraseña:', err);
-      setError(err instanceof Error ? err.message : 'Error desconocido al cambiar la contraseña');
+      setError(
+        err instanceof Error ? 
+          'Error al actualizar contraseña: ' + err.message : 
+          'Error desconocido'
+      );
     }
   };
 
   return (
     <div className="login-container">
       <h2 className="login-title">Iniciar Sesión</h2>
+      
       {step === 'SIGN_IN' ? (
         <div className="form-container">
           <input
@@ -88,6 +100,7 @@ const LoginPage = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="input-field"
+            required
           />
           <input
             type="password"
@@ -95,29 +108,40 @@ const LoginPage = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="input-field"
+            required
           />
-          <button onClick={handleLogin} className="submit-btn">Iniciar sesión</button>
+          <button 
+            onClick={handleLogin} 
+            className="submit-btn"
+            disabled={!email || !password}
+          >
+            Iniciar sesión
+          </button>
         </div>
       ) : (
         <div className="form-container">
-          <p>Debes establecer una nueva contraseña</p>
+          <p className="password-message">Debes establecer una nueva contraseña</p>
           <input
             type="password"
             placeholder="Nueva contraseña"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             className="input-field"
+            required
           />
-          <button onClick={handleNewPasswordSubmit} className="submit-btn">Cambiar contraseña</button>
+          <button 
+            onClick={handleNewPasswordSubmit} 
+            className="submit-btn"
+            disabled={!newPassword}
+          >
+            Cambiar contraseña
+          </button>
         </div>
       )}
 
-      {error && <p className="error-msg">{error}</p>}
-
-      {user && (
-        <div className="user-info">
-          <h3>Datos del Usuario:</h3>
-          <pre>{JSON.stringify(user, null, 2)}</pre>
+      {error && (
+        <div className="error-container">
+          <p className="error-msg">{error}</p>
         </div>
       )}
     </div>
