@@ -2,7 +2,6 @@ import { Amplify } from 'aws-amplify';
 import awsconfig from './aws-exports';
 import { generateClient } from 'aws-amplify/api';
 import { createAnuncios } from './graphql/mutations';
-import { GraphQLError } from 'graphql'; // Importación añadida
 
 Amplify.configure(awsconfig);
 
@@ -32,7 +31,7 @@ async function testAppSyncConnection() {
     });
 
     console.log("✅ Mutación createAnuncios exitosa:", response);
-  } catch (error: unknown) { // Cambiado de any a unknown
+  } catch (error: unknown) {
     console.error("❌ Error al conectar con AppSync:", error);
     
     if (error instanceof Error) {
