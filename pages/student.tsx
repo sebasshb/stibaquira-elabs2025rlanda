@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { generateClient } from 'aws-amplify/api';
 import { signOut } from 'aws-amplify/auth';
 import * as subscriptions from '../src/graphql/subscriptions';
@@ -19,10 +19,20 @@ const StudentPage = () => {
     id: string;
   } | null>(null);
   const [activeSection, setActiveSection] = useState('inicio');
-  const [lastActivity, setLastActivity] = useState(Date.now());
   const audioRef = useRef<HTMLAudioElement>(null!);
   const inactivityTimer = useRef<NodeJS.Timeout | null>(null);
+  const lastActivityRef = useRef(Date.now()); // Cambiado a useRef
   const router = useRouter();
+
+  // handleSignOut con useCallback
+  const handleSignOut = useCallback(async () => {
+    try {
+      await signOut();
+      router.push('/');
+    } catch (err) {
+      console.error('Error al cerrar sesión:', err);
+    }
+  }, [router]);
 
   // Configurar temporizador de inactividad
   useEffect(() => {
@@ -38,7 +48,7 @@ const StudentPage = () => {
     // Eventos que resetearán el temporizador
     const events = ['mousemove', 'keydown', 'click', 'scroll'];
     const resetActivity = () => {
-      setLastActivity(Date.now());
+      lastActivityRef.current = Date.now(); // Usamos la ref en lugar del state
       setupInactivityTimer();
     };
 
@@ -58,7 +68,7 @@ const StudentPage = () => {
         window.removeEventListener(event, resetActivity);
       });
     };
-  }, []);
+  }, [handleSignOut]); // Añadida handleSignOut como dependencia
 
   // Cargar el sonido
   useEffect(() => {
@@ -104,15 +114,6 @@ const StudentPage = () => {
 
   const handleCerrarAnuncio = () => {
     setUltimoAnuncio(null);
-  };
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      router.push('/'); // Redirige a la página de inicio
-    } catch (err) {
-      console.error('Error al cerrar sesión:', err);
-    }
   };
 
   return (

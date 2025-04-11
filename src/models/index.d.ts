@@ -1,10 +1,6 @@
 import { ModelInit, MutableModel, __modelMeta__, ManagedIdentifier } from "@aws-amplify/datastore";
-// @ts-ignore
+// @ts-expect-error - LazyLoading types are correctly handled by Amplify
 import { LazyLoading, LazyLoadingDisabled } from "@aws-amplify/datastore";
-
-
-
-
 
 type EagerAnnouncement = {
   readonly [__modelMeta__]: {

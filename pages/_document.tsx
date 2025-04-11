@@ -4,8 +4,7 @@ export default function Document() {
   return (
     <Html>
       <Head>
-        <link rel="stylesheet" href="/styles/bootstrap.min.css" />
-        <link rel="stylesheet" href="/styles/custom.css" />
+        {/* Eliminamos los links manuales */}
       </Head>
       <body>
         <Main />
