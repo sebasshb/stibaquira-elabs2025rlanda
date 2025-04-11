@@ -1,67 +1,56 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Amplify } from 'aws-amplify';
 import type { AppProps } from 'next/app';
 import { useEffect } from 'react';
-import awsExports from '../src/aws-exports';
 
-// Configuración compatible con AWS Amplify v6
+// Configuración segura para todos los entornos
 const configureAmplify = () => {
-  try {
-    // 1. Intenta con aws-exports primero
-    const config = {
-      ...awsExports,
-      ssr: true
-    };
+  const isProd = process.env.NODE_ENV === 'production';
+  
+  const graphqlConfig = {
+    endpoint: isProd 
+      ? process.env.NEXT_PUBLIC_APPSYNC_ENDPOINT!
+      : process.env.NEXT_PUBLIC_APPSYNC_ENDPOINT || 'https://wozkdm52wbbofozgb4wybcxo6m.appsync-api.us-east-1.amazonaws.com/graphql',
+    region: isProd
+      ? process.env.NEXT_PUBLIC_AWS_REGION!
+      : process.env.NEXT_PUBLIC_AWS_REGION || 'us-east-1',
+    apiKey: isProd
+      ? process.env.NEXT_PUBLIC_APPSYNC_API_KEY!
+      : process.env.NEXT_PUBLIC_APPSYNC_API_KEY || 'da2-iixru3au65bfxdo5c57o5zmytq',
+    defaultAuthMode: 'apiKey' as const
+  };
 
-    // Limpieza de la configuración
-    const { ssr, ...cleanConfig } = config;
-    
-    // Conversión de tipos para AWS Amplify v6 (¡nota el 'apiKey' en minúsculas!)
-    const amplifyConfig = {
-      API: {
-        GraphQL: {
-          endpoint: cleanConfig.aws_appsync_graphqlEndpoint,
-          region: cleanConfig.aws_appsync_region,
-          apiKey: cleanConfig.aws_appsync_apiKey,
-          defaultAuthMode: 'apiKey' as const // Cambiado a minúsculas
-        }
-      },
-      Auth: {
-        Cognito: {
-          userPoolId: cleanConfig.aws_user_pools_id,
-          userPoolClientId: cleanConfig.aws_user_pools_web_client_id,
-          identityPoolId: cleanConfig.aws_cognito_identity_pool_id
-        }
+  const authConfig = {
+    userPoolId: isProd
+      ? process.env.NEXT_PUBLIC_USER_POOL_ID!
+      : process.env.NEXT_PUBLIC_USER_POOL_ID || 'us-east-1_286IFgoGt',
+    userPoolClientId: isProd
+      ? process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID!
+      : process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID || '2lhc218m2ua8835f9tsogo95uh',
+    identityPoolId: isProd
+      ? process.env.NEXT_PUBLIC_IDENTITY_POOL_ID!
+      : process.env.NEXT_PUBLIC_IDENTITY_POOL_ID || 'us-east-1:1bb1f48f-0b0b-4d94-8806-f66c417c7852'
+  };
+
+  Amplify.configure({
+    API: {
+      GraphQL: graphqlConfig
+    },
+    Auth: {
+      Cognito: authConfig
+    }
+  });
+
+  console.log('Amplify Config:', {
+    API: {
+      GraphQL: {
+        ...graphqlConfig,
+        apiKey: '***' + graphqlConfig.apiKey?.slice(-4)
       }
-    };
-
-    Amplify.configure(amplifyConfig);
-    console.log('Amplify configurado:', Amplify.getConfig());
-  } catch (error) {
-    console.error('Error configurando Amplify:', error);
-    
-    // Configuración de respaldo con tipos correctos
-    const backupConfig = {
-      API: {
-        GraphQL: {
-          endpoint: process.env.NEXT_PUBLIC_APPSYNC_ENDPOINT!,
-          region: process.env.NEXT_PUBLIC_AWS_REGION!,
-          apiKey: process.env.NEXT_PUBLIC_APPSYNC_API_KEY!,
-          defaultAuthMode: 'apiKey' as const // Cambiado a minúsculas
-        }
-      },
-      Auth: {
-        Cognito: {
-          userPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID!,
-          userPoolClientId: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID!,
-          identityPoolId: process.env.NEXT_PUBLIC_IDENTITY_POOL_ID!
-        }
-      }
-    };
-
-    Amplify.configure(backupConfig);
-    console.warn('Usando configuración de respaldo');
-  }
+    },
+    Auth: {
+      Cognito: authConfig
+    }
+  });
 };
 
 function MyApp({ Component, pageProps }: AppProps) {
