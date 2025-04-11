@@ -13,42 +13,36 @@ const TestPage = () => {
   useEffect(() => {
     const testConnection = async () => {
       try {
-        // 1. Verificar configuración de Amplify
-        const amplifyConfig = Amplify.getConfig();
-        setConfigDetails(amplifyConfig);
-        console.log('Configuración de Amplify:', amplifyConfig);
-
-        if (!amplifyConfig.API?.GraphQL) {
-          throw new Error('No se encontró configuración GraphQL');
+        const currentConfig = Amplify.getConfig();
+        setConfigDetails(currentConfig);
+        
+        if (!currentConfig.API?.GraphQL?.endpoint) {
+          throw new Error('Configuración GraphQL incompleta');
         }
 
-        // 2. Intentar una operación simple (query o mutation)
+        setConnectionStatus('Conectando a GraphQL...');
         const client = generateClient();
         
-        // Opcional: Si tienes una query de prueba, úsala aquí
-        // Si no, haremos una prueba de conexión básica
-        setConnectionStatus('Conectando al endpoint GraphQL...');
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Timeout: El servidor no respondió')), 5000));
         
-        // Test de conexión simple
-        await client.graphql({ 
-          query: `query { __schema { types { name } } }` 
+        const queryPromise = client.graphql({
+          query: `query { __schema { types { name } } }`
         } as any);
 
+        await Promise.race([queryPromise, timeoutPromise]);
         setConnectionStatus('✅ Conexión exitosa con AppSync');
         
-        // Redirigir a admin después de 3 segundos si todo está bien
-        setTimeout(() => {
-          router.push('/admin');
-        }, 3000);
-
+        setTimeout(() => router.push('/admin'), 2000);
       } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        setConnectionStatus(`❌ Error: ${errorMessage}`);
         console.error('Error en testConnection:', error);
-        setConnectionStatus(`❌ Error de conexión: ${error instanceof Error ? error.message : String(error)}`);
       }
     };
 
     testConnection();
-  }, []);
+  }, [router]);
 
   return (
     <div className="login-container">
@@ -58,7 +52,16 @@ const TestPage = () => {
         {configDetails && (
           <div className="config-details">
             <h4>Detalles de configuración:</h4>
-            <pre>{JSON.stringify(configDetails, null, 2)}</pre>
+            <pre>{JSON.stringify({
+              ...configDetails,
+              API: configDetails.API ? {
+                ...configDetails.API,
+                GraphQL: configDetails.API.GraphQL ? {
+                  ...configDetails.API.GraphQL,
+                  apiKey: '***' + (configDetails.API.GraphQL.apiKey?.slice(-4) || '')
+                } : null
+              } : null
+            }, null, 2)}</pre>
           </div>
         )}
       </div>

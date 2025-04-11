@@ -1,14 +1,17 @@
-// next.config.ts
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  // Configuración específica para Pages Router:
   eslint: {
     ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
+  },
+  transpilePackages: ['aws-amplify'],
+  webpack: (config) => {
+    config.resolve.alias['../src/aws-exports'] = require.resolve('./src/aws-exports.js');
+    return config;
   }
 };
 
