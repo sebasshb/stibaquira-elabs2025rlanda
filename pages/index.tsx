@@ -6,6 +6,19 @@ import awsExports from '../src/aws-exports';
 import { useRouter } from 'next/router';
 import '../public/styles/admin.css';
 
+// Configuración de Amplify fuera del componente para que sea global
+Amplify.configure({
+  ...awsExports,
+  Auth: {
+    Cognito: {
+      userPoolId: awsExports.aws_user_pools_id,
+      userPoolClientId: awsExports.aws_user_pools_web_client_id,
+      identityPoolId: awsExports.aws_cognito_identity_pool_id,
+      allowGuestAccess: false
+    }
+  }
+});
+
 const LoginPage = () => {
   const [user, setUser] = useState<Partial<Record<string, string>> | null>(null);
   const [email, setEmail] = useState('');
@@ -16,21 +29,7 @@ const LoginPage = () => {
   const [session, setSession] = useState<any>(null);
   const router = useRouter();
 
-  // Configuración segura de Amplify
-  useEffect(() => {
-    const config = { 
-      ...awsExports,
-      ssr: true // Mantén esto solo si es absolutamente necesario
-    };
-    
-    // Elimina la propiedad ssr si existe para evitar errores de tipos
-    if ('ssr' in config) {
-      delete (config as any).ssr;
-    }
-
-    Amplify.configure(config);
-    console.log('Amplify configurado en Login');
-  }, []);
+  // Eliminado el useEffect de configuración ya que ahora está fuera del componente
 
   const handleLogin = async () => {
     try {
