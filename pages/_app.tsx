@@ -3,10 +3,10 @@ import type { AppProps } from 'next/app';
 import { Amplify } from 'aws-amplify';
 import awsExports from '../src/aws-exports';
 
-// Configuración básica pero segura para SSR
-if (typeof window !== 'undefined') {
-  Amplify.configure(awsExports);
-}
+// Configura Amplify para SSR (v6)
+Amplify.configure(awsExports, {
+  ssr: true
+});
 
 function MyApp({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />;
