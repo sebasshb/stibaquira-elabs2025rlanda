@@ -1,10 +1,11 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { signIn, fetchUserAttributes, confirmSignIn } from 'aws-amplify/auth';
 import { Amplify } from 'aws-amplify';
 import awsExports from '../src/aws-exports';
 import { useRouter } from 'next/router';
 import '../public/styles/admin.css';
+import ThemeToggle from '../src/app/context/ThemeToggle'; // Nuevo import
 
 // Configuración de Amplify fuera del componente para que sea global
 Amplify.configure({
@@ -28,8 +29,6 @@ const LoginPage = () => {
   const [step, setStep] = useState<'SIGN_IN' | 'NEW_PASSWORD_REQUIRED'>('SIGN_IN');
   const [session, setSession] = useState<any>(null);
   const router = useRouter();
-
-  // Eliminado el useEffect de configuración ya que ahora está fuera del componente
 
   const handleLogin = async () => {
     try {
@@ -89,6 +88,8 @@ const LoginPage = () => {
 
   return (
     <div className="login-container">
+      <ThemeToggle /> {/* Añadido el toggle de tema */}
+      
       <h2 className="login-title">Iniciar Sesión</h2>
       
       {step === 'SIGN_IN' ? (

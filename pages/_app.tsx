@@ -1,6 +1,8 @@
+// src/pages/_app.tsx
 import { Amplify } from 'aws-amplify';
 import type { AppProps } from 'next/app';
 import { useEffect } from 'react';
+import { ThemeProvider } from '../src/app/context/ThemeProvider'; // Nuevo import
 
 // Configuración segura para todos los entornos
 const configureAmplify = () => {
@@ -58,7 +60,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     configureAmplify();
   }, []);
 
-  return <Component {...pageProps} />;
+  return (
+    <ThemeProvider>
+      <Component {...pageProps} />
+    </ThemeProvider>
+  );
 }
 
 export default MyApp;

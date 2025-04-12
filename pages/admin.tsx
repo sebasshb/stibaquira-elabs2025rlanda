@@ -6,6 +6,7 @@ import { createAnuncios } from '../src/graphql/mutations';
 import '../public/styles/admin.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ThemeToggle from '../src/app/context/ThemeToggle'; // Nuevo import
 
 interface AnnouncementInput {
   id: string;
@@ -56,14 +57,14 @@ const AdminPage = () => {
     try {
       const client = generateClient();
       const now = new Date();
-      
+      const timestamp = now.getTime();
       const result = await client.graphql({
         query: createAnuncios,
         variables: {
           input: {
-            id: formatDateForId(now), // Formato: "2025-04-10"
+            id: `announce-${timestamp}`,
             content,
-            createdAt: now.toISOString() // Formato ISO: "2025-04-11T19:24:31.656Z"
+            createdAt: now.toISOString()
           }
         }
       });
@@ -127,7 +128,10 @@ const AdminPage = () => {
   return (
     <div className="admin-container">
       <header className="admin-header">
-        <h1 className="admin-title">📚 Panel de Administración</h1>
+        <div className="header-content">
+          <h1 className="admin-title">📚 Panel de Administración</h1>
+          <ThemeToggle /> {/* Añadido el toggle de tema */}
+        </div>
         <nav className="admin-nav">
           <button onClick={() => setActiveSection('inicio')} className="nav-item">🏠 Inicio</button>
           <button onClick={() => setActiveSection('anuncios')} className="nav-item">📢 Anuncios</button>
@@ -229,6 +233,8 @@ const AdminPage = () => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
+        toastClassName="toast-container"
+        className="toast-body"
       />
     </div>
   );

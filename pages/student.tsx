@@ -8,6 +8,7 @@ import type { GraphQLSubscription, GraphQLQuery } from '@aws-amplify/api';
 import type { OnCreateAnunciosSubscription, Anuncios, AnunciosConnection } from '../src/API';
 import '../public/styles/admin.css';
 import { useRouter } from 'next/navigation';
+import ThemeToggle from '../src/app/context/ThemeToggle'; // Nuevo import
 
 // Sonido de notificación
 const notificationSound = 'https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3';
@@ -91,7 +92,16 @@ const StudentPage = () => {
       });
       
       if (result.data?.listAnuncios?.items) {
-        const items = result.data.listAnuncios.items.filter((item): item is Anuncios => item !== null);
+        // Ordenar los anuncios por fecha descendente (más recientes primero)
+        const items = result.data.listAnuncios.items
+          .filter((item): item is Anuncios => item !== null)
+          .sort((a, b) => {
+            const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+            const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+            return dateB - dateA; // Orden descendente
+          })
+          .slice(0, 5); // Tomar solo los 5 más recientes
+
         setAnuncios(items);
       }
     } catch (error) {
@@ -167,7 +177,10 @@ const StudentPage = () => {
   return (
     <div className="admin-container">
       <header className="admin-header">
-        <h1 className="admin-title">📚 Panel del Estudiante</h1>
+        <div className="header-content">
+          <h1 className="admin-title">📚 Panel del Estudiante</h1>
+          <ThemeToggle /> {/* Añadido el toggle de tema */}
+        </div>
         <nav className="admin-nav">
           <button onClick={() => setActiveSection('inicio')} className="nav-item">🏠 Inicio</button>
           <button onClick={() => setActiveSection('anuncios')} className="nav-item">📢 Anuncios</button>
