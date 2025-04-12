@@ -39,6 +39,13 @@ const AdminPage = () => {
     }
   };
 
+  const formatDateForId = (date: Date): string => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${year}-${month}-${day}`;
+  };
+
   const handleAddAnnouncement = async () => {
     const content = newAnnouncement.trim();
     if (!content) {
@@ -54,9 +61,9 @@ const AdminPage = () => {
         query: createAnuncios,
         variables: {
           input: {
-            id: `announce-${now.getTime()}`,
+            id: formatDateForId(now), // Formato: "2025-04-10"
             content,
-            createdAt: now.toISOString()
+            createdAt: now.toISOString() // Formato ISO: "2025-04-11T19:24:31.656Z"
           }
         }
       });
