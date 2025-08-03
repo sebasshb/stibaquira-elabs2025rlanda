@@ -210,15 +210,57 @@ const StudentPage = () => {
     }
   };
 
+  // Cambios de layout para ancho completo
+  // Añade una clase extra al admin-container para ancho completo
+  // Opcional: Puedes mover estos estilos a tu CSS si prefieres
+
   return (
-    <div className="admin-container">
+    <div
+      className="admin-container"
+      style={{
+        width: '98vw',
+        maxWidth: '100vw',
+        minHeight: '100vh',
+        margin: '10px auto',
+        padding: '0 0px',
+        overflowX: 'hidden',
+        background: 'var(--primary-bg, #f6f6f9)',
+      }}
+    >
       {/* Header / Cabecera */}
-      <header className="admin-header">
-        <div className="header-content">
+      <header
+        className="admin-header"
+        style={{
+          width: '100%',
+          maxWidth: '100vw',
+          margin: 0,
+          padding: '0 0 0 0',
+        }}
+      >
+        <div className="header-content"
+          style={{
+            width: '100%',
+            maxWidth: '100vw',
+            margin: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '22px 2vw 16px 2vw',
+          }}
+        >
           <h1 className="admin-title">📚 Panel del Estudiante</h1>
           <ThemeToggle />
         </div>
-        <nav className="admin-nav">
+        <nav
+          className="admin-nav"
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: 12,
+            width: '100%',
+            padding: '0 0 14px 0',
+          }}
+        >
           <button onClick={() => setActiveSection('inicio')} className="nav-item">🏠 Inicio</button>
           <button onClick={() => setActiveSection('anuncios')} className="nav-item">📢 Anuncios</button>
           <button onClick={() => setActiveSection('labs')} className="nav-item">🧑‍💻 Laboratorios</button>
@@ -227,10 +269,25 @@ const StudentPage = () => {
       </header>
 
       {/* Main content */}
-      <main className="admin-main">
+      <main
+        className="admin-main"
+        style={{
+          width: '100vw',
+          maxWidth: '100vw',
+          minHeight: '80vh',
+          margin: 0,
+          padding: 0,
+        }}
+      >
         {/* Inicio */}
         {activeSection === 'inicio' && (
-          <div>
+          <div style={{
+            width: '100%',
+            padding: '38px 2vw 0 2vw',
+            boxSizing: 'border-box',
+            maxWidth: 1800,
+            margin: '0 auto'
+          }}>
             <h2>🏫 Bienvenido al Panel del Estudiante</h2>
             <p>Aquí podrás ver los anuncios y archivos compartidos por los administradores.</p>
           </div>
@@ -238,7 +295,16 @@ const StudentPage = () => {
 
         {/* Anuncios */}
         {activeSection === 'anuncios' && (
-          <div className="anuncios-container">
+          <div
+            className="anuncios-container"
+            style={{
+              width: '100%',
+              padding: '38px 2vw 0 2vw',
+              boxSizing: 'border-box',
+              maxWidth: 1800,
+              margin: '0 auto'
+            }}
+          >
             <h2>📢 Anuncios Recientes</h2>
             {loadingAnuncios ? (
               <p>Cargando anuncios...</p>
@@ -266,13 +332,15 @@ const StudentPage = () => {
           <div
             className="wizard-labs"
             style={{
-              maxWidth: 1040,
+              width: '100%',
+              maxWidth: 1800,
               margin: '0 auto',
-              padding: '24px 32px',
+              padding: '38px 2vw',
               background: '#fff',
-              borderRadius: 18,
-              boxShadow: '0 2px 16px #0001',
-              minHeight: 600,
+              borderRadius: 22,
+              boxShadow: '0 4px 32px #0001',
+              minHeight: 650,
+              boxSizing: 'border-box',
             }}
           >
             {/* Paso 1: Selección de perfil */}
@@ -340,16 +408,76 @@ const StudentPage = () => {
                 }}>
                   ← Volver a la selección de laboratorios
                 </button>
-                <div>
+                {/* Sticky barra superior con audio + startlab */}
+                <div style={{
+                  position: 'sticky',
+                  top: 16,
+                  zIndex: 10,
+                  background: '#23234d',
+                  borderRadius: 12,
+                  boxShadow: '0 2px 8px #0002',
+                  marginBottom: 28,
+                  padding: '14px 22px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 18,
+                  flexWrap: 'wrap',
+                  minHeight: 64,
+                  maxWidth: 1400,
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                }}>
+                  <h4 style={{
+                    margin: 0,
+                    marginRight: 18,
+                    color: '#ebe6ff',
+                    fontWeight: 600,
+                    fontSize: 17,
+                    whiteSpace: 'nowrap'
+                  }}>
+                    🎧 Escucha la guía del laboratorio
+                  </h4>
+                  <audio controls
+                    src={LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs[selectedLab].audio}
+                    style={{
+                      width: 240,
+                      minWidth: 120,
+                      maxWidth: 320,
+                      marginBottom: 0,
+                      marginRight: 12,
+                      background: 'transparent',
+                    }}
+                  />
+                  <button
+                    onClick={() => setShowConfirmStart(true)}
+                    className="start-lab-btn"
+                    style={{
+                      padding: '10px 22px',
+                      fontSize: 16,
+                      background: 'linear-gradient(to right, #421e80, #8b5cf6)',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: 9,
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      boxShadow: '0 2px 8px #0002',
+                      minWidth: 120,
+                      minHeight: 40,
+                      marginLeft: 12
+                    }}
+                  >
+                    🚀 Start Lab
+                  </button>
+                </div>
+                <div style={{
+                  width: '100%',
+                  maxWidth: 1400,
+                  marginLeft: 'auto',
+                  marginRight: 'auto'
+                }}>
                   <h3 style={{ marginBottom: 14 }}>
                     {LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs[selectedLab].name}
                   </h3>
-                  {/* Audio guía */}
-                  <div style={{ marginBottom: 16, background: '#23234d', padding: '12px 18px', borderRadius: 10 }}>
-                    <h4 style={{ margin: 0, marginBottom: 8, color: '#ebe6ff' }}>🎧 Escucha la guía del laboratorio</h4>
-                    <audio controls src={LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs[selectedLab].audio} style={{ width: '100%' }} />
-                  </div>
-                  {/* Markdown */}
                   <div style={{ width: '100%', overflow: 'hidden' }}>
                     <ReactMarkdown
                       components={{
@@ -372,18 +500,6 @@ const StudentPage = () => {
                       {loadingMarkdown ? 'Cargando guía del laboratorio...' : markdown}
                     </ReactMarkdown>
                   </div>
-                  {/* Botón Start Lab */}
-                  <button
-                    onClick={() => setShowConfirmStart(true)}
-                    className="start-lab-btn"
-                    style={{
-                      width: '100%', marginTop: 24, padding: '14px 0', fontSize: 18,
-                      background: 'linear-gradient(to right, #421e80, #8b5cf6)',
-                      color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, cursor: 'pointer'
-                    }}
-                  >
-                    🚀 Start Lab
-                  </button>
                 </div>
               </div>
             )}
