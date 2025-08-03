@@ -2,7 +2,7 @@
 import { Amplify } from 'aws-amplify';
 import { generateClient } from 'aws-amplify/api';
 import type { GraphQLResult, GraphQLQuery } from '@aws-amplify/api';
-import awsconfig from '../../aws-exports';
+import awsconfig from '../aws-exports';
 
 // Tipo simplificado para el cliente
 type SafeAmplifyClient = {
