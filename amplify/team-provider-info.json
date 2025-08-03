@@ -1,4 +1,22 @@
 {
+  "main": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-stibaquiraelabs2025r-main-22dfd-authRole",
+      "UnauthRoleArn": "arn:aws:iam::147997125454:role/amplify-stibaquiraelabs2025r-main-22dfd-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::147997125454:role/amplify-stibaquiraelabs2025r-main-22dfd-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-stibaquiraelabs2025r-main-22dfd-deployment",
+      "UnauthRoleName": "amplify-stibaquiraelabs2025r-main-22dfd-unauthRole",
+      "StackName": "amplify-stibaquiraelabs2025r-main-22dfd",
+      "StackId": "arn:aws:cloudformation:us-east-1:147997125454:stack/amplify-stibaquiraelabs2025r-main-22dfd/c10dc500-7013-11f0-bb08-0affe7365411",
+      "AmplifyAppId": "d13aw71quh9lew"
+    },
+    "categories": {
+      "auth": {
+        "educatelabs673e18d9": {}
+      }
+    }
+  },
   "dev": {
     "awscloudformation": {
       "AuthRoleName": "amplify-educatelabs-dev-6edf6-authRole",
