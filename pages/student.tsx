@@ -1,195 +1,103 @@
 'use client';
-import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { generateClient } from 'aws-amplify/api';
-import { signOut } from 'aws-amplify/auth';
-import * as subscriptions from '../src/graphql/subscriptions';
-import { listUltimos5Anuncios } from '../src/graphql/queries';
-import type { GraphQLSubscription, GraphQLQuery } from '@aws-amplify/api';
-import type { OnCreateAnunciosSubscription, Anuncios, AnunciosConnection } from '../src/API';
-import '../public/styles/admin.css';
-import { useRouter } from 'next/navigation';
-import ThemeToggle from '../src/app/context/ThemeToggle'; // Nuevo import
+import React, { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 
-// Sonido de notificación
-const notificationSound = 'https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3';
+const LABS_DE_DATA_ENGINEER = [
+  { name: 'Lab 1', md: '/labs/dataengineer/lab1.md', audio: '/labs/dataengineer/lab1.wav' },
+  { name: 'Lab 2', md: '/labs/dataengineer/lab2.md', audio: '/labs/dataengineer/lab2.wav' },
+  { name: 'Lab 3', md: '/labs/dataengineer/lab3.md', audio: '/labs/dataengineer/lab3.wav' },
+  { name: 'Lab 4', md: '/labs/dataengineer/lab4.md', audio: '/labs/dataengineer/lab4.wav' },
+];
 
-const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutos en milisegundos
-
-interface Anuncio {
-  id: string;
-  content: string | null;
-  createdAt: string | null;
-}
+// Perfiles de labs (escalable a futuro)
+const LAB_PROFILES = [
+  {
+    key: 'dataengineer',
+    label: 'Labs - Data Engineer',
+    image: '/labs/dataengineer/profile.png', // Puedes poner la ruta de imagen aquí, déjalo preparado
+    labs: LABS_DE_DATA_ENGINEER,
+  },
+  // Añade más perfiles aquí
+];
 
 const StudentPage = () => {
-  const [ultimoAnuncio, setUltimoAnuncio] = useState<{
-    content: string;
-    id: string;
-  } | null>(null);
-  const [anuncios, setAnuncios] = useState<Anuncio[]>([]);
-  const [activeSection, setActiveSection] = useState('inicio');
-  const [loadingAnuncios, setLoadingAnuncios] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null!);
-  const inactivityTimer = useRef<NodeJS.Timeout | null>(null);
-  const lastActivityRef = useRef(Date.now());
-  const router = useRouter();
+  // Estado navegación general
+  const [activeSection, setActiveSection] = useState<'inicio' | 'anuncios' | 'labs'>('inicio');
+  const [selectedProfile, setSelectedProfile] = useState<string | null>(null);
+  const [selectedLab, setSelectedLab] = useState<number | null>(null);
 
-  const handleSignOut = useCallback(async () => {
+  // Estado de recursos de lab
+  const [markdown, setMarkdown] = useState<string>('');
+  const [loadingMarkdown, setLoadingMarkdown] = useState(false);
+
+  // Modal de confirmación para Start Lab
+  const [showConfirmStart, setShowConfirmStart] = useState(false);
+  const [startLabStatus, setStartLabStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [errorMsg, setErrorMsg] = useState('');
+
+  // Cuando cambias de sección, reinicia flujo de labs
+  useEffect(() => {
+    setSelectedProfile(null);
+    setSelectedLab(null);
+    setMarkdown('');
+    setLoadingMarkdown(false);
+    setShowConfirmStart(false);
+    setStartLabStatus('idle');
+    setErrorMsg('');
+  }, [activeSection]);
+
+  // Cargar el markdown cuando seleccionas lab
+  useEffect(() => {
+    if (
+      selectedProfile &&
+      selectedLab !== null &&
+      LAB_PROFILES.some((p) => p.key === selectedProfile)
+    ) {
+      const profile = LAB_PROFILES.find((p) => p.key === selectedProfile)!;
+      const lab = profile.labs[selectedLab];
+      setLoadingMarkdown(true);
+      fetch(lab.md)
+        .then((res) => res.text())
+        .then((text) => setMarkdown(text))
+        .catch(() => setMarkdown('# Error al cargar la guía de laboratorio.'))
+        .finally(() => setLoadingMarkdown(false));
+    }
+  }, [selectedProfile, selectedLab]);
+
+  // Lógica para llamar tu API Lambda cuando confirma iniciar lab
+  const handleConfirmStartLab = async () => {
+    setStartLabStatus('loading');
+    setErrorMsg('');
     try {
-      await signOut();
-      router.push('/');
-    } catch (err) {
-      console.error('Error al cerrar sesión:', err);
+      // TODO: Ajusta aquí la llamada a tu API/Lambda (ejemplo usando fetch)
+      setTimeout(() => {
+        setStartLabStatus('success');
+      }, 800); // Simula éxito
+    } catch (err: any) {
+      setStartLabStatus('error');
+      setErrorMsg(err.message || 'Error al iniciar laboratorio');
     }
-  }, [router]);
-
-  // Configurar temporizador de inactividad
-  useEffect(() => {
-    const setupInactivityTimer = () => {
-      if (inactivityTimer.current) {
-        clearTimeout(inactivityTimer.current);
-      }
-      inactivityTimer.current = setTimeout(() => {
-        handleSignOut();
-      }, INACTIVITY_TIMEOUT);
-    };
-
-    const events = ['mousemove', 'keydown', 'click', 'scroll'];
-    const resetActivity = () => {
-      lastActivityRef.current = Date.now();
-      setupInactivityTimer();
-    };
-
-    events.forEach(event => {
-      window.addEventListener(event, resetActivity);
-    });
-
-    setupInactivityTimer();
-
-    return () => {
-      if (inactivityTimer.current) {
-        clearTimeout(inactivityTimer.current);
-      }
-      events.forEach(event => {
-        window.removeEventListener(event, resetActivity);
-      });
-    };
-  }, [handleSignOut]);
-
-  // Cargar el sonido
-  useEffect(() => {
-    audioRef.current = new Audio(notificationSound);
-    audioRef.current.volume = 0.3;
-  }, []);
-
-  // Cargar anuncios iniciales
-  const fetchAnuncios = useCallback(async () => {
-    try {
-      setLoadingAnuncios(true);
-      const client = generateClient();
-      const result = await client.graphql<GraphQLQuery<{ listAnuncios: AnunciosConnection }>>({
-        query: listUltimos5Anuncios
-      });
-      
-      if (result.data?.listAnuncios?.items) {
-        // Ordenar los anuncios por fecha descendente (más recientes primero)
-        const items = result.data.listAnuncios.items
-          .filter((item): item is Anuncios => item !== null)
-          .sort((a, b) => {
-            const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-            const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-            return dateB - dateA; // Orden descendente
-          })
-          .slice(0, 5); // Tomar solo los 5 más recientes
-
-        setAnuncios(items);
-      }
-    } catch (error) {
-      console.error('Error al cargar anuncios:', error);
-    } finally {
-      setLoadingAnuncios(false);
-    }
-  }, []);
-
-  // Cargar anuncios cuando se entra a la sección
-  useEffect(() => {
-    if (activeSection === 'anuncios') {
-      fetchAnuncios();
-    }
-  }, [activeSection, fetchAnuncios]);
-
-  // Suscripción a nuevos anuncios
-  useEffect(() => {
-    const client = generateClient();
-    
-    console.log('Iniciando suscripción a anuncios...');
-
-    const subscription = client
-      .graphql<GraphQLSubscription<OnCreateAnunciosSubscription>>({ 
-        query: subscriptions.onCreateAnuncios
-      })
-      .subscribe({
-        next: ({ data }) => {
-          if (data?.onCreateAnuncios) {
-            console.log('Nuevo anuncio recibido:', data.onCreateAnuncios);
-            
-            audioRef.current.play().catch(e => console.warn('Error al reproducir sonido:', e));
-
-            setUltimoAnuncio({
-              id: data.onCreateAnuncios.id,
-              content: data.onCreateAnuncios.content || 'Nuevo anuncio'
-            });
-
-            // Actualizar la lista de anuncios si estamos en esa sección
-            if (activeSection === 'anuncios') {
-              fetchAnuncios();
-            }
-          }
-        },
-        error: (error) => {
-          console.error('Error en suscripción:', error);
-        }
-      });
-
-    return () => {
-      console.log('Deteniendo suscripción...');
-      subscription.unsubscribe();
-    };
-  }, [activeSection, fetchAnuncios]);
-
-  const handleCerrarAnuncio = () => {
-    setUltimoAnuncio(null);
   };
 
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return 'Fecha desconocida';
-    
-    const date = new Date(dateString);
-    return date.toLocaleString('es-ES', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
+  // Render principal
   return (
     <div className="admin-container">
+      {/* Header / Cabecera */}
       <header className="admin-header">
         <div className="header-content">
           <h1 className="admin-title">📚 Panel del Estudiante</h1>
-          <ThemeToggle /> {/* Añadido el toggle de tema */}
         </div>
         <nav className="admin-nav">
           <button onClick={() => setActiveSection('inicio')} className="nav-item">🏠 Inicio</button>
           <button onClick={() => setActiveSection('anuncios')} className="nav-item">📢 Anuncios</button>
-          <button onClick={() => setActiveSection('lab1')} className="nav-item">🧪 Lab1</button>
-          <button onClick={handleSignOut} className="admin-logout-button">🚪 Salir</button>
+          <button onClick={() => setActiveSection('labs')} className="nav-item">🧑‍💻 Laboratorios</button>
+          <button onClick={() => { window.location.href = '/'; }} className="admin-logout-button">🚪 Salir</button>
         </nav>
       </header>
 
+      {/* Main content */}
       <main className="admin-main">
+        {/* Inicio */}
         {activeSection === 'inicio' && (
           <div>
             <h2>🏫 Bienvenido al Panel del Estudiante</h2>
@@ -197,98 +105,173 @@ const StudentPage = () => {
           </div>
         )}
 
+        {/* Anuncios */}
         {activeSection === 'anuncios' && (
-          <div className="anuncios-container">
+          <div>
             <h2>📢 Anuncios Recientes</h2>
-            
-            {loadingAnuncios ? (
-              <p>Cargando anuncios...</p>
-            ) : anuncios.length === 0 ? (
-              <p>No hay anuncios recientes.</p>
-            ) : (
-              <ul className="anuncios-list">
-                {anuncios.map((anuncio) => (
-                  <li key={anuncio.id} className="anuncio-item">
-                    <div className="anuncio-content">
-                      {anuncio.content || 'Anuncio sin contenido'}
+            <p>Acá iría tu lógica de anuncios...</p>
+          </div>
+        )}
+
+        {/* Laboratorios - Wizard */}
+        {activeSection === 'labs' && (
+            <div
+              className="wizard-labs"
+              style={{
+                maxWidth: 1040, // Más ancho
+                margin: '0 auto',
+                padding: '24px 32px',
+                background: '#fff',
+                borderRadius: 18,
+                boxShadow: '0 2px 16px #0001',
+                minHeight: 600,
+              }}
+            >
+            {/* Paso 1: Selección de perfil */}
+            {!selectedProfile && (
+              <>
+                <h2 style={{ textAlign: 'center', marginBottom: 28 }}>Selecciona el perfil de laboratorios</h2>
+                <div style={{ display: 'flex', gap: 24, justifyContent: 'center', flexWrap: 'wrap' }}>
+                  {LAB_PROFILES.map((profile) => (
+                    <div key={profile.key} style={{
+                      display: 'flex', flexDirection: 'column', alignItems: 'center',
+                      background: '#2a2157', borderRadius: 14, padding: 28, minWidth: 220,
+                      cursor: 'pointer', boxShadow: '0 2px 16px #0004', transition: 'transform 0.15s'
+                    }}
+                      onClick={() => setSelectedProfile(profile.key)}
+                    >
+                      {/* Imagen de perfil (por si la añades luego) */}
+                      <div style={{
+                        width: 70, height: 70, borderRadius: '50%', background: '#513c9e',
+                        marginBottom: 18, display: 'flex', alignItems: 'center', justifyContent: 'center'
+                      }}>
+                        {profile.image
+                          ? <img src={profile.image} alt={profile.label} style={{ width: 60, height: 60, borderRadius: '50%' }} />
+                          : <span style={{ fontSize: 32 }}>🧑‍💻</span>
+                        }
+                      </div>
+                      <span style={{ fontSize: 19, fontWeight: 600, color: '#fff', textAlign: 'center' }}>
+                        {profile.label}
+                      </span>
                     </div>
-                    <div className="anuncio-date">
-                      {formatDate(anuncio.createdAt)}
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Paso 2: Selección de laboratorio */}
+            {selectedProfile && selectedLab === null && (
+              <>
+                <button onClick={() => setSelectedProfile(null)} style={{
+                  marginBottom: 18, background: 'none', border: 'none', color: '#a78bfa', cursor: 'pointer'
+                }}>← Volver a la selección de perfiles</button>
+                <h3 style={{ textAlign: 'center', marginBottom: 24 }}>Elige un laboratorio</h3>
+                <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
+                  {LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs.map((lab, idx) => (
+                    <div key={lab.md}
+                      style={{
+                        background: '#32296a', borderRadius: 12, padding: 22, minWidth: 190,
+                        display: 'flex', flexDirection: 'column', alignItems: 'center',
+                        marginBottom: 15, cursor: 'pointer', boxShadow: '0 2px 12px #0002'
+                      }}
+                      onClick={() => setSelectedLab(idx)}
+                    >
+                      <span style={{ fontSize: 17, fontWeight: 600, color: '#fff', marginBottom: 10 }}>{lab.name}</span>
+                      <span style={{ fontSize: 32 }}>🧪</span>
                     </div>
-                  </li>
-                ))}
-              </ul>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Paso 3: Contenido del laboratorio seleccionado */}
+            {selectedProfile && selectedLab !== null && (
+              <div>
+                <button onClick={() => setSelectedLab(null)} style={{
+                  marginBottom: 20, background: 'none', border: 'none', color: '#a78bfa', cursor: 'pointer'
+                }}>
+                  ← Volver a la selección de laboratorios
+                </button>
+                <div>
+                  <h3 style={{ marginBottom: 14 }}>
+                    {LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs[selectedLab].name}
+                  </h3>
+                  {/* Audio guía */}
+                  <div style={{ marginBottom: 16, background: '#23234d', padding: '12px 18px', borderRadius: 10 }}>
+                    <h4 style={{ margin: 0, marginBottom: 8, color: '#ebe6ff' }}>🎧 Escucha la guía del laboratorio</h4>
+                    <audio controls src={LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs[selectedLab].audio} style={{ width: '100%' }} />
+                  </div>
+                  {/* Markdown */}
+                  <div style={{ width: '100%', overflow: 'hidden' }}>
+                    <ReactMarkdown
+                      components={{
+                        img: ({ node, ...props }) => (
+                          <img
+                            {...props}
+                            style={{
+                              maxWidth: '100%',
+                              height: 'auto',
+                              display: 'block',
+                              margin: '20px auto',
+                              borderRadius: 12,
+                              boxShadow: '0 2px 8px #0002',
+                            }}
+                            alt={props.alt || 'imagen'}
+                          />
+                        ),
+                        // Puedes personalizar más tags aquí
+                      }}
+                    >
+                      {loadingMarkdown ? 'Cargando guía del laboratorio...' : markdown}
+                    </ReactMarkdown>
+                  </div>
+                  {/* Botón Start Lab */}
+                  <button
+                    onClick={() => setShowConfirmStart(true)}
+                    className="start-lab-btn"
+                    style={{
+                      width: '100%', marginTop: 24, padding: '14px 0', fontSize: 18,
+                      background: 'linear-gradient(to right, #421e80, #8b5cf6)',
+                      color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, cursor: 'pointer'
+                    }}
+                  >
+                    🚀 Start Lab
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Paso 4: Confirmación de inicio de laboratorio */}
+            {showConfirmStart && (
+              <div style={{
+                position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+                background: 'rgba(0,0,0,0.55)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1100
+              }}>
+                <div style={{
+                  background: '#191942', borderRadius: 16, boxShadow: '0 6px 24px #0009',
+                  padding: 28, minWidth: 320, maxWidth: 380, color: '#fff', position: 'relative', textAlign: 'center'
+                }}>
+                  <button onClick={() => setShowConfirmStart(false)} style={{
+                    position: 'absolute', top: 8, right: 16, background: 'transparent', color: '#fff', fontSize: 24, border: 'none', cursor: 'pointer'
+                  }}>×</button>
+                  <h2>¿Seguro que quieres iniciar este laboratorio?</h2>
+                  <p>Se te asignará un entorno temporal y se te llevará a la consola de AWS (si la API responde correctamente).</p>
+                  {startLabStatus === 'idle' && (
+                    <button onClick={handleConfirmStartLab} style={{
+                      marginTop: 18, padding: '13px 26px', fontSize: 18, borderRadius: 8,
+                      background: 'linear-gradient(to right, #421e80, #8b5cf6)', color: '#fff',
+                      border: 'none', fontWeight: 700, cursor: 'pointer'
+                    }}>Sí, iniciar laboratorio</button>
+                  )}
+                  {startLabStatus === 'loading' && <p>Procesando solicitud...</p>}
+                  {startLabStatus === 'success' && <p style={{ color: '#4ade80' }}>¡Laboratorio iniciado con éxito!</p>}
+                  {startLabStatus === 'error' && <p style={{ color: '#fb7185' }}>Error: {errorMsg}</p>}
+                </div>
+              </div>
             )}
           </div>
         )}
-
-        {activeSection === 'lab1' && (
-          <div className="pdf-viewer-container">
-            <h2>🧪 Laboratorio 1</h2>
-            <div className="pdf-actions">
-              <a 
-                href="https://d-9067c9ba63.awsapps.com/start/#/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="external-link-button"
-              >
-                🔗 Acceso a AWS SSO
-              </a>
-            </div>
-            
-            <div className="pdf-embed-container">
-              <div style={{ 
-                position: 'relative', 
-                width: '100%', 
-                height: 0, 
-                paddingTop: '56.2500%',
-                paddingBottom: 0, 
-                boxShadow: '0 2px 8px 0 rgba(63,69,81,0.16)', 
-                marginTop: '1.6em', 
-                marginBottom: '0.9em', 
-                overflow: 'hidden',
-                borderRadius: '8px', 
-                willChange: 'transform'
-              }}>
-                <iframe 
-                  loading="lazy" 
-                  style={{ 
-                    position: 'absolute', 
-                    width: '100%', 
-                    height: '100%', 
-                    top: 0, 
-                    left: 0, 
-                    border: 'none', 
-                    padding: 0,
-                    margin: 0 
-                  }}
-                  src="https://www.canva.com/design/DAGkK7P_NtI/wZywW3PyxrVWwHLXWeXtLw/view?embed" 
-                  allowFullScreen
-                >
-                </iframe>
-              </div>
-            </div>
-          </div>
-        )}
       </main>
-
-      {ultimoAnuncio && (
-        <div className="announcement-overlay">
-          <div className="announcement-modal">
-            <button 
-              onClick={handleCerrarAnuncio}
-              className="announcement-close-button"
-              aria-label="Cerrar anuncio"
-            >
-              ×
-            </button>
-            <h3>¡Nuevo Anuncio!</h3>
-            <p className="announcement-content">
-              {ultimoAnuncio.content}
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

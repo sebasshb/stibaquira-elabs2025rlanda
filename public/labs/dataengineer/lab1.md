@@ -4,7 +4,7 @@ En este laboratorio se le proporcionará un entorno en el cual ya está levantad
 Su objetivo es crear una Instancia RDS a partir de la VPC proporcionada, la creación del security group para la RDS, y el RDS Subnet Group
 necesario para la creación de la misma.
 
-<img src="https://raw.githubusercontent.com/sebasshb/Laboratorio-RDS/refs/heads/main/LabRDSArch.png" alt="image" style="max-width:30%; display:block; margin:20px 0;">
+![image](https://raw.githubusercontent.com/sebasshb/Laboratorio-RDS/refs/heads/main/LabRDSArch.png)
 
 ## Creación del Security Group para RDS
 
@@ -150,4 +150,4 @@ Ahora procedemos a crear un Subnet Group para la Instancia RDS que vamos a despl
 
 Ha completado el laboratorio satisfactoriamente.
 
-<img src="https://raw.githubusercontent.com/sebasshb/Laboratorio-RDS/refs/heads/main/LabRDSFinalArch.png" alt="image" style="max-width:35%; display:block; margin:20px 0;">
+![image](https://raw.githubusercontent.com/sebasshb/Laboratorio-RDS/refs/heads/main/LabRDSFinalArch.png)

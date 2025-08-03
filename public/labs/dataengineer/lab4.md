@@ -8,7 +8,7 @@ Athena es un servicio de consulta que permite analizar datos directamente desde 
 
 Cada vez que ejecutas una consulta en Athena, los resultados deben almacenarse en algún lugar, y por defecto, Athena los guarda en un bucket S3. Este paso es obligatorio porque Athena necesita escribirlos en un archivo que puedas revisar, descargar o reutilizar más adelante. Es por eso que en este laboratorio debes crear dos buckets S3 uno para los datos de origen que vas a consultar y otro para los resultados de las consultas que ejecutes con Athena.
 
-<img src="https://raw.githubusercontent.com/iscatalan/arquitecturas/refs/heads/main/Arquitectura%20Athena.png" alt="image" style="max-width:55%; display:block; margin:20px 0;">
+![S3](https://raw.githubusercontent.com/iscatalan/arquitecturas/refs/heads/main/Arquitectura%20Athena.png)
 
 **Tarea 1: Extraer los datos para el trabajo del laboratorio**
 
