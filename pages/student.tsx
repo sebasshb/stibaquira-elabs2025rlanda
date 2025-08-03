@@ -1,7 +1,23 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 
+import { generateClient } from 'aws-amplify/api';
+import { signOut } from 'aws-amplify/auth';
+import * as subscriptions from '../src/graphql/subscriptions';
+import { listUltimos5Anuncios } from '../src/graphql/queries';
+import type { GraphQLSubscription, GraphQLQuery } from '@aws-amplify/api';
+import type { OnCreateAnunciosSubscription, Anuncios, AnunciosConnection } from '../src/API';
+import '../public/styles/admin.css';
+import { useRouter } from 'next/navigation';
+import ThemeToggle from '../src/app/context/ThemeToggle';
+
+// Sonido de notificación
+const notificationSound = 'https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3';
+
+const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutos en milisegundos
+
+// -------- Configuración de Labs ---------
 const LABS_DE_DATA_ENGINEER = [
   { name: 'Lab 1', md: '/labs/dataengineer/lab1.md', audio: '/labs/dataengineer/lab1.wav' },
   { name: 'Lab 2', md: '/labs/dataengineer/lab2.md', audio: '/labs/dataengineer/lab2.wav' },
@@ -9,33 +25,148 @@ const LABS_DE_DATA_ENGINEER = [
   { name: 'Lab 4', md: '/labs/dataengineer/lab4.md', audio: '/labs/dataengineer/lab4.wav' },
 ];
 
-// Perfiles de labs (escalable a futuro)
 const LAB_PROFILES = [
   {
     key: 'dataengineer',
     label: 'Labs - Data Engineer',
-    image: '/labs/dataengineer/profile.png', // Puedes poner la ruta de imagen aquí, déjalo preparado
+    image: '/labs/dataengineer/profile.png', // Preparado para soporte futuro de imagen de perfil
     labs: LABS_DE_DATA_ENGINEER,
   },
-  // Añade más perfiles aquí
+  // Puedes añadir más perfiles aquí fácilmente
 ];
 
+// --------- Main Componente --------------
 const StudentPage = () => {
+  // Estado anuncios y notificaciones
+  const [ultimoAnuncio, setUltimoAnuncio] = useState<{ content: string; id: string } | null>(null);
+  const [anuncios, setAnuncios] = useState<Anuncios[]>([]);
+  const [loadingAnuncios, setLoadingAnuncios] = useState(false);
+
   // Estado navegación general
   const [activeSection, setActiveSection] = useState<'inicio' | 'anuncios' | 'labs'>('inicio');
   const [selectedProfile, setSelectedProfile] = useState<string | null>(null);
   const [selectedLab, setSelectedLab] = useState<number | null>(null);
 
-  // Estado de recursos de lab
+  // Estado recursos labs
   const [markdown, setMarkdown] = useState<string>('');
   const [loadingMarkdown, setLoadingMarkdown] = useState(false);
 
-  // Modal de confirmación para Start Lab
+  // Modal confirmación start lab
   const [showConfirmStart, setShowConfirmStart] = useState(false);
   const [startLabStatus, setStartLabStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Cuando cambias de sección, reinicia flujo de labs
+  // Refs y router
+  const audioRef = useRef<HTMLAudioElement>(null!);
+  const inactivityTimer = useRef<NodeJS.Timeout | null>(null);
+  const lastActivityRef = useRef(Date.now());
+  const router = useRouter();
+
+  // Cerrar sesión con Amplify y router
+  const handleSignOut = useCallback(async () => {
+    try {
+      await signOut();
+      router.push('/');
+    } catch (err) {
+      console.error('Error al cerrar sesión:', err);
+    }
+  }, [router]);
+
+  // Inactividad automática
+  useEffect(() => {
+    const setupInactivityTimer = () => {
+      if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
+      inactivityTimer.current = setTimeout(() => { handleSignOut(); }, INACTIVITY_TIMEOUT);
+    };
+    const events = ['mousemove', 'keydown', 'click', 'scroll'];
+    const resetActivity = () => {
+      lastActivityRef.current = Date.now();
+      setupInactivityTimer();
+    };
+    events.forEach(event => window.addEventListener(event, resetActivity));
+    setupInactivityTimer();
+    return () => {
+      if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
+      events.forEach(event => window.removeEventListener(event, resetActivity));
+    };
+  }, [handleSignOut]);
+
+  // Cargar sonido notificación
+  useEffect(() => {
+    audioRef.current = new Audio(notificationSound);
+    audioRef.current.volume = 0.3;
+  }, []);
+
+  // Cargar anuncios iniciales
+  const fetchAnuncios = useCallback(async () => {
+    try {
+      setLoadingAnuncios(true);
+      const client = generateClient();
+      const result = await client.graphql<GraphQLQuery<{ listAnuncios: AnunciosConnection }>>({
+        query: listUltimos5Anuncios
+      });
+      if (result.data?.listAnuncios?.items) {
+        const items = result.data.listAnuncios.items
+          .filter((item): item is Anuncios => item !== null)
+          .sort((a, b) => {
+            const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+            const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+            return dateB - dateA;
+          })
+          .slice(0, 5);
+        setAnuncios(items);
+      }
+    } catch (error) {
+      console.error('Error al cargar anuncios:', error);
+    } finally {
+      setLoadingAnuncios(false);
+    }
+  }, []);
+
+  // Cargar anuncios cuando entras a la sección
+  useEffect(() => {
+    if (activeSection === 'anuncios') fetchAnuncios();
+  }, [activeSection, fetchAnuncios]);
+
+  // Suscripción a nuevos anuncios (tiempo real)
+  useEffect(() => {
+    const client = generateClient();
+    const subscription = client
+      .graphql<GraphQLSubscription<OnCreateAnunciosSubscription>>({
+        query: subscriptions.onCreateAnuncios
+      })
+      .subscribe({
+        next: ({ data }) => {
+          if (data?.onCreateAnuncios) {
+            audioRef.current.play().catch(e => console.warn('Error al reproducir sonido:', e));
+            setUltimoAnuncio({
+              id: data.onCreateAnuncios.id,
+              content: data.onCreateAnuncios.content || 'Nuevo anuncio'
+            });
+            if (activeSection === 'anuncios') fetchAnuncios();
+          }
+        },
+        error: (error) => {
+          console.error('Error en suscripción:', error);
+        }
+      });
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [activeSection, fetchAnuncios]);
+
+  const handleCerrarAnuncio = () => setUltimoAnuncio(null);
+
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return 'Fecha desconocida';
+    const date = new Date(dateString);
+    return date.toLocaleString('es-ES', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+  };
+
+  // --- Wizard Labs: limpiar flujo al cambiar de sección
   useEffect(() => {
     setSelectedProfile(null);
     setSelectedLab(null);
@@ -79,19 +210,19 @@ const StudentPage = () => {
     }
   };
 
-  // Render principal
   return (
     <div className="admin-container">
       {/* Header / Cabecera */}
       <header className="admin-header">
         <div className="header-content">
           <h1 className="admin-title">📚 Panel del Estudiante</h1>
+          <ThemeToggle />
         </div>
         <nav className="admin-nav">
           <button onClick={() => setActiveSection('inicio')} className="nav-item">🏠 Inicio</button>
           <button onClick={() => setActiveSection('anuncios')} className="nav-item">📢 Anuncios</button>
           <button onClick={() => setActiveSection('labs')} className="nav-item">🧑‍💻 Laboratorios</button>
-          <button onClick={() => { window.location.href = '/'; }} className="admin-logout-button">🚪 Salir</button>
+          <button onClick={handleSignOut} className="admin-logout-button">🚪 Salir</button>
         </nav>
       </header>
 
@@ -107,26 +238,43 @@ const StudentPage = () => {
 
         {/* Anuncios */}
         {activeSection === 'anuncios' && (
-          <div>
+          <div className="anuncios-container">
             <h2>📢 Anuncios Recientes</h2>
-            <p>Acá iría tu lógica de anuncios...</p>
+            {loadingAnuncios ? (
+              <p>Cargando anuncios...</p>
+            ) : anuncios.length === 0 ? (
+              <p>No hay anuncios recientes.</p>
+            ) : (
+              <ul className="anuncios-list">
+                {anuncios.map((anuncio) => (
+                  <li key={anuncio.id} className="anuncio-item">
+                    <div className="anuncio-content">
+                      {anuncio.content || 'Anuncio sin contenido'}
+                    </div>
+                    <div className="anuncio-date">
+                      {formatDate(anuncio.createdAt)}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         )}
 
-        {/* Laboratorios - Wizard */}
+        {/* Wizard Labs */}
         {activeSection === 'labs' && (
-            <div
-              className="wizard-labs"
-              style={{
-                maxWidth: 1040, // Más ancho
-                margin: '0 auto',
-                padding: '24px 32px',
-                background: '#fff',
-                borderRadius: 18,
-                boxShadow: '0 2px 16px #0001',
-                minHeight: 600,
-              }}
-            >
+          <div
+            className="wizard-labs"
+            style={{
+              maxWidth: 1040,
+              margin: '0 auto',
+              padding: '24px 32px',
+              background: '#fff',
+              borderRadius: 18,
+              boxShadow: '0 2px 16px #0001',
+              minHeight: 600,
+            }}
+          >
             {/* Paso 1: Selección de perfil */}
             {!selectedProfile && (
               <>
@@ -140,7 +288,7 @@ const StudentPage = () => {
                     }}
                       onClick={() => setSelectedProfile(profile.key)}
                     >
-                      {/* Imagen de perfil (por si la añades luego) */}
+                      {/* Imagen de perfil */}
                       <div style={{
                         width: 70, height: 70, borderRadius: '50%', background: '#513c9e',
                         marginBottom: 18, display: 'flex', alignItems: 'center', justifyContent: 'center'
@@ -219,7 +367,6 @@ const StudentPage = () => {
                             alt={props.alt || 'imagen'}
                           />
                         ),
-                        // Puedes personalizar más tags aquí
                       }}
                     >
                       {loadingMarkdown ? 'Cargando guía del laboratorio...' : markdown}
@@ -272,6 +419,25 @@ const StudentPage = () => {
           </div>
         )}
       </main>
+
+      {/* Overlay para anuncios en tiempo real */}
+      {ultimoAnuncio && (
+        <div className="announcement-overlay">
+          <div className="announcement-modal">
+            <button
+              onClick={handleCerrarAnuncio}
+              className="announcement-close-button"
+              aria-label="Cerrar anuncio"
+            >
+              ×
+            </button>
+            <h3>¡Nuevo Anuncio!</h3>
+            <p className="announcement-content">
+              {ultimoAnuncio.content}
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
