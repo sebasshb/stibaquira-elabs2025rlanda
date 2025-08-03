@@ -258,7 +258,7 @@ const StudentPage = () => {
             justifyContent: 'center',
             gap: 12,
             width: '100%',
-            padding: '0 0 14px 0',
+            padding: '0 0 14px',
           }}
         >
           <button onClick={() => setActiveSection('inicio')} className="nav-item">🏠 Inicio</button>
@@ -272,18 +272,18 @@ const StudentPage = () => {
       <main
         className="admin-main"
         style={{
-          width: '100vw',
+          width: '95vw',
           maxWidth: '100vw',
           minHeight: '80vh',
-          margin: 0,
-          padding: 0,
+          margin: '0 auto',
+          padding: '0 0px',
         }}
       >
         {/* Inicio */}
         {activeSection === 'inicio' && (
           <div style={{
             width: '100%',
-            padding: '38px 2vw 0 2vw',
+            padding: '0 12px',
             boxSizing: 'border-box',
             maxWidth: 1800,
             margin: '0 auto'
@@ -299,7 +299,7 @@ const StudentPage = () => {
             className="anuncios-container"
             style={{
               width: '100%',
-              padding: '38px 2vw 0 2vw',
+              padding: '0 100px',
               boxSizing: 'border-box',
               maxWidth: 1800,
               margin: '0 auto'
@@ -417,10 +417,10 @@ const StudentPage = () => {
                   borderRadius: 12,
                   boxShadow: '0 2px 8px #0002',
                   marginBottom: 28,
-                  padding: '14px 22px',
+                  padding: '10px 10px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 18,
+                  gap: 14,
                   flexWrap: 'wrap',
                   minHeight: 64,
                   maxWidth: 1400,
@@ -428,11 +428,11 @@ const StudentPage = () => {
                   marginRight: 'auto',
                 }}>
                   <h4 style={{
-                    margin: 0,
-                    marginRight: 18,
+                    margin: '12px',
+                    marginRight: 12,
                     color: '#ebe6ff',
                     fontWeight: 600,
-                    fontSize: 17,
+                    fontSize: 16,
                     whiteSpace: 'nowrap'
                   }}>
                     🎧 Escucha la guía del laboratorio
@@ -440,11 +440,12 @@ const StudentPage = () => {
                   <audio controls
                     src={LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs[selectedLab].audio}
                     style={{
-                      width: 240,
+                      width: 800,
                       minWidth: 120,
-                      maxWidth: 320,
+                      maxWidth: 920,
                       marginBottom: 0,
-                      marginRight: 12,
+                      padding: '20 100px',
+                      marginRight: 0,
                       background: 'transparent',
                     }}
                   />
@@ -452,8 +453,8 @@ const StudentPage = () => {
                     onClick={() => setShowConfirmStart(true)}
                     className="start-lab-btn"
                     style={{
-                      padding: '10px 22px',
-                      fontSize: 16,
+                      padding: '8px 75px',
+                      fontSize: 15,
                       background: 'linear-gradient(to right, #421e80, #8b5cf6)',
                       color: '#fff',
                       border: 'none',
@@ -471,7 +472,7 @@ const StudentPage = () => {
                 </div>
                 <div style={{
                   width: '100%',
-                  maxWidth: 1400,
+                  maxWidth: 1800,
                   marginLeft: 'auto',
                   marginRight: 'auto'
                 }}>
@@ -485,7 +486,7 @@ const StudentPage = () => {
                           <img
                             {...props}
                             style={{
-                              maxWidth: '100%',
+                              maxWidth: '90%',
                               height: 'auto',
                               display: 'block',
                               margin: '20px auto',
