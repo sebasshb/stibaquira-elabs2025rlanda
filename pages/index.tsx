@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { signIn, fetchUserAttributes, confirmSignIn } from 'aws-amplify/auth';
 import { Amplify } from 'aws-amplify';
-import awsExports from '../src/aws-exports';
+import awsExports from '../aws-exports';
 import { useRouter } from 'next/router';
 import '../public/styles/admin.css';
 import ThemeToggle from '../src/app/context/ThemeToggle'; // Nuevo import

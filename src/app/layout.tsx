@@ -1,6 +1,6 @@
 // src/app/layout.tsx
 import { Amplify } from 'aws-amplify';
-import awsconfig from "../aws-exports";
+import awsconfig from "../../aws-exports";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from './context/ThemeProvider'; // Nuevo import
