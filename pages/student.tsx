@@ -19,10 +19,10 @@ const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutos en milisegundos
 
 // -------- Configuración de Labs ---------
 const LABS_DE_DATA_ENGINEER = [
-  { name: 'Lab 1', md: '/labs/dataengineer/lab1.md', audio: '/labs/dataengineer/lab1.wav' },
-  { name: 'Lab 2', md: '/labs/dataengineer/lab2.md', audio: '/labs/dataengineer/lab2.wav' },
-  { name: 'Lab 3', md: '/labs/dataengineer/lab3.md', audio: '/labs/dataengineer/lab3.wav' },
-  { name: 'Lab 4', md: '/labs/dataengineer/lab4.md', audio: '/labs/dataengineer/lab4.wav' },
+  { name: 'Laboratorio RDS', md: '/labs/dataengineer/lab1.md', audio: '/labs/dataengineer/lab1.wav' },
+  { name: 'Laboratorio DMS', md: '/labs/dataengineer/lab2.md', audio: '/labs/dataengineer/lab2.wav' },
+  { name: 'Lab Serverless', md: '/labs/dataengineer/lab3.md', audio: '/labs/dataengineer/lab3.wav' },
+  { name: 'Lab Athena', md: '/labs/dataengineer/lab4.md', audio: '/labs/dataengineer/lab4.wav' },
 ];
 
 const LAB_PROFILES = [
@@ -218,7 +218,7 @@ const StudentPage = () => {
     <div
       className="admin-container"
       style={{
-        width: '98vw',
+        width: '90vw',
         maxWidth: '100vw',
         minHeight: '100vh',
         margin: '10px auto',
@@ -333,9 +333,9 @@ const StudentPage = () => {
             className="wizard-labs"
             style={{
               width: '100%',
-              maxWidth: 1800,
-              margin: '0 auto',
-              padding: '38px 2vw',
+              maxWidth: 1700,
+              margin: '0 12px',
+              padding: '10px 2vw',
               background: '#fff',
               borderRadius: 22,
               boxShadow: '0 4px 32px #0001',
@@ -404,7 +404,7 @@ const StudentPage = () => {
             {selectedProfile && selectedLab !== null && (
               <div>
                 <button onClick={() => setSelectedLab(null)} style={{
-                  marginBottom: 20, background: 'none', border: 'none', color: '#a78bfa', cursor: 'pointer'
+                  marginBottom: 10, marginTop: 0, background: 'none', border: 'none', color: '#00366B', cursor: 'pointer'
                 }}>
                   ← Volver a la selección de laboratorios
                 </button>
@@ -413,7 +413,7 @@ const StudentPage = () => {
                   position: 'sticky',
                   top: 16,
                   zIndex: 10,
-                  background: '#23234d',
+                  background: '#00366B',
                   borderRadius: 12,
                   boxShadow: '0 2px 8px #0002',
                   marginBottom: 28,
@@ -430,7 +430,7 @@ const StudentPage = () => {
                   <h4 style={{
                     margin: '12px',
                     marginRight: 12,
-                    color: '#ebe6ff',
+                    color: '#FFFFFF',
                     fontWeight: 600,
                     fontSize: 16,
                     whiteSpace: 'nowrap'
@@ -455,7 +455,7 @@ const StudentPage = () => {
                     style={{
                       padding: '8px 75px',
                       fontSize: 15,
-                      background: 'linear-gradient(to right, #421e80, #8b5cf6)',
+                      background: 'linear-gradient(to right,rgb(49, 131, 255),rgb(37, 95, 255))',
                       color: '#fff',
                       border: 'none',
                       borderRadius: 9,
@@ -472,24 +472,24 @@ const StudentPage = () => {
                 </div>
                 <div style={{
                   width: '100%',
-                  maxWidth: 1800,
-                  marginLeft: 'auto',
+                  maxWidth: 1500,
+                  marginLeft: '14px',
                   marginRight: 'auto'
                 }}>
-                  <h3 style={{ marginBottom: 14 }}>
+                  <h3 style={{ marginBottom: 0, color: '#737373', fontSize: 12}}>
                     {LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs[selectedLab].name}
                   </h3>
-                  <div style={{ width: '100%', overflow: 'hidden' }}>
+                  <div style={{ width: '102%', overflow: 'hidden' }}>
                     <ReactMarkdown
                       components={{
                         img: ({ node, ...props }) => (
                           <img
                             {...props}
                             style={{
-                              maxWidth: '90%',
+                              maxWidth: '80%',
                               height: 'auto',
                               display: 'block',
-                              margin: '20px auto',
+                              margin: '12px auto',
                               borderRadius: 12,
                               boxShadow: '0 2px 8px #0002',
                             }}
