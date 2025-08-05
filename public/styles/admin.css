@@ -1,9 +1,9 @@
 /* Variables de color y tipografía */
 :root {
   /* Light Theme */
-  --primary-color: #009ece; /* Azul claro */  
+  --primary-color: #001969; /* Azul claro */  
   --secondary-color: rgb(42, 16, 156); /* Azul */ 
-  --accent-color: #28a745; /* Verde */
+  --accent-color: #004177; /* Verde */
   --danger-color: #d30074; /* Rojo */
   --light-color: #f8f9fa;
   --dark-color: #3f3440;
@@ -47,10 +47,10 @@
 
 /* Dark Theme */
 [data-theme="dark"] {
-  --primary-color: rgb(42, 16, 156);
-  --secondary-color: #007cce;
-  --accent-color: #34a853;
-  --danger-color: #d30074;
+  --primary-color: #eac6ff;
+  --secondary-color: #007fe6;
+  --accent-color: #0065b8;
+  --danger-color: #050505;
   --light-color: #202124;
   --dark-color: #e8eaed;
   --text-color: #e8eaed;
@@ -241,7 +241,7 @@ body {
 }
 
 .admin-logout-button:hover {
-  background: #c9302c;
+  background: #ff004c;
   transform: translateY(-2px);
 }
 
@@ -290,7 +290,7 @@ body {
 }
 
 .button-primary:hover, .submit-btn:hover {
-  background: #218838;
+  background: #00639c;
   transform: translateY(-2px);
 }
 
