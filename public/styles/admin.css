@@ -1,8 +1,8 @@
 /* Variables de color y tipografía */
 :root {
   /* Light Theme */
-  --primary-color: #002147; /* Azul oscuro */
-  --secondary-color: #0056b3; /* Azul */
+  --primary-color: #002363; /* Azul claro */
+  --secondary-color: #0096D1; /* Azul */
   --accent-color: #28a745; /* Verde */
   --danger-color: #d9534f; /* Rojo */
   --light-color: #f8f9fa;

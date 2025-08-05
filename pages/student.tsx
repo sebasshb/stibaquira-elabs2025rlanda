@@ -220,7 +220,7 @@ const StudentPage = () => {
       style={{
         width: '87vw',
         maxWidth: '100vw',
-        minHeight: '100vh',
+        minHeight: '87vh',
         margin: '10px auto',
         padding: '0 0px',
         overflowX: 'hidden',
@@ -379,9 +379,9 @@ const StudentPage = () => {
             {selectedProfile && selectedLab === null && (
               <>
                 <button onClick={() => setSelectedProfile(null)} style={{
-                  marginBottom: 0, background: 'none', border: 'none', color: '#0096D1', cursor: 'pointer'
+                  marginBottom: 0, background: 'none', border: 'none', color: ' #0096D1', cursor: 'pointer'
                 }}>← Volver a la selección de perfiles</button>
-                <h3 style={{ textAlign: 'center', marginBottom: 27, marginTop: 0 , fontSize: 23 }}>Elige un laboratorio</h3>
+                <h3 style={{ textAlign: 'center', color: '#002363' , marginBottom: 27, marginTop: 0 , fontSize: 23 }}>Elige un laboratorio</h3>
                 <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
                   {LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs.map((lab, idx) => (
                     <div key={lab.md}
@@ -413,9 +413,9 @@ const StudentPage = () => {
                   position: 'sticky',
                   top: 16,
                   zIndex: 10,
-                  background: '#00366B',
+                  background: 'rgb(0, 108, 209)',
                   borderRadius: 12,
-                  boxShadow: '0 2px 8px #0002',
+                  boxShadow: '0 2px 8px #0096D1',
                   marginBottom: 28,
                   padding: '10px 10px',
                   display: 'flex',
@@ -455,7 +455,7 @@ const StudentPage = () => {
                     style={{
                       padding: '8px 75px',
                       fontSize: 15,
-                      background: 'linear-gradient(to right,rgb(49, 131, 255),rgb(37, 95, 255))',
+                      background: 'linear-gradient(to right, #0096D1,rgb(37, 95, 255))',
                       color: '#fff',
                       border: 'none',
                       borderRadius: 9,
