@@ -334,12 +334,13 @@ const StudentPage = () => {
             style={{
               width: '100%',
               maxWidth: 1630,
+              maxHeight: 'auto',
               margin: '0 19.6px',
               padding: '10px 2vw',
               background: '#fff',
               borderRadius: 22,
               boxShadow: '0 4px 32px #0096D1',
-              minHeight: 650,
+              minHeight: 735,
               boxSizing: 'border-box',
             }}
           >
@@ -351,7 +352,7 @@ const StudentPage = () => {
                   {LAB_PROFILES.map((profile) => (
                     <div key={profile.key} style={{
                       display: 'flex', flexDirection: 'column', alignItems: 'center',
-                      background: '#0096D1', borderRadius: 14, padding: 28, minWidth: 220,
+                      background: 'rgb(0, 108, 209)', borderRadius: 14, padding: 28, minWidth: 220,
                       cursor: 'pointer', boxShadow: '0 2px 16px #0096D1', transition: 'transform 0.15s'
                     }}
                       onClick={() => setSelectedProfile(profile.key)}
@@ -386,7 +387,7 @@ const StudentPage = () => {
                   {LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs.map((lab, idx) => (
                     <div key={lab.md}
                       style={{
-                        background: '#0096D1', borderRadius: 12, padding: 22, minWidth: 190,
+                        background: 'rgb(0, 108, 209)', borderRadius: 12, padding: 22, minWidth: 190,
                         display: 'flex', flexDirection: 'column', alignItems: 'center',
                         marginBottom: 15, cursor: 'pointer', boxShadow: '0 2px 12px #0096D1'
                       }}
@@ -476,20 +477,19 @@ const StudentPage = () => {
                   marginLeft: '14px',
                   marginRight: 'auto'
                 }}>
-                  <h3 style={{ marginBottom: 0, color: '#737373', fontSize: 12}}>
+                  <h3 style={{ marginBottom: 0, marginLeft: 75 , marginRight: 'auto' , color: '#0096D1', fontSize: 14}}>
                     {LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs[selectedLab].name}
                   </h3>
-                  <div style={{ width: '102%', overflow: 'hidden' }}>
+                  <div style={{ width: '90%', textAlign: 'justify', letterSpacing: '', fontSize: 17 , WebkitJustifyContent: 'center', marginLeft: 'auto', marginRight: 'auto' , overflow: 'hidden' }}>
                     <ReactMarkdown
                       components={{
                         img: ({ node, ...props }) => (
                           <img
                             {...props}
                             style={{
-                              maxWidth: '80%',
-                              height: 'auto',
+                              maxWidth: '70%',
                               display: 'block',
-                              margin: '12px auto',
+                              margin: '40px auto',
                               borderRadius: 12,
                               boxShadow: '0 2px 8px #0002',
                             }}

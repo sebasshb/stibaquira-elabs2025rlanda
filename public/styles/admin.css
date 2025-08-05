@@ -1,8 +1,8 @@
 /* Variables de color y tipografía */
 :root {
   /* Light Theme */
-  --primary-color: #002363; /* Azul claro */
-  --secondary-color: #0096D1; /* Azul */
+  --primary-color: #2c0091; /* Azul claro */
+  --secondary-color: rgb(0, 108, 209); /* Azul */
   --accent-color: #28a745; /* Verde */
   --danger-color: #d9534f; /* Rojo */
   --light-color: #f8f9fa;
@@ -161,7 +161,7 @@ body {
 }
 
 .nav-item:hover {
-  background: #003580;
+  background: #0096D1;
   transform: translateY(-2px);
 }
 
