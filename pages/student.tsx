@@ -22,7 +22,7 @@ const LABS_DE_DATA_ENGINEER = [
   { name: 'Laboratorio RDS', md: '/labs/dataengineer/lab1.md', audio: '/labs/dataengineer/lab1.wav' },
   { name: 'Laboratorio DMS', md: '/labs/dataengineer/lab2.md', audio: '/labs/dataengineer/lab2.wav' },
   { name: 'Lab Serverless', md: '/labs/dataengineer/lab3.md', audio: '/labs/dataengineer/lab3.wav' },
-  { name: 'Lab Athena', md: '/labs/dataengineer/lab4.md', audio: '/labs/dataengineer/lab4.wav' },
+  { name: 'Lab Athena', md: '/labs/dataengineer/lab4.md', audio: '/labs/dataengineer/lab4.md' },
 ];
 
 const LAB_PROFILES = [
@@ -211,8 +211,6 @@ const StudentPage = () => {
   };
 
   // Cambios de layout para ancho completo
-  // Añade una clase extra al admin-container para ancho completo
-  // Opcional: Puedes mover estos estilos a tu CSS si prefieres
 
   return (
     <div
@@ -224,7 +222,7 @@ const StudentPage = () => {
         margin: '10px auto',
         padding: '0 0px',
         overflowX: 'hidden',
-        background: 'var(--primary-bg, #f6f6f9)',
+        background: 'var(--primary-bg, var(--card-bg))',
       }}
     >
       {/* Header / Cabecera */}
@@ -337,9 +335,9 @@ const StudentPage = () => {
               maxHeight: 'auto',
               margin: '0 19.6px',
               padding: '10px 2vw',
-              background: '#fff',
+              background: 'var(--card-bg)',
               borderRadius: 22,
-              boxShadow: '0 4px 32px #0096D1',
+              boxShadow: '0 4px 32px var(--shadow-color)',
               minHeight: 735,
               boxSizing: 'border-box',
             }}
@@ -347,27 +345,40 @@ const StudentPage = () => {
             {/* Paso 1: Selección de perfil */}
             {!selectedProfile && (
               <>
-                <h2 style={{ textAlign: 'center', marginBottom: 30, marginTop: 20}}>Selecciona el perfil de laboratorios</h2>
+                <h2 style={{ textAlign: 'center', marginBottom: 30, marginTop: 20 }}>Selecciona el perfil de laboratorios</h2>
                 <div style={{ display: 'flex', gap: 24, justifyContent: 'center', flexWrap: 'wrap' }}>
                   {LAB_PROFILES.map((profile) => (
                     <div key={profile.key} style={{
-                      display: 'flex', flexDirection: 'column', alignItems: 'center',
-                      background: 'rgb(0, 108, 209)', borderRadius: 14, padding: 28, minWidth: 220,
-                      cursor: 'pointer', boxShadow: '0 2px 16px #0096D1', transition: 'transform 0.15s'
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      background: 'var(--secondary-color)',
+                      borderRadius: 14,
+                      padding: 28,
+                      minWidth: 220,
+                      cursor: 'pointer',
+                      boxShadow: '0 2px 16px var(--shadow-color)',
+                      transition: 'transform 0.15s'
                     }}
                       onClick={() => setSelectedProfile(profile.key)}
                     >
                       {/* Imagen de perfil */}
                       <div style={{
-                        width: 100, height: 100, borderRadius: '50%', background: '#E6F8FF',
-                        marginBottom: 18, display: 'flex', alignItems: 'center', justifyContent: 'center'
+                        width: 100,
+                        height: 100,
+                        borderRadius: '50%',
+                        background: 'var(--light-color)',
+                        marginBottom: 18,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
                       }}>
                         {profile.image
                           ? <img src={profile.image} alt={profile.label} style={{ width: 60, height: 60, borderRadius: '50%' }} />
                           : <span style={{ fontSize: 32 }}>🧑‍💻</span>
                         }
                       </div>
-                      <span style={{ fontSize: 19, fontWeight: 600, color: '#fff', textAlign: 'center' }}>
+                      <span style={{ fontSize: 19, fontWeight: 600, color: 'var(--dark-color)', textAlign: 'center' }}>
                         {profile.label}
                       </span>
                     </div>
@@ -380,20 +391,31 @@ const StudentPage = () => {
             {selectedProfile && selectedLab === null && (
               <>
                 <button onClick={() => setSelectedProfile(null)} style={{
-                  marginBottom: 0, background: 'none', border: 'none', color: ' #0096D1', cursor: 'pointer'
+                  marginBottom: 0,
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--secondary-color)',
+                  cursor: 'pointer'
                 }}>← Volver a la selección de perfiles</button>
-                <h3 style={{ textAlign: 'center', color: '#002363' , marginBottom: 27, marginTop: 0 , fontSize: 23 }}>Elige un laboratorio</h3>
+                <h3 style={{ textAlign: 'center', color: 'var(--primary-color)', marginBottom: 27, marginTop: 0, fontSize: 23 }}>Elige un laboratorio</h3>
                 <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
                   {LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs.map((lab, idx) => (
                     <div key={lab.md}
                       style={{
-                        background: 'rgb(0, 108, 209)', borderRadius: 12, padding: 22, minWidth: 190,
-                        display: 'flex', flexDirection: 'column', alignItems: 'center',
-                        marginBottom: 15, cursor: 'pointer', boxShadow: '0 2px 12px #0096D1'
+                        background: 'var(--secondary-color)',
+                        borderRadius: 12,
+                        padding: 22,
+                        minWidth: 190,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        marginBottom: 15,
+                        cursor: 'pointer',
+                        boxShadow: '0 2px 12px var(--shadow-color)'
                       }}
                       onClick={() => setSelectedLab(idx)}
                     >
-                      <span style={{ fontSize: 18, fontWeight: 600, color: '#fff', marginBottom: 10 }}>{lab.name}</span>
+                      <span style={{ fontSize: 18, fontWeight: 600, color: 'var(--dark-color)', marginBottom: 10 }}>{lab.name}</span>
                       <span style={{ fontSize: 32 }}>🧪</span>
                     </div>
                   ))}
@@ -405,7 +427,7 @@ const StudentPage = () => {
             {selectedProfile && selectedLab !== null && (
               <div>
                 <button onClick={() => setSelectedLab(null)} style={{
-                  marginBottom: 10, marginTop: 0, background: 'none', border: 'none', color: '#0096D1', cursor: 'pointer'
+                  marginBottom: 10, marginTop: 0, background: 'none', border: 'none', color: 'var(--secondary-color)', cursor: 'pointer'
                 }}>
                   ← Volver a la selección de laboratorios
                 </button>
@@ -414,9 +436,9 @@ const StudentPage = () => {
                   position: 'sticky',
                   top: 16,
                   zIndex: 10,
-                  background: 'rgb(0, 108, 209)',
+                  background: 'var(--secondary-color)',
                   borderRadius: 12,
-                  boxShadow: '0 2px 8px #0096D1',
+                  boxShadow: '0 2px 8px var(--shadow-color)',
                   marginBottom: 28,
                   padding: '10px 10px',
                   display: 'flex',
@@ -431,7 +453,7 @@ const StudentPage = () => {
                   <h4 style={{
                     margin: '12px',
                     marginRight: 12,
-                    color: '#FFFFFF',
+                    color: 'var(--dark-color)',
                     fontWeight: 600,
                     fontSize: 16,
                     whiteSpace: 'nowrap'
@@ -456,13 +478,13 @@ const StudentPage = () => {
                     style={{
                       padding: '8px 75px',
                       fontSize: 15,
-                      background: 'linear-gradient(to right, #0096D1,rgb(37, 95, 255))',
+                      background: 'linear-gradient(to right, var(--secondary-color), var(--primary-color))',
                       color: '#fff',
                       border: 'none',
                       borderRadius: 9,
                       fontWeight: 700,
                       cursor: 'pointer',
-                      boxShadow: '0 2px 8px #0002',
+                      boxShadow: '0 2px 8px var(--shadow-color)',
                       minWidth: 120,
                       minHeight: 40,
                       marginLeft: 12
@@ -477,10 +499,10 @@ const StudentPage = () => {
                   marginLeft: '14px',
                   marginRight: 'auto'
                 }}>
-                  <h3 style={{ marginBottom: 0, marginLeft: 75 , marginRight: 'auto' , color: '#0096D1', fontSize: 14}}>
+                  <h3 style={{ marginBottom: 0, marginLeft: 75, marginRight: 'auto', color: 'var(--secondary-color)', fontSize: 14 }}>
                     {LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs[selectedLab].name}
                   </h3>
-                  <div style={{ width: '90%', textAlign: 'justify', letterSpacing: '', fontSize: 17 , justifyContent: 'center', justifyItems: 'center', marginLeft: 'auto', marginRight: 'auto' , overflow: 'hidden' }}>
+                  <div style={{ width: '90%', textAlign: 'justify', letterSpacing: '', fontSize: 17, justifyContent: 'center', justifyItems: 'center', marginLeft: 'auto', marginRight: 'auto', overflow: 'hidden' }}>
                     <ReactMarkdown
                       components={{
                         img: ({ node, ...props }) => (
@@ -491,7 +513,7 @@ const StudentPage = () => {
                               display: 'block',
                               margin: '40px auto',
                               borderRadius: 12,
-                              boxShadow: '0 2px 8px #0002',
+                              boxShadow: '0 2px 8px var(--shadow-color)',
                             }}
                             alt={props.alt || 'imagen'}
                           />
@@ -512,8 +534,15 @@ const StudentPage = () => {
                 background: 'rgba(0,0,0,0.55)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1100
               }}>
                 <div style={{
-                  background: '#191942', borderRadius: 16, boxShadow: '0 6px 24px #0009',
-                  padding: 28, minWidth: 320, maxWidth: 380, color: '#fff', position: 'relative', textAlign: 'center'
+                  background: 'var(--primary-color)',
+                  borderRadius: 16,
+                  boxShadow: '0 6px 24px var(--shadow-color)',
+                  padding: 28,
+                  minWidth: 320,
+                  maxWidth: 380,
+                  color: '#fff',
+                  position: 'relative',
+                  textAlign: 'center'
                 }}>
                   <button onClick={() => setShowConfirmStart(false)} style={{
                     position: 'absolute', top: 8, right: 16, background: 'transparent', color: '#fff', fontSize: 24, border: 'none', cursor: 'pointer'
@@ -523,7 +552,7 @@ const StudentPage = () => {
                   {startLabStatus === 'idle' && (
                     <button onClick={handleConfirmStartLab} style={{
                       marginTop: 18, padding: '13px 26px', fontSize: 18, borderRadius: 8,
-                      background: 'linear-gradient(to right, #421e80, #8b5cf6)', color: '#fff',
+                      background: 'linear-gradient(to right, var(--primary-color), var(--secondary-color))', color: '#fff',
                       border: 'none', fontWeight: 700, cursor: 'pointer'
                     }}>Sí, iniciar laboratorio</button>
                   )}
