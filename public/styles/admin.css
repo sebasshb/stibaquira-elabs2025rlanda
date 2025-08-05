@@ -1,10 +1,10 @@
 /* Variables de color y tipografía */
 :root {
   /* Light Theme */
-  --primary-color: #2c0091; /* Azul claro */
-  --secondary-color: rgb(0, 108, 209); /* Azul */
+  --primary-color: #009ece; /* Azul claro */  
+  --secondary-color: rgb(42, 16, 156); /* Azul */ 
   --accent-color: #28a745; /* Verde */
-  --danger-color: #d9534f; /* Rojo */
+  --danger-color: #d30074; /* Rojo */
   --light-color: #f8f9fa;
   --dark-color: #3f3440;
   --text-color: #212529;
@@ -29,6 +29,10 @@
     radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99, 102, 241, 0.25), transparent 70%),
     #000; /* para los botones tipo cosmos */
 
+  --button-hover-gradient:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(241, 99, 234, 0.37), transparent 70%),
+    #000;
+
   /* Fondo para cards en modo claro */
   --card-gradient: 
     radial-gradient(circle at 30% 70%, rgba(173, 216, 230, 0.09), transparent 70%),
@@ -43,10 +47,10 @@
 
 /* Dark Theme */
 [data-theme="dark"] {
-  --primary-color: #a1b2ff;
-  --secondary-color: #1a73e8;
+  --primary-color: rgb(42, 16, 156);
+  --secondary-color: #007cce;
   --accent-color: #34a853;
-  --danger-color: #ea4335;
+  --danger-color: #d30074;
   --light-color: #202124;
   --dark-color: #e8eaed;
   --text-color: #e8eaed;
@@ -65,6 +69,10 @@
   
   --button-gradient:
     radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99, 102, 241, 0.25), transparent 70%),
+    #000;
+
+  --button-hover-gradient:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(241, 99, 234, 0.37), transparent 70%),
     #000;
 
   --bg-gradient:
@@ -213,7 +221,7 @@ body {
 }
 
 .nav-item:hover {
-  background: #0096D1;
+  background: var(--button-hover-gradient);
   transform: translateY(-2px);
 }
 
