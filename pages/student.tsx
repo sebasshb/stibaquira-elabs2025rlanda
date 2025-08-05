@@ -480,7 +480,7 @@ const StudentPage = () => {
                   <h3 style={{ marginBottom: 0, marginLeft: 75 , marginRight: 'auto' , color: '#0096D1', fontSize: 14}}>
                     {LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs[selectedLab].name}
                   </h3>
-                  <div style={{ width: '90%', textAlign: 'justify', letterSpacing: '', fontSize: 17 , WebkitJustifyContent: 'center', marginLeft: 'auto', marginRight: 'auto' , overflow: 'hidden' }}>
+                  <div style={{ width: '90%', textAlign: 'justify', letterSpacing: '', fontSize: 17 , justifyContent: 'center', justifyItems: 'center', marginLeft: 'auto', marginRight: 'auto' , overflow: 'hidden' }}>
                     <ReactMarkdown
                       components={{
                         img: ({ node, ...props }) => (
