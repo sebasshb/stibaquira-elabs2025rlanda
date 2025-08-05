@@ -218,7 +218,7 @@ const StudentPage = () => {
     <div
       className="admin-container"
       style={{
-        width: '90vw',
+        width: '87vw',
         maxWidth: '100vw',
         minHeight: '100vh',
         margin: '10px auto',
@@ -272,21 +272,21 @@ const StudentPage = () => {
       <main
         className="admin-main"
         style={{
-          width: '95vw',
+          width: '100vw',
           maxWidth: '100vw',
           minHeight: '80vh',
-          margin: '0 auto',
-          padding: '0 0px',
+          margin: '0 0px',
+          padding: '0 0',
         }}
       >
         {/* Inicio */}
         {activeSection === 'inicio' && (
           <div style={{
             width: '100%',
-            padding: '0 12px',
+            padding: '0 60px',
             boxSizing: 'border-box',
-            maxWidth: 1800,
-            margin: '0 auto'
+            maxWidth: 1400,
+            margin: '0 135px'
           }}>
             <h2>🏫 Bienvenido al Panel del Estudiante</h2>
             <p>Aquí podrás ver los anuncios y archivos compartidos por los administradores.</p>
@@ -298,11 +298,11 @@ const StudentPage = () => {
           <div
             className="anuncios-container"
             style={{
-              width: '100%',
-              padding: '0 100px',
+              width: '86%',
+              padding: '0 80px',
               boxSizing: 'border-box',
-              maxWidth: 1800,
-              margin: '0 auto'
+              maxWidth: 1700,
+              margin: '0 10px'
             }}
           >
             <h2>📢 Anuncios Recientes</h2>
@@ -333,12 +333,12 @@ const StudentPage = () => {
             className="wizard-labs"
             style={{
               width: '100%',
-              maxWidth: 1700,
-              margin: '0 12px',
+              maxWidth: 1630,
+              margin: '0 19.6px',
               padding: '10px 2vw',
               background: '#fff',
               borderRadius: 22,
-              boxShadow: '0 4px 32px #0001',
+              boxShadow: '0 4px 32px #0096D1',
               minHeight: 650,
               boxSizing: 'border-box',
             }}
@@ -346,19 +346,19 @@ const StudentPage = () => {
             {/* Paso 1: Selección de perfil */}
             {!selectedProfile && (
               <>
-                <h2 style={{ textAlign: 'center', marginBottom: 28 }}>Selecciona el perfil de laboratorios</h2>
+                <h2 style={{ textAlign: 'center', marginBottom: 30, marginTop: 20}}>Selecciona el perfil de laboratorios</h2>
                 <div style={{ display: 'flex', gap: 24, justifyContent: 'center', flexWrap: 'wrap' }}>
                   {LAB_PROFILES.map((profile) => (
                     <div key={profile.key} style={{
                       display: 'flex', flexDirection: 'column', alignItems: 'center',
-                      background: '#2a2157', borderRadius: 14, padding: 28, minWidth: 220,
-                      cursor: 'pointer', boxShadow: '0 2px 16px #0004', transition: 'transform 0.15s'
+                      background: '#0096D1', borderRadius: 14, padding: 28, minWidth: 220,
+                      cursor: 'pointer', boxShadow: '0 2px 16px #0096D1', transition: 'transform 0.15s'
                     }}
                       onClick={() => setSelectedProfile(profile.key)}
                     >
                       {/* Imagen de perfil */}
                       <div style={{
-                        width: 70, height: 70, borderRadius: '50%', background: '#513c9e',
+                        width: 100, height: 100, borderRadius: '50%', background: '#E6F8FF',
                         marginBottom: 18, display: 'flex', alignItems: 'center', justifyContent: 'center'
                       }}>
                         {profile.image
@@ -379,20 +379,20 @@ const StudentPage = () => {
             {selectedProfile && selectedLab === null && (
               <>
                 <button onClick={() => setSelectedProfile(null)} style={{
-                  marginBottom: 18, background: 'none', border: 'none', color: '#a78bfa', cursor: 'pointer'
+                  marginBottom: 0, background: 'none', border: 'none', color: '#0096D1', cursor: 'pointer'
                 }}>← Volver a la selección de perfiles</button>
-                <h3 style={{ textAlign: 'center', marginBottom: 24 }}>Elige un laboratorio</h3>
+                <h3 style={{ textAlign: 'center', marginBottom: 27, marginTop: 0 , fontSize: 23 }}>Elige un laboratorio</h3>
                 <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
                   {LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs.map((lab, idx) => (
                     <div key={lab.md}
                       style={{
-                        background: '#32296a', borderRadius: 12, padding: 22, minWidth: 190,
+                        background: '#0096D1', borderRadius: 12, padding: 22, minWidth: 190,
                         display: 'flex', flexDirection: 'column', alignItems: 'center',
-                        marginBottom: 15, cursor: 'pointer', boxShadow: '0 2px 12px #0002'
+                        marginBottom: 15, cursor: 'pointer', boxShadow: '0 2px 12px #0096D1'
                       }}
                       onClick={() => setSelectedLab(idx)}
                     >
-                      <span style={{ fontSize: 17, fontWeight: 600, color: '#fff', marginBottom: 10 }}>{lab.name}</span>
+                      <span style={{ fontSize: 18, fontWeight: 600, color: '#fff', marginBottom: 10 }}>{lab.name}</span>
                       <span style={{ fontSize: 32 }}>🧪</span>
                     </div>
                   ))}
@@ -404,7 +404,7 @@ const StudentPage = () => {
             {selectedProfile && selectedLab !== null && (
               <div>
                 <button onClick={() => setSelectedLab(null)} style={{
-                  marginBottom: 10, marginTop: 0, background: 'none', border: 'none', color: '#00366B', cursor: 'pointer'
+                  marginBottom: 10, marginTop: 0, background: 'none', border: 'none', color: '#0096D1', cursor: 'pointer'
                 }}>
                   ← Volver a la selección de laboratorios
                 </button>
