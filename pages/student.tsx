@@ -12,12 +12,10 @@ import '../public/styles/admin.css';
 import { useRouter } from 'next/navigation';
 import ThemeToggle from '../src/app/context/ThemeToggle';
 
-// Sonido de notificación
 const notificationSound = 'https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3';
 
-const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutos en milisegundos
+const INACTIVITY_TIMEOUT = 5 * 60 * 1000;
 
-// -------- Configuración de Labs ---------
 const LABS_DE_DATA_ENGINEER = [
   { name: 'Laboratorio RDS', md: '/labs/dataengineer/lab1.md', audio: '/labs/dataengineer/lab1.wav' },
   { name: 'Laboratorio DMS', md: '/labs/dataengineer/lab2.md', audio: '/labs/dataengineer/lab2.wav' },
@@ -29,40 +27,28 @@ const LAB_PROFILES = [
   {
     key: 'dataengineer',
     label: 'Labs - Data Engineer',
-    image: '/labs/dataengineer/profile.png', // Preparado para soporte futuro de imagen de perfil
+    image: '/labs/dataengineer/profile.png',
     labs: LABS_DE_DATA_ENGINEER,
   },
-  // Puedes añadir más perfiles aquí fácilmente
 ];
 
-// --------- Main Componente --------------
 const StudentPage = () => {
-  // Estado anuncios y notificaciones
   const [ultimoAnuncio, setUltimoAnuncio] = useState<{ content: string; id: string } | null>(null);
   const [anuncios, setAnuncios] = useState<Anuncios[]>([]);
   const [loadingAnuncios, setLoadingAnuncios] = useState(false);
-
-  // Estado navegación general
   const [activeSection, setActiveSection] = useState<'inicio' | 'anuncios' | 'labs'>('inicio');
   const [selectedProfile, setSelectedProfile] = useState<string | null>(null);
   const [selectedLab, setSelectedLab] = useState<number | null>(null);
-
-  // Estado recursos labs
   const [markdown, setMarkdown] = useState<string>('');
   const [loadingMarkdown, setLoadingMarkdown] = useState(false);
-
-  // Modal confirmación start lab
   const [showConfirmStart, setShowConfirmStart] = useState(false);
   const [startLabStatus, setStartLabStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
-
-  // Refs y router
   const audioRef = useRef<HTMLAudioElement>(null!);
   const inactivityTimer = useRef<NodeJS.Timeout | null>(null);
   const lastActivityRef = useRef(Date.now());
   const router = useRouter();
 
-  // Cerrar sesión con Amplify y router
   const handleSignOut = useCallback(async () => {
     try {
       await signOut();
@@ -72,7 +58,6 @@ const StudentPage = () => {
     }
   }, [router]);
 
-  // Inactividad automática
   useEffect(() => {
     const setupInactivityTimer = () => {
       if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
@@ -91,13 +76,11 @@ const StudentPage = () => {
     };
   }, [handleSignOut]);
 
-  // Cargar sonido notificación
   useEffect(() => {
     audioRef.current = new Audio(notificationSound);
     audioRef.current.volume = 0.3;
   }, []);
 
-  // Cargar anuncios iniciales
   const fetchAnuncios = useCallback(async () => {
     try {
       setLoadingAnuncios(true);
@@ -123,12 +106,10 @@ const StudentPage = () => {
     }
   }, []);
 
-  // Cargar anuncios cuando entras a la sección
   useEffect(() => {
     if (activeSection === 'anuncios') fetchAnuncios();
   }, [activeSection, fetchAnuncios]);
 
-  // Suscripción a nuevos anuncios (tiempo real)
   useEffect(() => {
     const client = generateClient();
     const subscription = client
@@ -166,7 +147,6 @@ const StudentPage = () => {
     });
   };
 
-  // --- Wizard Labs: limpiar flujo al cambiar de sección
   useEffect(() => {
     setSelectedProfile(null);
     setSelectedLab(null);
@@ -177,7 +157,6 @@ const StudentPage = () => {
     setErrorMsg('');
   }, [activeSection]);
 
-  // Cargar el markdown cuando seleccionas lab
   useEffect(() => {
     if (
       selectedProfile &&
@@ -195,22 +174,18 @@ const StudentPage = () => {
     }
   }, [selectedProfile, selectedLab]);
 
-  // Lógica para llamar tu API Lambda cuando confirma iniciar lab
   const handleConfirmStartLab = async () => {
     setStartLabStatus('loading');
     setErrorMsg('');
     try {
-      // TODO: Ajusta aquí la llamada a tu API/Lambda (ejemplo usando fetch)
       setTimeout(() => {
         setStartLabStatus('success');
-      }, 800); // Simula éxito
+      }, 800);
     } catch (err: any) {
       setStartLabStatus('error');
       setErrorMsg(err.message || 'Error al iniciar laboratorio');
     }
   };
-
-  // Cambios de layout para ancho completo
 
   return (
     <div
@@ -222,10 +197,8 @@ const StudentPage = () => {
         margin: '10px auto',
         padding: '0 0px',
         overflowX: 'hidden',
-        background: 'var(--primary-bg, var(--card-bg))',
       }}
     >
-      {/* Header / Cabecera */}
       <header
         className="admin-header"
         style={{
@@ -266,7 +239,6 @@ const StudentPage = () => {
         </nav>
       </header>
 
-      {/* Main content */}
       <main
         className="admin-main"
         style={{
@@ -277,7 +249,6 @@ const StudentPage = () => {
           padding: '0 0',
         }}
       >
-        {/* Inicio */}
         {activeSection === 'inicio' && (
           <div style={{
             width: '100%',
@@ -291,7 +262,6 @@ const StudentPage = () => {
           </div>
         )}
 
-        {/* Anuncios */}
         {activeSection === 'anuncios' && (
           <div
             className="anuncios-container"
@@ -325,7 +295,6 @@ const StudentPage = () => {
           </div>
         )}
 
-        {/* Wizard Labs */}
         {activeSection === 'labs' && (
           <div
             className="wizard-labs"
@@ -335,7 +304,6 @@ const StudentPage = () => {
               maxHeight: 'auto',
               margin: '0 19.6px',
               padding: '10px 2vw',
-              background: 'var(--card-bg)',
               borderRadius: 22,
               boxShadow: '0 4px 32px var(--shadow-color)',
               minHeight: 735,
@@ -348,18 +316,20 @@ const StudentPage = () => {
                 <h2 style={{ textAlign: 'center', marginBottom: 30, marginTop: 20 }}>Selecciona el perfil de laboratorios</h2>
                 <div style={{ display: 'flex', gap: 24, justifyContent: 'center', flexWrap: 'wrap' }}>
                   {LAB_PROFILES.map((profile) => (
-                    <div key={profile.key} style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      background: 'var(--secondary-color)',
-                      borderRadius: 14,
-                      padding: 28,
-                      minWidth: 220,
-                      cursor: 'pointer',
-                      boxShadow: '0 2px 16px var(--shadow-color)',
-                      transition: 'transform 0.15s'
-                    }}
+                    <div
+                      key={profile.key}
+                      className="wizard-profile-box"
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        borderRadius: 14,
+                        padding: 28,
+                        minWidth: 220,
+                        cursor: 'pointer',
+                        boxShadow: '0 2px 16px var(--shadow-color)',
+                        transition: 'transform 0.15s'
+                      }}
                       onClick={() => setSelectedProfile(profile.key)}
                     >
                       {/* Imagen de perfil */}
@@ -400,9 +370,10 @@ const StudentPage = () => {
                 <h3 style={{ textAlign: 'center', color: 'var(--primary-color)', marginBottom: 27, marginTop: 0, fontSize: 23 }}>Elige un laboratorio</h3>
                 <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
                   {LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs.map((lab, idx) => (
-                    <div key={lab.md}
+                    <div
+                      key={lab.md}
+                      className="wizard-lab-box"
                       style={{
-                        background: 'var(--secondary-color)',
                         borderRadius: 12,
                         padding: 22,
                         minWidth: 190,
@@ -432,24 +403,25 @@ const StudentPage = () => {
                   ← Volver a la selección de laboratorios
                 </button>
                 {/* Sticky barra superior con audio + startlab */}
-                <div style={{
-                  position: 'sticky',
-                  top: 16,
-                  zIndex: 10,
-                  background: 'var(--secondary-color)',
-                  borderRadius: 12,
-                  boxShadow: '0 2px 8px var(--shadow-color)',
-                  marginBottom: 28,
-                  padding: '10px 10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 14,
-                  flexWrap: 'wrap',
-                  minHeight: 64,
-                  maxWidth: 1400,
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
-                }}>
+                <div
+                  className="wizard-audio-bar"
+                  style={{
+                    position: 'sticky',
+                    top: 16,
+                    zIndex: 10,
+                    borderRadius: 12,
+                    boxShadow: '0 2px 8px var(--shadow-color)',
+                    marginBottom: 28,
+                    padding: '10px 10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 14,
+                    flexWrap: 'wrap',
+                    minHeight: 64,
+                    maxWidth: 1400,
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                  }}>
                   <h4 style={{
                     margin: '12px',
                     marginRight: 12,
@@ -566,7 +538,6 @@ const StudentPage = () => {
         )}
       </main>
 
-      {/* Overlay para anuncios en tiempo real */}
       {ultimoAnuncio && (
         <div className="announcement-overlay">
           <div className="announcement-modal">
