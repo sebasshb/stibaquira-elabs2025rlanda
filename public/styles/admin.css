@@ -184,10 +184,9 @@ body {
 /* Encabezado */
 .admin-header {
   width: 100%;
-  max-width: 1660px;
   background: var(--header-gradient);
   color: white;
-  padding: 1.5rem 0;
+  padding: 1.5rem 2vw 0.8rem 2vw;
   border-radius: var(--border-radius) var(--border-radius) 0 0;
   text-align: center;
   margin-bottom: 0rem;
@@ -207,8 +206,7 @@ body {
   justify-content: center;
   gap: 0.8rem;
   width: 100%;
-  margin-top: 0;
-  margin-bottom: 0.5rem;
+  margin: 0 0 1rem 0;
   box-sizing: border-box;
   /* Sin padding lateral aquí (si lo tienes, iguala al admin-header) */
 }
@@ -471,7 +469,7 @@ body {
   width: 100%;
   max-width: 1660px;
   margin: 0.7rem auto;
-  padding: 1.5rem 2vw;   /* vw para que no se pegue a los bordes en móviles */
+  padding: 0 0vw 1.5rem 0vw;   /* vw para que no se pegue a los bordes en móviles */
   min-height: 80vh;
   box-sizing: border-box;
 }
