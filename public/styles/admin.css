@@ -460,6 +460,33 @@ body {
   transform: translateY(-2px);
 }
 
+.admin-container {
+  width: 100%;
+  max-width: 1660px;
+  margin: 0.7rem auto;
+  padding: 1.5rem 2vw;   /* vw para que no se pegue a los bordes en móviles */
+  min-height: 80vh;
+  box-sizing: border-box;
+}
+
+/* Contenedores internos de secciones */
+.section-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto 2rem auto;
+  padding: 0 1.5vw;
+  box-sizing: border-box;
+}
+
+/* Wizard-labs container responsivo */
+.wizard-labs {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto 2rem auto;
+  padding: 1rem 2vw;
+  box-sizing: border-box;
+}
+
 /* Animaciones */
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -469,9 +496,14 @@ body {
 /* Media Queries para Responsive */
 @media (max-width: 768px) {
   .admin-container {
-    width: 98%;
-    margin: 1rem auto;
-    padding: 1rem;
+    padding: 1rem 2vw;
+    max-width: 100vw;
+    min-width: 0;
+  }
+
+  .section-container, .wizard-labs {
+    padding: 0 2vw;
+    max-width: 100vw;
   }
   
   .theme-switch {
@@ -491,7 +523,7 @@ body {
   }
   
   .admin-main {
-    padding: 1rem;
+    padding: 1rem 1vw;
   }
   
   .user-form-container, .login-container {

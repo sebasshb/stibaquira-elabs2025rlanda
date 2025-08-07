@@ -53,7 +53,7 @@ button {
 
 /* Estilo para el mensaje de error */
 .error-message {
-  color: red;
+  color: rgb(255, 0, 64);
   font-size: 14px;
   text-align: center;
   margin-top: 15px;

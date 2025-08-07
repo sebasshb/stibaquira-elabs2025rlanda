@@ -188,50 +188,13 @@ const StudentPage = () => {
   };
 
   return (
-    <div
-      className="admin-container"
-      style={{
-        width: '87vw',
-        maxWidth: '100vw',
-        minHeight: '87vh',
-        margin: '10px auto',
-        padding: '0 0px',
-        overflowX: 'hidden',
-      }}
-    >
-      <header
-        className="admin-header"
-        style={{
-          width: '100%',
-          maxWidth: '100vw',
-          margin: 0,
-          padding: '0 0 0 0',
-        }}
-      >
-        <div className="header-content"
-          style={{
-            width: '100%',
-            maxWidth: '100vw',
-            margin: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '22px 2vw 16px 2vw',
-          }}
-        >
+    <div className="admin-container">
+      <header className="admin-header">
+        <div className="header-content">
           <h1 className="admin-title">📚 Panel del Estudiante</h1>
           <ThemeToggle />
         </div>
-        <nav
-          className="admin-nav"
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: 12,
-            width: '100%',
-            padding: '0 0 14px',
-          }}
-        >
+        <nav className="admin-nav">
           <button onClick={() => setActiveSection('inicio')} className="nav-item">🏠 Inicio</button>
           <button onClick={() => setActiveSection('anuncios')} className="nav-item">📢 Anuncios</button>
           <button onClick={() => setActiveSection('labs')} className="nav-item">🧑‍💻 Laboratorios</button>
@@ -239,40 +202,16 @@ const StudentPage = () => {
         </nav>
       </header>
 
-      <main
-        className="admin-main"
-        style={{
-          width: '100vw',
-          maxWidth: '100vw',
-          minHeight: '80vh',
-          margin: '0 0px',
-          padding: '0 0',
-        }}
-      >
+      <main className="admin-main">
         {activeSection === 'inicio' && (
-          <div style={{
-            width: '100%',
-            padding: '0 60px',
-            boxSizing: 'border-box',
-            maxWidth: 1400,
-            margin: '0 135px'
-          }}>
+          <div className="section-container">
             <h2>🏫 Bienvenido al Panel del Estudiante</h2>
             <p>Aquí podrás ver los anuncios y archivos compartidos por los administradores.</p>
           </div>
         )}
 
         {activeSection === 'anuncios' && (
-          <div
-            className="anuncios-container"
-            style={{
-              width: '86%',
-              padding: '0 80px',
-              boxSizing: 'border-box',
-              maxWidth: 1700,
-              margin: '0 10px'
-            }}
-          >
+          <div className="anuncios-container">
             <h2>📢 Anuncios Recientes</h2>
             {loadingAnuncios ? (
               <p>Cargando anuncios...</p>
@@ -296,20 +235,7 @@ const StudentPage = () => {
         )}
 
         {activeSection === 'labs' && (
-          <div
-            className="wizard-labs"
-            style={{
-              width: '100%',
-              maxWidth: 1630,
-              maxHeight: 'auto',
-              margin: '0 19.6px',
-              padding: '10px 2vw',
-              borderRadius: 22,
-              boxShadow: '0 4px 32px var(--shadow-color)',
-              minHeight: 735,
-              boxSizing: 'border-box',
-            }}
-          >
+          <div className="wizard-labs">
             {/* Paso 1: Selección de perfil */}
             {!selectedProfile && (
               <>
@@ -465,16 +391,11 @@ const StudentPage = () => {
                     🚀 Start Lab
                   </button>
                 </div>
-                <div style={{
-                  width: '100%',
-                  maxWidth: 1500,
-                  marginLeft: '14px',
-                  marginRight: 'auto'
-                }}>
-                  <h3 style={{ marginBottom: 0, marginLeft: 75, marginRight: 'auto', color: 'var(--secondary-color)', fontSize: 14 }}>
+                <div className="section-container">
+                  <h3 style={{ marginBottom: 0, color: 'var(--secondary-color)', fontSize: 14 }}>
                     {LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs[selectedLab].name}
                   </h3>
-                  <div style={{ width: '90%', textAlign: 'justify', letterSpacing: '', fontSize: 17, justifyContent: 'center', justifyItems: 'center', marginLeft: 'auto', marginRight: 'auto', overflow: 'hidden' }}>
+                  <div style={{ width: '90%', textAlign: 'justify', fontSize: 17, marginLeft: 'auto', marginRight: 'auto', overflow: 'hidden' }}>
                     <ReactMarkdown
                       components={{
                         img: ({ node, ...props }) => (
