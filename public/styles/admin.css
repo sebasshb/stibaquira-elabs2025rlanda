@@ -415,7 +415,7 @@ body {
 .login-container {
   width: 95%;
   max-width: 400px;
-  margin: 3rem auto;
+  margin: 1.5rem auto;
   padding: 2rem;
   background: var(--card-gradient);
   border-radius: var(--border-radius);
@@ -604,4 +604,16 @@ body {
   box-shadow: 0 10px 30px rgba(0,0,0,0.35);
   user-select: none;
   -webkit-user-drag: none;
+}
+
+/* Logo encima del login */
+.login-logo {
+  text-align: center;
+  margin-top: clamp(2rem, 6vh, 1rem); /* espacio desde la parte superior */
+  margin-bottom: 1rem; /* espacio entre logo y login-container */
+}
+
+.login-logo img {
+  max-width: 160px;
+  height: auto;
 }
