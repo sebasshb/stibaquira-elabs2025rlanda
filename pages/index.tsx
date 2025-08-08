@@ -85,9 +85,7 @@ const LoginPage = () => {
   return (
     <>
       {/* Logo fuera del contenedor de login */}
-      <div className="login-logo">
-        <img src="/LogoMYO.png" alt="Logo Empresa" />
-      </div>
+      <div className="login-logo" aria-label="Logo Empresa" role="img" />
 
       {/* Contenedor de login */}
       <div className="login-container">

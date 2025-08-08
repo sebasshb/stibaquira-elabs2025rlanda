@@ -606,14 +606,24 @@ body {
   -webkit-user-drag: none;
 }
 
-/* Logo encima del login */
-.login-logo {
-  text-align: center;
-  margin-top: clamp(2rem, 6vh, 1rem); /* espacio desde la parte superior */
-  margin-bottom: 1rem; /* espacio entre logo y login-container */
+/* Variables para el logo por tema */
+:root {
+  --logo-url: url("/LogoMYO-light.png");
 }
 
-.login-logo img {
-  max-width: 160px;
-  height: auto;
+[data-theme="dark"] {
+  --logo-url: url("/LogoMYO-dark.png");
+}
+
+/* Bloque del logo (tamaño, render y sombra) */
+.login-logo {
+  display: block;
+  width: 360px; /* ajusta si necesitas más grande o más pequeño */
+  height: 120px;
+  margin: clamp(2rem, 6vh, 2rem) auto 1.2rem auto;
+  background-image: var(--logo-url);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  filter: drop-shadow(0 4px 8px rgba(201, 223, 255, 0.671)); /* sombra sutil y difusa */
 }
