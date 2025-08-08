@@ -1,24 +1,9 @@
 'use client';
 import React, { useState } from 'react';
 import { signIn, fetchUserAttributes, confirmSignIn } from 'aws-amplify/auth';
-import { Amplify } from 'aws-amplify';
-import awsExports from '../src/aws-exports';
 import { useRouter } from 'next/router';
 import '../public/styles/admin.css';
 import ThemeToggle from '../src/app/context/ThemeToggle';
-
-// Configuración de Amplify fuera del componente para que sea global
-Amplify.configure({
-  ...awsExports,
-  Auth: {
-    Cognito: {
-      userPoolId: awsExports.aws_user_pools_id,
-      userPoolClientId: awsExports.aws_user_pools_web_client_id,
-      identityPoolId: awsExports.aws_cognito_identity_pool_id,
-      allowGuestAccess: false
-    }
-  }
-});
 
 const LoginPage = () => {
   const [user, setUser] = useState<Partial<Record<string, string>> | null>(null);
@@ -33,18 +18,17 @@ const LoginPage = () => {
   const handleLogin = async () => {
     try {
       setError('');
-      const userData = await signIn({ username: email, password });
+      const userData = await signIn({ username: email.trim().toLowerCase(), password });
 
       if (userData.isSignedIn) {
         const attributes = await fetchUserAttributes();
         setUser(attributes);
 
-        // Redirección basada en el tipo de usuario
         const userType = attributes['custom:tipo'];
         if (userType === 'admin') {
-          router.push(`/admin?email=${encodeURIComponent(email)}`);
+          router.push(`/admin`);
         } else if (userType === 'student') {
-          router.push(`/student?email=${encodeURIComponent(email)}`);
+          router.push(`/student`);
         } else {
           setError('Rol de usuario no reconocido');
         }
@@ -84,10 +68,8 @@ const LoginPage = () => {
 
   return (
     <>
-      {/* Logo fuera del contenedor de login */}
       <div className="login-logo" aria-label="Logo Empresa" role="img" />
 
-      {/* Contenedor de login */}
       <div className="login-container">
         <ThemeToggle />
 
