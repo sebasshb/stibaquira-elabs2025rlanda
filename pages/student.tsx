@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { createPortal } from 'react-dom';
 
 import { generateClient } from 'aws-amplify/api';
 import { signOut } from 'aws-amplify/auth';
@@ -48,6 +49,9 @@ const StudentPage = () => {
   const inactivityTimer = useRef<NodeJS.Timeout | null>(null);
   const lastActivityRef = useRef(Date.now());
   const router = useRouter();
+
+  // Estado para lightbox de imágenes
+  const [lightboxImage, setLightboxImage] = useState<{ src: string; alt: string } | null>(null);
 
   const handleSignOut = useCallback(async () => {
     try {
@@ -185,6 +189,46 @@ const StudentPage = () => {
       setStartLabStatus('error');
       setErrorMsg(err.message || 'Error al iniciar laboratorio');
     }
+  };
+
+  // Manejo de tecla Esc y bloqueo de scroll cuando el lightbox está abierto
+  useEffect(() => {
+    if (!lightboxImage) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLightboxImage(null);
+    };
+    document.addEventListener('keydown', onKeyDown);
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [lightboxImage]);
+
+  // Render del overlay con Portal para ocupar toda la pantalla real
+  const renderLightbox = () => {
+    if (!lightboxImage || typeof window === 'undefined') return null;
+    return createPortal(
+      <div
+        className="image-lightbox-overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Imagen ampliada"
+        onClick={() => setLightboxImage(null)}
+      >
+        <img
+          className="image-lightbox-img"
+          src={lightboxImage.src}
+          alt={lightboxImage.alt || 'imagen ampliada'}
+          onClick={(e) => e.stopPropagation()}
+        />
+      </div>,
+      document.body
+    );
   };
 
   return (
@@ -398,15 +442,22 @@ const StudentPage = () => {
                   <div style={{ width: '90%', textAlign: 'justify', fontSize: 17, marginLeft: 'auto', marginRight: 'auto', overflow: 'hidden' }}>
                     <ReactMarkdown
                       components={{
+                        // Imágenes clicables para abrir lightbox
                         img: ({ node, ...props }) => (
                           <img
                             {...props}
+                            onClick={() => {
+                              if (props.src) {
+                                setLightboxImage({ src: typeof props.src === 'string' ? props.src : URL.createObjectURL(props.src), alt: props.alt ?? 'imagen' });
+                              }
+                            }}
                             style={{
                               maxWidth: '70%',
                               display: 'block',
                               margin: '40px auto',
                               borderRadius: 12,
                               boxShadow: '0 2px 8px var(--shadow-color)',
+                              cursor: 'zoom-in',
                             }}
                             alt={props.alt || 'imagen'}
                           />
@@ -476,6 +527,9 @@ const StudentPage = () => {
           </div>
         </div>
       )}
+
+      {/* Lightbox con Portal montado en <body> */}
+      {renderLightbox()}
     </div>
   );
 };

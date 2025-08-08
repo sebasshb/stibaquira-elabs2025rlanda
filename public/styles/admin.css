@@ -582,3 +582,26 @@ body {
   -webkit-backdrop-filter: blur(10px);
   transition: var(--transition);
 }
+
+/* 🔍 NUEVO: Lightbox para imágenes del markdown */
+.image-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2vw;
+  z-index: 1500;
+  cursor: zoom-out;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.image-lightbox-img {
+  max-width: 95vw;
+  max-height: 90vh;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  user-select: none;
+  -webkit-user-drag: none;
+}
