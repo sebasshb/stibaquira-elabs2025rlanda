@@ -20,7 +20,7 @@ const LABS_DE_DATA_ENGINEER = [
   { name: 'Laboratorio RDS', md: '/labs/dataengineer/lab1.md', audio: '/labs/dataengineer/lab1.wav' },
   { name: 'Laboratorio DMS', md: '/labs/dataengineer/lab2.md', audio: '/labs/dataengineer/lab2.wav' },
   { name: 'Lab Serverless', md: '/labs/dataengineer/lab3.md', audio: '/labs/dataengineer/lab3.wav' },
-  { name: 'Lab Athena', md: '/labs/dataengineer/lab4.md', audio: '/labs/dataengineer/lab4.md' },
+  { name: 'Lab Athena', md: '/labs/dataengineer/lab4.md', audio: '/labs/dataengineer/lab4.wav' },
 ];
 
 const LAB_PROFILES = [
