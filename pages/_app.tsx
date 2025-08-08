@@ -2,62 +2,35 @@
 import { Amplify } from 'aws-amplify';
 import type { AppProps } from 'next/app';
 import { useEffect } from 'react';
-import { ThemeProvider } from '../src/app/context/ThemeProvider'; // Nuevo import
+import { ThemeProvider } from '../src/app/context/ThemeProvider';
 
-// Configuración segura para todos los entornos
-const configureAmplify = () => {
-  const isProd = process.env.NODE_ENV === 'production';
-  
-  const graphqlConfig = {
-    endpoint: isProd 
-      ? process.env.NEXT_PUBLIC_APPSYNC_ENDPOINT!
-      : process.env.NEXT_PUBLIC_APPSYNC_ENDPOINT || 'https://wozkdm52wbbofozgb4wybcxo6m.appsync-api.us-east-1.amazonaws.com/graphql',
-    region: isProd
-      ? process.env.NEXT_PUBLIC_AWS_REGION!
-      : process.env.NEXT_PUBLIC_AWS_REGION || 'us-east-1',
-    apiKey: isProd
-      ? process.env.NEXT_PUBLIC_APPSYNC_API_KEY!
-      : process.env.NEXT_PUBLIC_APPSYNC_API_KEY || 'da2-iixru3au65bfxdo5c57o5zmytq',
-    defaultAuthMode: 'apiKey' as const
-  };
+// 👉 Fuente única de verdad: aws-exports del proyecto
+import awsExports from '../src/aws-exports';
 
-  const authConfig = {
-    userPoolId: isProd
-      ? process.env.NEXT_PUBLIC_USER_POOL_ID!
-      : process.env.NEXT_PUBLIC_USER_POOL_ID || 'us-east-1_286IFgoGt',
-    userPoolClientId: isProd
-      ? process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID!
-      : process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID || '2lhc218m2ua8835f9tsogo95uh',
-    identityPoolId: isProd
-      ? process.env.NEXT_PUBLIC_IDENTITY_POOL_ID!
-      : process.env.NEXT_PUBLIC_IDENTITY_POOL_ID || 'us-east-1:1bb1f48f-0b0b-4d94-8806-f66c417c7852'
-  };
+function configureAmplifyOnce() {
+  // Configura Amplify con aws-exports (evitamos env vars y mapeos)
+  Amplify.configure(awsExports);
 
-  Amplify.configure({
-    API: {
-      GraphQL: graphqlConfig
-    },
-    Auth: {
-      Cognito: authConfig
-    }
-  });
-
-  console.log('Amplify Config:', {
-    API: {
-      GraphQL: {
-        ...graphqlConfig,
-        apiKey: '***' + graphqlConfig.apiKey?.slice(-4)
-      }
-    },
-    Auth: {
-      Cognito: authConfig
-    }
-  });
-};
+  // Log útil (no expone secretos)
+  try {
+    const cfg: any = (Amplify as any).getConfig?.() || {};
+    const auth = cfg?.Auth || cfg?.auth || {};
+    const cognito = auth?.Cognito || {};
+    console.log('Amplify Auth config:', {
+      userPoolId: cognito.userPoolId || awsExports.aws_user_pools_id,
+      userPoolClientId:
+        '***' +
+        String(cognito.userPoolClientId || awsExports.aws_user_pools_web_client_id).slice(-4),
+      identityPoolId: cognito.identityPoolId || awsExports.aws_cognito_identity_pool_id,
+    });
+  } catch {
+    // noop
+  }
+}
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
-    configureAmplify();
+    configureAmplifyOnce();
   }, []);
 
   return (

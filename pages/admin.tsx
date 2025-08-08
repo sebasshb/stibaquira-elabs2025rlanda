@@ -1,6 +1,7 @@
 'use client';
-import React, { useState } from 'react';
-import { signOut } from 'aws-amplify/auth';
+import React, { useState, useEffect } from 'react';
+import { signOut, fetchUserAttributes } from 'aws-amplify/auth';
+import { useRouter } from 'next/navigation';
 import { generateClient } from 'aws-amplify/api';
 import { createAnuncios } from '../src/graphql/mutations';
 import '../public/styles/admin.css';
@@ -21,6 +22,22 @@ interface NewUser {
 }
 
 const AdminPage = () => {
+  const router = useRouter();
+
+  // 🔒 Verificar sesión al montar (redirige si no hay usuario)
+  useEffect(() => {
+    (async () => {
+      try {
+        const attrs = await fetchUserAttributes();
+        if (!attrs?.email) {
+          router.push('/');
+        }
+      } catch {
+        router.push('/');
+      }
+    })();
+  }, [router]);
+
   const [activeSection, setActiveSection] = useState('inicio');
   const [newAnnouncement, setNewAnnouncement] = useState('');
   const [isCreatingUser, setIsCreatingUser] = useState(false);

@@ -1,9 +1,9 @@
 'use client';
 import React, { useState } from 'react';
 import { signIn, fetchUserAttributes, confirmSignIn } from 'aws-amplify/auth';
-import { useRouter } from 'next/router';
 import '../public/styles/admin.css';
 import ThemeToggle from '../src/app/context/ThemeToggle';
+import { useRouter } from 'next/router';
 
 const LoginPage = () => {
   const [user, setUser] = useState<Partial<Record<string, string>> | null>(null);
@@ -18,61 +18,79 @@ const LoginPage = () => {
   const handleLogin = async () => {
     try {
       setError('');
-      const userData = await signIn({ username: email.trim().toLowerCase(), password });
-
+      const username = email.trim().toLowerCase();
+  
+      // 1) Intento con SRP (por defecto)
+      let userData = await signIn({ username, password });
+  
+      // 2) Si no quedó firmado, probamos USER_PASSWORD_AUTH (requiere permitirlo en el App client)
+      if (!userData.isSignedIn) {
+        try {
+          userData = await signIn({
+            username,
+            password,
+            options: { authFlowType: 'USER_PASSWORD_AUTH' },
+          });
+        } catch (e) {
+          // dejamos que lo maneje el catch general
+          throw e;
+        }
+      }
+  
+      // 3) Firmado OK -> ruta por rol
       if (userData.isSignedIn) {
         const attributes = await fetchUserAttributes();
-        setUser(attributes);
-
         const userType = attributes['custom:tipo'];
-        if (userType === 'admin') {
-          router.push(`/admin`);
-        } else if (userType === 'student') {
-          router.push(`/student`);
-        } else {
-          setError('Rol de usuario no reconocido');
-        }
-      } else if (userData.nextStep.signInStep === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED') {
+        if (userType === 'admin') router.push('/admin');
+        else if (userType === 'student') router.push('/student');
+        else setError('Rol de usuario no reconocido');
+        return;
+      }
+  
+      // 4) Retos comunes (p.ej. FORCE_CHANGE_PASSWORD)
+      if (userData.nextStep?.signInStep === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED') {
         setSession(userData);
         setStep('NEW_PASSWORD_REQUIRED');
+        return;
       }
-    } catch (err) {
+  
+      setError('No se pudo completar el inicio de sesión.');
+    } catch (err: any) {
       console.error('Error en login:', err);
-      setError(
-        err instanceof Error
-          ? err.name === 'NotAuthorizedException'
-            ? 'Credenciales incorrectas'
-            : err.message
-          : 'Error desconocido'
-      );
+      const name = err?.name || err?.__type || 'AuthError';
+      const msg =
+        name === 'NotAuthorizedException' ? 'Credenciales incorrectas'
+        : name === 'PasswordResetRequiredException' ? 'Debes cambiar la contraseña'
+        : name === 'UserNotConfirmedException' ? 'Debes confirmar tu correo'
+        : name === 'UserNotFoundException' ? 'El usuario no existe'
+        : err?.message || 'Error desconocido';
+      setError(`${msg} (${name})`);
     }
   };
+  
 
   const handleNewPasswordSubmit = async () => {
     try {
       if (!session) throw new Error('Sesión no disponible');
-
       await confirmSignIn({ challengeResponse: newPassword });
-
       setStep('SIGN_IN');
       setNewPassword('');
       setError('Contraseña actualizada. Inicia sesión nuevamente.');
-    } catch (err) {
+    } catch (err: any) {
+      const name = err?.name || err?.__type || 'AuthError';
       setError(
-        err instanceof Error
-          ? 'Error al actualizar contraseña: ' + err.message
-          : 'Error desconocido'
+        `Error al actualizar contraseña: ${err?.message || 'desconocido'} (${name})`
       );
     }
   };
 
   return (
     <>
+      {/* Logo afuera del contenedor */}
       <div className="login-logo" aria-label="Logo Empresa" role="img" />
 
       <div className="login-container">
         <ThemeToggle />
-
         <h2 className="login-title">Iniciar Sesión</h2>
 
         {step === 'SIGN_IN' ? (
@@ -103,9 +121,7 @@ const LoginPage = () => {
           </div>
         ) : (
           <div className="form-container">
-            <p className="password-message">
-              Debes establecer una nueva contraseña
-            </p>
+            <p className="password-message">Debes establecer una nueva contraseña</p>
             <input
               type="password"
               placeholder="Nueva contraseña"

@@ -50,7 +50,7 @@ const StudentPage = () => {
   const lastActivityRef = useRef(Date.now());
   const router = useRouter();
 
-  // 🔹 NUEVO: email del usuario autenticado (obtenido desde Cognito, no desde la URL)
+  // 🔹 Email del usuario autenticado (Cognito)
   const [userEmail, setUserEmail] = useState<string>('');
 
   // Estado para lightbox de imágenes
@@ -65,17 +65,21 @@ const StudentPage = () => {
     }
   }, [router]);
 
-  // 🔹 NUEVO: cargar atributos del usuario (email) al montar
+  // 🔒 Verificar sesión al montar (redirige si no hay usuario)
   useEffect(() => {
     (async () => {
       try {
         const attrs = await fetchUserAttributes();
-        if (attrs?.email) setUserEmail(attrs.email);
-      } catch (e) {
-        console.error('No se pudieron obtener los atributos del usuario:', e);
+        if (!attrs?.email) {
+          router.push('/');
+          return;
+        }
+        setUserEmail(attrs.email);
+      } catch {
+        router.push('/');
       }
     })();
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     const setupInactivityTimer = () => {
@@ -266,8 +270,7 @@ const StudentPage = () => {
           <div className="section-container">
             <h2>🏫 Bienvenido al Panel del Estudiante</h2>
             <p>Aquí podrás ver los anuncios y archivos compartidos por los administradores.</p>
-            {/* Si lo necesitas para debugging:
-            {userEmail && <p>Sesión: {userEmail}</p>} */}
+            {/* {userEmail && <p>Sesión: {userEmail}</p>} */}
           </div>
         )}
 
