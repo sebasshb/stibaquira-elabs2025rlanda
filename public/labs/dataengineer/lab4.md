@@ -1,6 +1,8 @@
-## Laboratorio Athena Quest
+# Laboratorio Athena Quest
 
-**Objetivo General:**  Aprender a usar los servicios de almacenamiento y análisis de datos en AWS, ya sea Amazon S3 y Amazon Athena para guardar datos y realizar consultas SQL que permitan explorar y analizar información 
+[Ver vídeo guía](https://workshopde-videos-lab.s3.us-east-1.amazonaws.com/lab_athena.mp4)
+
+**Objetivo General:**  Aprender a usar los servicios de almacenamiento y análisis de datos en AWS, ya sea Amazon S3 y Amazon Athena para guardar datos y realizar consultas SQL que permitan explorar y analizar información.
 
 **Introducción:**  S3 es un servicio de almacenamiento que permite guardar objetos de forma segura y escalable. La información se organiza en buckets y cada uno debe tener un nombre único a nivel global, es decir, no puede repetirse en ninguna otra cuenta de AWS del mundo. Además, por seguridad los buckets deben estar configurados para bloquear el acceso público. Esto evita que los datos sean visibles para cualquier persona y protege la privacidad de la información. 
 

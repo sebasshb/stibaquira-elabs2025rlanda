@@ -1,7 +1,8 @@
-## Laboratorio Serverless (DynamoDB - Lambda - API Gateway)
+# Laboratorio Serverless (DynamoDB - Lambda - API Gateway)
 
+[Ver vídeo guía](https://workshopde-videos-lab.s3.us-east-1.amazonaws.com/Lab_Serverless.mp4)
 
-**Objetivo General:** Aprender a integrar servicios de AWS como DynamoDB, Lambda y API Gateway en una arquitectura serverless que simula una API de usuarios. Se desarrollará una función Lambda conectada a DynamoDB, expuesta mediante rutas en API Gateway y se validará su funcionamiento utilizando los métodos GET y POST desde el navegador y CloudShell
+**Objetivo General:** Aprender a integrar servicios de AWS como DynamoDB, Lambda y API Gateway en una arquitectura serverless que simula una API de usuarios. Se desarrollará una función Lambda conectada a DynamoDB, expuesta mediante rutas en API Gateway y se validará su funcionamiento utilizando los métodos GET y POST desde el navegador y CloudShell. 
 
 
 

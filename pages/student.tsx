@@ -462,6 +462,20 @@ const StudentPage = () => {
                   <div style={{ width: '90%', textAlign: 'justify', fontSize: 17, marginLeft: 'auto', marginRight: 'auto', overflow: 'hidden' }}>
                     <ReactMarkdown
                       components={{
+                        // Personalizar el comportamiento de los enlaces
+                        a: ({ node, ...props }) => (
+                          <a
+                            {...props}
+                            target="_blank" // Abrir en una nueva pestaña
+                            rel="noopener noreferrer" // Seguridad adicional para evitar vulnerabilidades
+                            style={{
+                              color: 'var(--primary-color)', // Opcional: estilo para los enlaces
+                              textDecoration: 'underline',
+                            }}
+                          >
+                            {props.children}
+                          </a>
+                        ),
                         // Imágenes clicables para abrir lightbox
                         img: ({ node, ...props }) => (
                           <img
