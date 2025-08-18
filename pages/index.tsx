@@ -1,6 +1,12 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { signIn, fetchUserAttributes, confirmSignIn, signOut } from 'aws-amplify/auth';
+import {
+  signIn,
+  fetchUserAttributes,
+  confirmSignIn,
+  signOut,
+  getCurrentUser, // 👈 NUEVO
+} from 'aws-amplify/auth';
 import '../public/styles/admin.css';
 import ThemeToggle from '../src/app/context/ThemeToggle';
 import { useRouter } from 'next/router';
@@ -15,15 +21,30 @@ const LoginPage = () => {
   const [session, setSession] = useState<any>(null);
   const router = useRouter();
 
-  // 🚪 En login siempre limpiamos la sesión local (tokens, etc.)
+  // 🚪 Hard reset al montar: si hay sesión previa (CDN/cache), la cerramos.
   useEffect(() => {
-    // Ignoramos errores por si no hay sesión previa
-    signOut({ global: true }).catch(() => {});
+    (async () => {
+      try {
+        await getCurrentUser();            // ¿hay usuario?
+        await signOut({ global: true });   // ciérralo globalmente
+        await new Promise((r) => setTimeout(r, 50)); // pequeño delay para que se sincronicen los storages
+      } catch {
+        // no había sesión -> no-op
+      }
+    })();
   }, []);
 
   const handleLogin = async () => {
     try {
       setError('');
+
+      // 🔐 Doble seguro: justo antes de signIn, si Amplify "cree" que ya hay user, lo limpiamos.
+      try {
+        await getCurrentUser();
+        await signOut({ global: true });
+        await new Promise((r) => setTimeout(r, 50));
+      } catch {}
+
       const username = email.trim().toLowerCase();
 
       // 1) Intento con SRP (por defecto)
@@ -64,6 +85,7 @@ const LoginPage = () => {
         : name === 'PasswordResetRequiredException' ? 'Debes cambiar la contraseña'
         : name === 'UserNotConfirmedException' ? 'Debes confirmar tu correo'
         : name === 'UserNotFoundException' ? 'El usuario no existe'
+        : name === 'UserAlreadyAuthenticatedException' ? 'Ya hay una sesión activa; recargando estado…'
         : err?.message || 'Error desconocido';
       setError(`${msg} (${name})`);
     }
