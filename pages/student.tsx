@@ -18,16 +18,37 @@ const notificationSound = 'https://assets.mixkit.co/sfx/preview/mixkit-alarm-dig
 const INACTIVITY_TIMEOUT = 5 * 60 * 1000;
 
 const LABS_DE_DATA_ENGINEER = [
-  { name: 'Laboratorio RDS', md: '/labs/dataengineer/lab1.md', audio: '/labs/dataengineer/lab1.wav' },
-  { name: 'Laboratorio DMS', md: '/labs/dataengineer/lab2.md', audio: '/labs/dataengineer/lab2.wav' },
-  { name: 'Lab Serverless', md: '/labs/dataengineer/lab3.md', audio: '/labs/dataengineer/lab3.wav' },
-  { name: 'Lab Athena', md: '/labs/dataengineer/lab4.md', audio: '/labs/dataengineer/lab4.wav' },
+  {
+    name: 'Lab RDS',
+    md: '/labs/dataengineer/lab1.md',
+    audio: '/labs/dataengineer/lab1.wav',
+    image: '/labs/dataengineer/thumbnails/rds.png'
+  },
+  {
+    name: 'Lab DMS',
+    md: '/labs/dataengineer/lab2.md',
+    audio: '/labs/dataengineer/lab2.wav',
+    image: '/labs/dataengineer/thumbnails/dms.png'
+  },
+  {
+    name: 'Lab Serverless',
+    md: '/labs/dataengineer/lab3.md',
+    audio: '/labs/dataengineer/lab3.wav',
+    image: '/labs/dataengineer/thumbnails/serverless.png'
+  },
+  {
+    name: 'Lab Athena',
+    md: '/labs/dataengineer/lab4.md',
+    audio: '/labs/dataengineer/lab4.wav',
+    image: '/labs/dataengineer/thumbnails/athena.png'
+  },
 ];
+
 
 const LAB_PROFILES = [
   {
     key: 'dataengineer',
-    label: 'Labs - Data Engineer',
+    label: 'Data Engineer',
     image: '/labs/dataengineer/profile.png',
     labs: LABS_DE_DATA_ENGINEER,
   },
@@ -304,44 +325,20 @@ const StudentPage = () => {
             {!selectedProfile && (
               <>
                 <h2 style={{ textAlign: 'center', marginBottom: 30, marginTop: 20 }}>Selecciona el perfil de laboratorios</h2>
-                <div style={{ display: 'flex', gap: 24, justifyContent: 'center', flexWrap: 'wrap' }}>
+                <div className="profiles-grid">
                   {LAB_PROFILES.map((profile) => (
-                    <div
+                    <button
                       key={profile.key}
-                      className="wizard-profile-box"
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        borderRadius: 14,
-                        padding: 28,
-                        minWidth: 220,
-                        cursor: 'pointer',
-                        boxShadow: '0 2px 16px var(--shadow-color)',
-                        transition: 'transform 0.15s'
-                      }}
+                      className="wizard-profile-box image-card"
                       onClick={() => setSelectedProfile(profile.key)}
+                      aria-label={profile.label}
+                      type="button"
                     >
-                      {/* Imagen de perfil */}
-                      <div style={{
-                        width: 100,
-                        height: 100,
-                        borderRadius: '50%',
-                        background: 'var(--light-color)',
-                        marginBottom: 18,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}>
-                        {profile.image
-                          ? <img src={profile.image} alt={profile.label} style={{ width: 60, height: 60, borderRadius: '50%' }} />
-                          : <span style={{ fontSize: 32 }}>🧑‍💻</span>
-                        }
+                      <img src={profile.image} alt={profile.label} className="profile-image" />
+                      <div className="profile-caption">
+                        <span className="profile-title">{profile.label}</span>
                       </div>
-                      <span style={{ fontSize: 19, fontWeight: 600, color: 'var(--dark-color)', textAlign: 'center' }}>
-                        {profile.label}
-                      </span>
-                    </div>
+                    </button>
                   ))}
                 </div>
               </>
@@ -357,28 +354,24 @@ const StudentPage = () => {
                   color: 'var(--secondary-color)',
                   cursor: 'pointer'
                 }}>← Volver a la selección de perfiles</button>
-                <h3 style={{ textAlign: 'center', color: 'var(--primary-color)', marginBottom: 27, marginTop: 0, fontSize: 23 }}>Elige un laboratorio</h3>
-                <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
+                <h3 style={{ textAlign: 'center', color: 'var(--primary-color)', marginBottom: 27, marginTop: 0, fontSize: 23 }}>
+                  Elige un laboratorio
+                </h3>
+
+                <div className="labs-grid">
                   {LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs.map((lab, idx) => (
-                    <div
+                    <button
                       key={lab.md}
-                      className="wizard-lab-box"
-                      style={{
-                        borderRadius: 12,
-                        padding: 22,
-                        minWidth: 190,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        marginBottom: 15,
-                        cursor: 'pointer',
-                        boxShadow: '0 2px 12px var(--shadow-color)'
-                      }}
+                      type="button"
+                      className="lab-card"
                       onClick={() => setSelectedLab(idx)}
+                      aria-label={lab.name}
                     >
-                      <span style={{ fontSize: 18, fontWeight: 600, color: 'var(--dark-color)', marginBottom: 10 }}>{lab.name}</span>
-                      <span style={{ fontSize: 32 }}>🧪</span>
-                    </div>
+                      <img src={lab.image} alt={lab.name} className="lab-card__img" />
+                      <div className="lab-card__caption">
+                        <span className="lab-card__title">{lab.name}</span>
+                      </div>
+                    </button>
                   ))}
                 </div>
               </>

@@ -627,3 +627,155 @@ body {
   background-size: contain;
   filter: drop-shadow(0 4px 8px rgba(201, 223, 255, 0.671)); /* sombra sutil y difusa */
 }
+
+.profile-image-box {
+  width: 100%;
+  height: 180px; /* ajusta según el alto que quieras */
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+  overflow: hidden;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* ocupa toda la caja recortando si hace falta */
+  display: block;
+}
+
+/* Grid de perfiles */
+.profiles-grid {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: 'wrap';
+  padding: 0 1.5vw;
+}
+
+/* Tarjeta tipo imagen full-bleed */
+.wizard-profile-box.image-card {
+  position: relative;
+  overflow: hidden;
+  padding: 0;                       /* sin padding interno */
+  width: clamp(220px, 26vw, 320px);
+  aspect-ratio: 4 / 3;              /* proporción constante */
+  border-radius: 14px;
+  box-shadow: 0 2px 16px var(--shadow-color);
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease;
+  background: none !important;      /* sin fondo glass detrás de la imagen */
+  border: 0;                        /* sin borde glass */
+  display: block;
+}
+
+.wizard-profile-box.image-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px var(--shadow-color);
+}
+
+/* La imagen ocupa todo el card */
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;                /* recorta para llenar */
+  display: block;
+}
+
+/* Cinta inferior con blur para el texto */
+.profile-caption {
+  position: absolute;
+  inset: auto 0 0 0;                /* left:0; right:0; bottom:0 */
+  padding: 14px 16px;
+  color: #fff;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.45) 0%,
+    rgba(0,0,0,0.25) 60%,
+    rgba(0,0,0,0.05) 100%
+  );
+}
+
+/* Título legible sobre el blur */
+.profile-title {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .wizard-profile-box.image-card {
+    width: clamp(200px, 44vw, 300px);
+    aspect-ratio: 4 / 3;
+  }
+  .profile-title { font-size: 16px; }
+}
+
+/* ====== Labs grid con tarjetas de imagen ====== */
+.labs-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 0 1.5vw;
+}
+
+.lab-card {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  width: clamp(200px, 24vw, 300px);
+  aspect-ratio: 4 / 3;               /* proporción consistente */
+  border-radius: 12px;
+  box-shadow: 0 2px 12px var(--shadow-color);
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease;
+  background: none !important;       /* sin fondo glass detrás */
+  border: 0;
+  display: block;
+}
+
+.lab-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px var(--shadow-color);
+}
+
+.lab-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;                  /* ocupa toda la tarjeta */
+  display: block;
+}
+
+/* Banda inferior con blur para el texto */
+.lab-card__caption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 12px 14px;
+  color: #fff;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.45) 0%,
+    rgba(0,0,0,0.25) 60%,
+    rgba(0,0,0,0.05) 100%
+  );
+}
+
+.lab-card__title {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+}
+
+@media (max-width: 768px) {
+  .lab-card {
+    width: clamp(180px, 44vw, 300px);
+    aspect-ratio: 4 / 3;
+  }
+  .lab-card__title { font-size: 16px; }
+}
