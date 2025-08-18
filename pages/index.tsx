@@ -12,9 +12,9 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // 🧹 Reset local rápido al montar (sin red)
+  // 🧹 Limpieza local (sin red) + prefetch de rutas
   useEffect(() => {
-    signOut().catch(() => {}); // limpia storage local; no hace llamada a Cognito
+    signOut().catch(() => {}); // limpia storage local sin contactar Cognito
     router.prefetch('/student');
     router.prefetch('/admin');
   }, [router]);
@@ -27,7 +27,7 @@ const LoginPage = () => {
     try {
       const username = email.trim().toLowerCase();
 
-      // 🔐 Un solo flujo (elige el que uses en tu App client)
+      // 🔐 Un solo flujo de auth (ajústalo al que uses en tu App Client)
       const userData = await signIn({
         username,
         password,
@@ -38,7 +38,7 @@ const LoginPage = () => {
         throw new Error('No se pudo completar el inicio de sesión.');
       }
 
-      // 🎯 Toma el rol del ID token (sin fetchUserAttributes)
+      // 🎯 Toma el rol desde el ID token (sin fetchUserAttributes)
       const { tokens } = await fetchAuthSession();
       const payload = (tokens?.idToken?.payload || {}) as any;
       const userType =
@@ -63,7 +63,6 @@ const LoginPage = () => {
 
   return (
     <>
-      {/* Logo afuera del contenedor */}
       <div className="login-logo" aria-label="Logo Empresa" role="img" />
 
       <div className="login-container">
@@ -108,7 +107,7 @@ const LoginPage = () => {
 
 export default LoginPage;
 
-// 🛡️ Evitamos cachear la página de login (HTML) en CDN/navegador
+// 🛡️ No cache del HTML de login
 export async function getServerSideProps({ res }: any) {
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
   res.setHeader('Pragma', 'no-cache');
