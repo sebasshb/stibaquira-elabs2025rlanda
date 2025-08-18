@@ -1,6 +1,6 @@
 'use client';
-import React, { useState } from 'react';
-import { signIn, fetchUserAttributes, confirmSignIn } from 'aws-amplify/auth';
+import React, { useEffect, useState } from 'react';
+import { signIn, fetchUserAttributes, confirmSignIn, signOut } from 'aws-amplify/auth';
 import '../public/styles/admin.css';
 import ThemeToggle from '../src/app/context/ThemeToggle';
 import { useRouter } from 'next/router';
@@ -15,28 +15,29 @@ const LoginPage = () => {
   const [session, setSession] = useState<any>(null);
   const router = useRouter();
 
+  // 🚪 En login siempre limpiamos la sesión local (tokens, etc.)
+  useEffect(() => {
+    // Ignoramos errores por si no hay sesión previa
+    signOut({ global: true }).catch(() => {});
+  }, []);
+
   const handleLogin = async () => {
     try {
       setError('');
       const username = email.trim().toLowerCase();
-  
+
       // 1) Intento con SRP (por defecto)
       let userData = await signIn({ username, password });
-  
-      // 2) Si no quedó firmado, probamos USER_PASSWORD_AUTH (requiere permitirlo en el App client)
+
+      // 2) Fallback USER_PASSWORD_AUTH (si lo permite el App client)
       if (!userData.isSignedIn) {
-        try {
-          userData = await signIn({
-            username,
-            password,
-            options: { authFlowType: 'USER_PASSWORD_AUTH' },
-          });
-        } catch (e) {
-          // dejamos que lo maneje el catch general
-          throw e;
-        }
+        userData = await signIn({
+          username,
+          password,
+          options: { authFlowType: 'USER_PASSWORD_AUTH' },
+        });
       }
-  
+
       // 3) Firmado OK -> ruta por rol
       if (userData.isSignedIn) {
         const attributes = await fetchUserAttributes();
@@ -46,14 +47,14 @@ const LoginPage = () => {
         else setError('Rol de usuario no reconocido');
         return;
       }
-  
+
       // 4) Retos comunes (p.ej. FORCE_CHANGE_PASSWORD)
       if (userData.nextStep?.signInStep === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED') {
         setSession(userData);
         setStep('NEW_PASSWORD_REQUIRED');
         return;
       }
-  
+
       setError('No se pudo completar el inicio de sesión.');
     } catch (err: any) {
       console.error('Error en login:', err);
@@ -67,7 +68,6 @@ const LoginPage = () => {
       setError(`${msg} (${name})`);
     }
   };
-  
 
   const handleNewPasswordSubmit = async () => {
     try {
@@ -151,3 +151,14 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
+// 🛡️ Evitamos cachear la página de login (HTML) en CDN/navegador
+export async function getServerSideProps({ res }: any) {
+  res.setHeader(
+    'Cache-Control',
+    'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0'
+  );
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  return { props: {} };
+}
