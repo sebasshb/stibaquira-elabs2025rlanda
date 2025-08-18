@@ -252,7 +252,7 @@ Busca DMS dentro de la AWS Management Console y asegurate de desactivar esta opc
 
 8. Añade etiquetas (altamente recomendado) y haz clic en Create role.
 
-9. Repite el mismo proceso pero con el servicio de DMS, te quedarás con el siguiente Rol IAM: AmazonDMSRedshiftS3Role
+9. #### Repite el mismo proceso pero con el servicio de DMS, pero solo le asociarás la política "AmazonDMSRedshiftS3Role"
 
 ![Logo de Mi Proyecto](https://raw.githubusercontent.com/sebasshb/LabDMSResources/refs/heads/main/Captura16.png)
 
@@ -326,6 +326,8 @@ Busca Redshift en la AWS Management Console.
 
 En esta parte bajas a donde sale Associated IAM roles, y seleccionas en Actions la opción para asociar los roles de IAM que hemos creado para nuestro Cluster.
 
+#### Si sólo aparece el rol "myRedshiftRole", no te preocupes con asociar ese en específico ya vas en el camino. (igual si no sale ninguno puedes levantar el Cluster y luego asociarlo)
+
 ![Logo de Mi Proyecto](https://raw.githubusercontent.com/sebasshb/LabDMSResources/refs/heads/main/Captura23.png)
 
 ![Logo de Mi Proyecto](https://raw.githubusercontent.com/sebasshb/LabDMSResources/refs/heads/main/Captura24.png)
@@ -344,12 +346,13 @@ En esta parte bajas a donde sale Associated IAM roles, y seleccionas en Actions 
 
 ![Logo de Mi Proyecto](https://raw.githubusercontent.com/sebasshb/LabDMSResources/refs/heads/main/Captura26.png)
 
-4. Debería aparecer los roles myRedshiftRole y DMSLabRole que creaste. Seleccionalos.
+4. Debería aparecer los roles myRedshiftRole y DMSLabRole que creaste. Seleccionalos. 
+   #### De nuevo, si no sale el DMSLabRole no hay problema.
 
 5. Haz clic en Associate IAM role.
 
 
-IMPORTANTE: Si en alguna fase del laboratorio hay algun error de network (específicamente en el endpoint target de DMS), deberás revisar el security group y verificar que este tenga la regla de entrada para Redshift, sí no lo está, sigue estos pasos:
+#### IMPORTANTE: Si en alguna fase del laboratorio hay algun error de network (específicamente en el endpoint target de DMS), deberás revisar el security group y verificar que este tenga la regla de entrada para Redshift, sí no lo está, sigue estos pasos:
 
 
 #### Regla de Security Group para Redshift:

@@ -34,6 +34,8 @@
 - Paso 3: Verificar que el archivo esté guardado. Si aparece un círculo al lado de lambda_function.py, significa que aún no se ha guardado.
 - Paso 4: Una vez guardado, haz clic en "Deploy" para aplicar los cambios y actualizar la función Lambda.
 
+### [Descarga el script aquí](https://workshop-mo.s3.us-east-1.amazonaws.com/script_lambda.py)
+
 ![Lambda](https://raw.githubusercontent.com/iscatalan/arquitecturas/refs/heads/main/lambda.jpg)
 
 

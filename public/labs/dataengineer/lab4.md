@@ -14,10 +14,7 @@ Cada vez que ejecutas una consulta en Athena, los resultados deben almacenarse e
 
 **Tarea 1: Extraer los datos para el trabajo del laboratorio**
 
-- Debes descargar los datos books.csv con temática de libros:
-
-Link: https://workshop-mo.s3.us-east-1.amazonaws.com/libros_laboratorio.csv
-
+- Debes descargar los datos books.csv con temática de libros: [Link de descarga](https://workshop-mo.s3.us-east-1.amazonaws.com/libros_laboratorio.csv)
 
 **Tarea 2: Crear un bucket S3 para los datos del Laboratorio**
 
