@@ -18,7 +18,7 @@ export default function ThemeToggle() {
           <span className="theme-switch-slider"></span>
         </label>
         <span className="theme-icon">
-          {theme === 'dark' ? '☀️' : '🌙'}
+          {theme === 'dark' ? '🌙' : '☀️'} 
         </span>
       </div>
     </div>

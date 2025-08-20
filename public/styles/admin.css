@@ -412,6 +412,60 @@ body {
 }
 
 /* Login */
+/* Selector de rol (login) */
+.role-switch {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 0.5rem 0 1rem 0;
+}
+
+.role-chip {
+  appearance: none;
+  border: 1px solid var(--border-color);
+  background: var(--card-gradient);
+  color: var(--text-color);
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px; /* pill */
+  cursor: pointer;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 16px rgba(31, 38, 135, 0.12), 0 2px 8px var(--shadow-color);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+
+.role-chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(31, 38, 135, 0.18), 0 3px 10px var(--shadow-color);
+  border-color: rgba(1, 3, 73, 0.25);
+}
+
+.role-chip.selected {
+  border-color: var(--secondary-color);
+  box-shadow: 0 8px 24px rgba(31, 38, 135, 0.22), 0 3px 12px var(--shadow-color);
+  background:
+    radial-gradient(circle at 30% 70%, rgba(173, 216, 230, 0.10), transparent 70%),
+    radial-gradient(circle at 70% 30%, rgba(255, 182, 193, 0.12), transparent 75%),
+    rgba(255, 255, 255, 0.92);
+}
+
+[data-theme="dark"] .role-chip {
+  border-color: rgba(101, 53, 129, 0.12);
+  background:
+    radial-gradient(ellipse 120% 80% at 70% 20%, rgba(255, 20, 147, 0.05), transparent 60%),
+    radial-gradient(ellipse 100% 60% at 30% 10%, rgba(0, 255, 255, 0.03), transparent 75%),
+    rgba(10, 10, 10, 0.62);
+}
+
+[data-theme="dark"] .role-chip.selected {
+  border-color: var(--secondary-color);
+  background:
+    radial-gradient(ellipse 120% 80% at 70% 20%, rgba(255, 20, 147, 0.09), transparent 60%),
+    radial-gradient(ellipse 100% 60% at 30% 10%, rgba(0, 255, 255, 0.05), transparent 75%),
+    rgba(15, 15, 15, 0.75);
+}
+
 .login-container {
   width: 95%;
   max-width: 400px;

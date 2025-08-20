@@ -79,28 +79,47 @@ const StudentPage = () => {
 
   const handleSignOut = useCallback(async () => {
     try {
-      await signOut();
+      // limpia sesión de estudiantes (API/DynamoDB)
+      localStorage.removeItem('studentSession');
+      // intenta cerrar sesión de Cognito si existiera
+      await signOut().catch(() => {});
+    } finally {
       router.push('/');
-    } catch (err) {
-      console.error('Error al cerrar sesión:', err);
     }
   }, [router]);
+  
 
-  // 🔒 Verificar sesión al montar (redirige si no hay usuario)
+  // 🔒 Verificar sesión al montar (Cognito o login API via localStorage)
   useEffect(() => {
     (async () => {
+      // 1) Intento Cognito
       try {
         const attrs = await fetchUserAttributes();
-        if (!attrs?.email) {
-          router.push('/');
-          return;
+        if (attrs?.email) {
+          setUserEmail(attrs.email);
+          return; // sesión válida con Cognito
         }
-        setUserEmail(attrs.email);
       } catch {
-        router.push('/');
+        // Ignorar: puede ser sesión por API
       }
+
+      // 2) Intento sesión por API (localStorage)
+      try {
+        const raw = localStorage.getItem('studentSession');
+        const session = raw ? JSON.parse(raw) : null;
+        if (session?.email) {
+          setUserEmail(session.email);
+          return; // sesión válida por API
+        }
+      } catch {
+        // no-op
+      }
+
+      // 3) Sin sesión válida en ninguno de los dos
+      router.push('/');
     })();
   }, [router]);
+
 
   useEffect(() => {
     const setupInactivityTimer = () => {
