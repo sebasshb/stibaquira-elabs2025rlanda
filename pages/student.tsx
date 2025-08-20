@@ -12,6 +12,7 @@ import type { OnCreateAnunciosSubscription, Anuncios, AnunciosConnection } from 
 import '../public/styles/admin.css';
 import { useRouter } from 'next/navigation';
 import ThemeToggle from '../src/app/context/ThemeToggle';
+import Head from 'next/head'; // ✅ import nuevo
 
 const notificationSound = 'https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3';
 
@@ -291,6 +292,10 @@ const StudentPage = () => {
   };
 
   return (
+    <>
+    <Head>
+      <title>Student | Workshop M&amp;O</title>
+    </Head>
     <div className="admin-container">
       <header className="admin-header">
         <div className="header-content">
@@ -577,6 +582,7 @@ const StudentPage = () => {
       {/* Lightbox con Portal montado en <body> */}
       {renderLightbox()}
     </div>
+    </>
   );
 };
 

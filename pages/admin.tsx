@@ -8,6 +8,7 @@ import '../public/styles/admin.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ThemeToggle from '../src/app/context/ThemeToggle'; // Nuevo import
+import Head from 'next/head'; // ✅ import nuevo
 
 interface AnnouncementInput {
   id: string;
@@ -143,6 +144,10 @@ const AdminPage = () => {
   };
 
   return (
+    <>
+      <Head>
+        <title>Admin | Workshop M&amp;O</title>
+      </Head>
     <div className="admin-container">
       <header className="admin-header">
         <div className="header-content">
@@ -254,6 +259,7 @@ const AdminPage = () => {
         className="toast-body"
       />
     </div>
+    </>
   );
 };
 
