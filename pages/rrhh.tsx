@@ -110,7 +110,7 @@ const rrhhPage = () => {
         <title>RRHH | Workshop M&amp;O</title>
       </Head>
 
-      <div className="admin-container rrhh-scope">{/* 👈 añade rrhh-scope aquí */}
+      <div className="admin-container rrhh-scope">
         <header className="admin-header">
           <div className="header-content">
             <h1 className="admin-title">Panel Recursos Humanos</h1>

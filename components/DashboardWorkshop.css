@@ -1,7 +1,7 @@
-/* DashboardWorkshop.css */
-
+/* DashboardWorkshop.css — versión escopada */
 .rrhh-scope .dashboard-container {
-  max-width: 1200px;
+  max-width: 1660px;  /* más amplio, consistente con admin */
+  width: 100%;
   margin: 24px auto;
   padding: 24px;
   background: var(--card-gradient);
@@ -10,233 +10,39 @@
   box-shadow: 0 12px 24px rgba(0,0,0,0.08);
 }
 
-.rrhh-scope h1 { text-align:center; margin-bottom:24px; }
+.rrhh-scope .dashboard-container {
+  max-width: 1600px;
+  width: 100%;
+  margin: 24px auto;
+  padding: 24px;
+  background: var(--card-gradient);
+  color: var(--text-color);
+  border-radius: 16px;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+}
 
-/* === Banner KPIs === */
-.rrhh-scope .kpi-banner {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
+.rrhh-scope h1 {
+  text-align: center;
   margin-bottom: 24px;
-  flex-wrap: wrap;
+  font-weight: 700;
+  color: var(--text-color);      /* antes: #222 */
 }
 
 .rrhh-scope .kpi-card {
-  background: #fff;
-  box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
-  border-radius: 8px;
-  padding: 16px 20px;
-  flex: 1 1 200px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  cursor: default;
+  background: var(--card-bg);    /* antes: #fff */
 }
 
-.rrhh-scope .kpi-card.activo {
-  border-top-width: 6px;
-  box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
-  cursor: pointer;
-}
+.rrhh-scope .kpi-value { color: var(--text-color); }  /* antes: #111 */
+.rrhh-scope .kpi-title { color: var(--text-color); opacity: .75; } /* antes: #666 */
 
-.rrhh-scope .kpi-icon {
-  font-size: 2.6rem;
-  flex-shrink: 0;
-}
 
-.rrhh-scope .kpi-info {
-  flex-grow: 1;
-}
+.rrhh-scope .kpi-banner { display:flex; gap:16px; justify-content:center; margin-bottom:24px; flex-wrap:wrap; }
+.rrhh-scope .kpi-card { background: var(--card-bg); border-radius:8px; padding:16px 20px; flex:1 1 200px; display:flex; align-items:center; gap:14px; transition: box-shadow .3s ease; }
+.rrhh-scope .kpi-card.activo { box-shadow: 0 4px 12px rgb(0 0 0 / .15); cursor:pointer; }
+.rrhh-scope .kpi-icon { font-size:2.6rem; flex-shrink:0; }
+.rrhh-scope .kpi-info { flex-grow:1; }
+.rrhh-scope .kpi-value { font-size:1.7rem; font-weight:700; color: var(--text-color); }
+.rrhh-scope .kpi-title { font-size:1rem; font-weight:600; color: var(--text-color); opacity:.75; }
 
-.rrhh-scope .kpi-value {
-  font-size: 1.7rem;
-  font-weight: 700;
-  color: #111;
-  margin-bottom: 4px;
-}
-
-.rrhh-scope .kpi-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #666;
-}
-
-/* === Filtros y búsqueda === */
-.rrhh-scope .controles {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.rrhh-scope .input-busqueda {
-  flex-grow: 1;
-  max-width: 350px;
-  padding: 8px 12px;
-  font-size: 1rem;
-  border-radius: 6px;
-  border: 1.5px solid #ccc;
-  transition: border-color 0.2s ease;
-}
-
-.rrhh-scope .input-busqueda:focus {
-  outline: none;
-  border-color: #10ac84;
-  box-shadow: 0 0 6px rgba(16, 172, 132, 0.5);
-}
-
-.rrhh-scope .botones-filtro {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.rrhh-scope .botones-filtro button {
-  padding: 8px 18px;
-  font-size: 0.95rem;
-  border-radius: 6px;
-  border: 1.8px solid #bbb;
-  background-color: #fff;
-  color: #444;
-  font-weight: 600;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-  cursor: pointer;
-}
-
-.rrhh-scope .botones-filtro button.activo,
-.rrhh-scope .botones-filtro button:hover {
-  background-color: #10ac84;
-  border-color: #10ac84;
-  color: white;
-}
-
-/* === Mensajes de estado === */
-.rrhh-scope .error {
-  color: #ff4d4d;
-  text-align: center;
-  font-weight: 600;
-  margin: 16px 0;
-}
-
-/* === Gráficos y layouts === */
-.rrhh-scope .graficos {
-  display: flex;
-  flex-direction: column;
-  gap: 36px;
-}
-
-/* Cada gráfico en tarjeta */
-.rrhh-scope .grafico {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgb(0 0 0 / 0.07);
-  padding: 20px;
-}
-
-.rrhh-scope .grafico h3 {
-  margin-bottom: 12px;
-  color: #222;
-  font-weight: 700;
-}
-
-.rrhh-scope .info-mensaje {
-  font-size: 0.9rem;
-  color: #555;
-  margin-bottom: 14px;
-  font-style: italic;
-}
-
-/* === Mapa grande y lista de participantes === */
-.rrhh-scope .map-large {
-  margin-top: 16px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 3px 12px rgb(0 0 0 / 0.1);
-  padding: 20px;
-}
-
-.rrhh-scope .map-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14px;
-}
-
-.rrhh-scope .map-header h3 {
-  font-weight: 700;
-  color: #222;
-}
-
-.rrhh-scope .btn-volver {
-  background-color: #10ac84;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.25s ease;
-}
-
-.rrhh-scope .btn-volver:hover {
-  background-color: #0e9e77;
-}
-
-/* Lista nombres participantes */
-.rrhh-scope .lista-nombres {
-  max-height: 320px;
-  overflow-y: auto;
-  padding-right: 12px;
-}
-
-.rrhh-scope .lista-nombres h3 {
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
-.rrhh-scope .lista-nombres ul {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
-}
-
-.rrhh-scope .lista-nombres li {
-  padding: 8px 6px;
-  border-bottom: 1px solid #eee;
-  font-size: 0.95rem;
-  color: #333;
-}
-
-/* Scrollbar estilo para lista */
-.rrhh-scope .lista-nombres::-webkit-scrollbar {
-  width: 6px;
-}
-
-.rrhh-scope .lista-nombres::-webkit-scrollbar-thumb {
-  background-color: #10ac84;
-  border-radius: 3px;
-}
-
-.rrhh-scope .lista-nombres::-webkit-scrollbar-track {
-  background: #f0f0f0;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .rrhh-scope .kpi-banner {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .rrhh-scope .controles {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .rrhh-scope .botones-filtro {
-    justify-content: center;
-  }
-}
+.rrhh-scope .controles { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px; }
+.rrhh-scope .input-busqueda { flex-grow:1; max-width:350px; padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); }

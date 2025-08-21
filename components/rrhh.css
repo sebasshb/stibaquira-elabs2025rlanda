@@ -56,12 +56,49 @@
 }
 
 /* Acomodo del header (coincide con admin/student) */
-.header-content {
-  display: flex;
+/* Centrado consistente del título del header solo en RRHH */
+.rrhh-scope .header-content {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
-  padding: 22px 2vw 16px 2vw;
+  gap: 12px;
+  padding: 22px 2vw 16px;
 }
+
+.rrhh-scope .header-content .admin-title {
+  grid-column: 2;            /* siempre centrado */
+  text-align: center;
+}
+
+.rrhh-scope .header-content > :not(.admin-title) {
+  grid-column: 3;            /* ej. ThemeToggle / acciones */
+  justify-self: end;
+}
+
+/* Ampliar el “modal” de contenido en RRHH */
+.rrhh-scope .content-wrapper {
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+}
+
 
 /* Pequeño gap en nav */
 .admin-nav { gap: 12px; }
+
+/* Centrar título del header SOLO en RRHH */
+.rrhh-scope .admin-header .header-content { 
+  display: flex; 
+  align-items: center; 
+}
+.rrhh-scope .admin-title {
+  flex: 1 1 auto;
+  text-align: center;
+  margin: 0;
+}
+
+/* Forzar dashboards a usar todo el ancho disponible dentro de admin-main */
+.rrhh-scope .dashboard-container {
+  max-width: 100%;
+  width: 100%;
+}

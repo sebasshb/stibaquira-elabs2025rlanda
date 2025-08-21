@@ -5,30 +5,40 @@
   box-sizing: border-box;
 }
 
+/* Quita cualquier estilo global a body; todo bajo rrhh-scope */
 .rrhh-scope .dashboard-container {
-  max-width: 1200px;
-  margin: 24px auto;              /* menos margen para encajar en la card padre */
-  padding: 24px 24px;
+  max-width: 1600px;
+  width: 100%;
+  margin: 24px auto;
+  padding: 24px 32px;
   background: var(--card-gradient);
   color: var(--text-color);
   border-radius: 16px;
   box-shadow: 0 12px 24px rgba(0,0,0,0.08);
-  min-height: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
 }
 
-/* --- Título --- */
 .rrhh-scope .dashboard-container > h1 {
-  font-weight: 100;
-  font-size: 0.5rem;
-  color: #1a202c;
-  user-select: none;
+  color: var(--text-color);          /* antes: #1a202c */
+}
+
+/* Tarjetas y controles con variables */
+.rrhh-scope .kpi-card { background: var(--card-bg); }
+.rrhh-scope .kpi-title { color: var(--text-color); opacity: .75; } /* antes: #666 */
+.rrhh-scope .input-busqueda {
+  border: 2px solid #cbd5e1;
+  background-color: var(--card-bg);  /* antes: #f9fafb */
+  color: var(--text-color);          /* antes: #2d3748 */
+}
+.rrhh-scope .lista-nombres {
+  background: var(--card-bg);        /* antes: #f7fafc */
+  color: var(--text-color);          /* antes: #2d3748 */
+}
+
+.rrhh-scope .dashboard-container > h1 {
+  font-weight: 600;
+  font-size: 1.6rem;
+  color: var(--text-color);
   text-align: center;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
 }
 
 /* --- Banner KPIs (ajustado para ser más compacto) --- */
@@ -383,3 +393,4 @@
     flex: 1 1 48%;
   }
 }
+
