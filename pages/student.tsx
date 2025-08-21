@@ -18,11 +18,6 @@ const notificationSound = 'https://assets.mixkit.co/sfx/preview/mixkit-alarm-dig
 
 const INACTIVITY_TIMEOUT = 5 * 60 * 1000;
 
-// 🔑 helper para borrar cookie de rol
-function clearRoleCookie() {
-  document.cookie = 'elabs_auth=; Max-Age=0; Path=/; SameSite=Lax; Secure';
-}
-
 const LABS_DE_DATA_ENGINEER = [
   {
     name: 'Lab RDS',
@@ -89,7 +84,6 @@ const StudentPage = () => {
       localStorage.removeItem('studentSession');
       // intenta cerrar sesión de Cognito si existiera
       await signOut().catch(() => {});
-      clearRoleCookie(); // 🔑 limpiar cookie al salir
     } finally {
       router.push('/');
     }
