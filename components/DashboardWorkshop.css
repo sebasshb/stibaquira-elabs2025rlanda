@@ -1,24 +1,19 @@
 /* DashboardWorkshop.css */
 
-.dashboard-container {
+.rrhh-scope .dashboard-container {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 24px auto;
   padding: 24px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f7f9fc;
-  min-height: 100vh;
-  color: #333;
+  background: var(--card-gradient);
+  color: var(--text-color);
+  border-radius: 16px;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.08);
 }
 
-h1 {
-  text-align: center;
-  margin-bottom: 24px;
-  font-weight: 700;
-  color: #222;
-}
+.rrhh-scope h1 { text-align:center; margin-bottom:24px; }
 
 /* === Banner KPIs === */
-.kpi-banner {
+.rrhh-scope .kpi-banner {
   display: flex;
   gap: 16px;
   justify-content: center;
@@ -26,7 +21,7 @@ h1 {
   flex-wrap: wrap;
 }
 
-.kpi-card {
+.rrhh-scope .kpi-card {
   background: #fff;
   box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
   border-radius: 8px;
@@ -39,36 +34,36 @@ h1 {
   cursor: default;
 }
 
-.kpi-card.activo {
+.rrhh-scope .kpi-card.activo {
   border-top-width: 6px;
   box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
   cursor: pointer;
 }
 
-.kpi-icon {
+.rrhh-scope .kpi-icon {
   font-size: 2.6rem;
   flex-shrink: 0;
 }
 
-.kpi-info {
+.rrhh-scope .kpi-info {
   flex-grow: 1;
 }
 
-.kpi-value {
+.rrhh-scope .kpi-value {
   font-size: 1.7rem;
   font-weight: 700;
   color: #111;
   margin-bottom: 4px;
 }
 
-.kpi-title {
+.rrhh-scope .kpi-title {
   font-size: 1rem;
   font-weight: 600;
   color: #666;
 }
 
 /* === Filtros y búsqueda === */
-.controles {
+.rrhh-scope .controles {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -77,7 +72,7 @@ h1 {
   gap: 12px;
 }
 
-.input-busqueda {
+.rrhh-scope .input-busqueda {
   flex-grow: 1;
   max-width: 350px;
   padding: 8px 12px;
@@ -87,19 +82,19 @@ h1 {
   transition: border-color 0.2s ease;
 }
 
-.input-busqueda:focus {
+.rrhh-scope .input-busqueda:focus {
   outline: none;
   border-color: #10ac84;
   box-shadow: 0 0 6px rgba(16, 172, 132, 0.5);
 }
 
-.botones-filtro {
+.rrhh-scope .botones-filtro {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
 }
 
-.botones-filtro button {
+.rrhh-scope .botones-filtro button {
   padding: 8px 18px;
   font-size: 0.95rem;
   border-radius: 6px;
@@ -111,15 +106,15 @@ h1 {
   cursor: pointer;
 }
 
-.botones-filtro button.activo,
-.botones-filtro button:hover {
+.rrhh-scope .botones-filtro button.activo,
+.rrhh-scope .botones-filtro button:hover {
   background-color: #10ac84;
   border-color: #10ac84;
   color: white;
 }
 
 /* === Mensajes de estado === */
-.error {
+.rrhh-scope .error {
   color: #ff4d4d;
   text-align: center;
   font-weight: 600;
@@ -127,27 +122,27 @@ h1 {
 }
 
 /* === Gráficos y layouts === */
-.graficos {
+.rrhh-scope .graficos {
   display: flex;
   flex-direction: column;
   gap: 36px;
 }
 
 /* Cada gráfico en tarjeta */
-.grafico {
+.rrhh-scope .grafico {
   background: white;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgb(0 0 0 / 0.07);
   padding: 20px;
 }
 
-.grafico h3 {
+.rrhh-scope .grafico h3 {
   margin-bottom: 12px;
   color: #222;
   font-weight: 700;
 }
 
-.info-mensaje {
+.rrhh-scope .info-mensaje {
   font-size: 0.9rem;
   color: #555;
   margin-bottom: 14px;
@@ -155,7 +150,7 @@ h1 {
 }
 
 /* === Mapa grande y lista de participantes === */
-.map-large {
+.rrhh-scope .map-large {
   margin-top: 16px;
   background: white;
   border-radius: 10px;
@@ -163,19 +158,19 @@ h1 {
   padding: 20px;
 }
 
-.map-header {
+.rrhh-scope .map-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 14px;
 }
 
-.map-header h3 {
+.rrhh-scope .map-header h3 {
   font-weight: 700;
   color: #222;
 }
 
-.btn-volver {
+.rrhh-scope .btn-volver {
   background-color: #10ac84;
   color: white;
   border: none;
@@ -186,29 +181,29 @@ h1 {
   transition: background-color 0.25s ease;
 }
 
-.btn-volver:hover {
+.rrhh-scope .btn-volver:hover {
   background-color: #0e9e77;
 }
 
 /* Lista nombres participantes */
-.lista-nombres {
+.rrhh-scope .lista-nombres {
   max-height: 320px;
   overflow-y: auto;
   padding-right: 12px;
 }
 
-.lista-nombres h3 {
+.rrhh-scope .lista-nombres h3 {
   font-weight: 700;
   margin-bottom: 10px;
 }
 
-.lista-nombres ul {
+.rrhh-scope .lista-nombres ul {
   list-style: none;
   padding-left: 0;
   margin: 0;
 }
 
-.lista-nombres li {
+.rrhh-scope .lista-nombres li {
   padding: 8px 6px;
   border-bottom: 1px solid #eee;
   font-size: 0.95rem;
@@ -216,32 +211,32 @@ h1 {
 }
 
 /* Scrollbar estilo para lista */
-.lista-nombres::-webkit-scrollbar {
+.rrhh-scope .lista-nombres::-webkit-scrollbar {
   width: 6px;
 }
 
-.lista-nombres::-webkit-scrollbar-thumb {
+.rrhh-scope .lista-nombres::-webkit-scrollbar-thumb {
   background-color: #10ac84;
   border-radius: 3px;
 }
 
-.lista-nombres::-webkit-scrollbar-track {
+.rrhh-scope .lista-nombres::-webkit-scrollbar-track {
   background: #f0f0f0;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .kpi-banner {
+  .rrhh-scope .kpi-banner {
     flex-direction: column;
     gap: 12px;
   }
 
-  .controles {
+  .rrhh-scope .controles {
     flex-direction: column;
     gap: 12px;
   }
 
-  .botones-filtro {
+  .rrhh-scope .botones-filtro {
     justify-content: center;
   }
 }

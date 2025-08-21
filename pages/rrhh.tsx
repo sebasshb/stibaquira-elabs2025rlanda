@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { signOut, fetchUserAttributes } from 'aws-amplify/auth';
 import '../public/styles/admin.css';        // Base global
-import '../components/rrhh.css';    // Estilos específicos para esta página
+import '../components/rrhh.css';            // (lo dejamos; puedes retirarlo luego si ya no lo necesitas)
 import { useRouter } from 'next/navigation';
 import ThemeToggle from '../src/app/context/ThemeToggle';
 import Generaciones from '../components/Generaciones';
@@ -28,8 +28,6 @@ const rrhhPage = () => {
   const lastActivityRef = useRef(Date.now());
   const router = useRouter();
   const [userEmail, setUserEmail] = useState<string | null>(null);
-  
-
 
   const handleSignOut = useCallback(async () => {
     try {
@@ -109,220 +107,149 @@ const rrhhPage = () => {
   return (
     <>
       <Head>
-        <title>Student | Workshop M&amp;O</title>
+        <title>RRHH | Workshop M&amp;O</title>
       </Head>
-    <div className="admin-container">
-      <header className="admin-header">
-        <div
-          className="header-content"
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '22px 2vw 16px 2vw' }}
-        >
-          <h1 className="admin-title">Panel Recursos Humanos</h1>
-          <ThemeToggle />
-        </div>
-        <nav className="admin-nav" style={{ gap: 12, color: 'white' }}>
-          <button
-            onClick={() => handleSetSection('inicio')}
-            className="nav-item"
-            style={{ fontWeight: activeSection === 'inicio' ? 'bold' : 'normal' }}
-          >
-            🏠 Inicio
-          </button>
 
-          <div style={{ position: 'relative', display: 'inline-block' }}>
+      <div className="admin-container rrhh-scope">{/* 👈 añade rrhh-scope aquí */}
+        <header className="admin-header">
+          <div className="header-content">
+            <h1 className="admin-title">Panel Recursos Humanos</h1>
+            <ThemeToggle />
+          </div>
+
+          <nav className="admin-nav">
             <button
-              onClick={toggleDashboardsDropdown}
-              className="nav-item"
-              style={{ fontWeight: activeSection === 'dashboard' ? 'bold' : 'normal' }}
-              aria-haspopup="true"
-              aria-expanded={showDashboardsDropdown}
+              onClick={() => handleSetSection('inicio')}
+              className={`nav-item ${activeSection === 'inicio' ? 'active' : ''}`}
             >
-              📊 Dashboards ▼
+              🏠 Inicio
             </button>
-            {showDashboardsDropdown && (
-              <ul
-                style={{
-                  position: 'absolute',
-                  top: '100%',
-                  left: 0,
-                  backgroundColor: 'white',
-                  boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-                  borderRadius: 4,
-                  padding: '8px 0',
-                  margin: 0,
-                  listStyle: 'none',
-                  minWidth: 200,
-                  zIndex: 1000,
-                }}
-              >
-                <li>
-                  <button
-                    onClick={() => handleSelectDashboardModulo('generaciones')}
-                    className="dropdown-item"
-                    style={{
-                      width: '100%',
-                      padding: '8px 16px',
-                      textAlign: 'left',
-                      background: dashboardModulo === 'generaciones' ? '#eee' : 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Generaciones re/Start
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => handleSelectDashboardModulo('capacitaciones')}
-                    className="dropdown-item"
-                    style={{
-                      width: '100%',
-                      padding: '8px 16px',
-                      textAlign: 'left',
-                      background: dashboardModulo === 'capacitaciones' ? '#eee' : 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Capacitaciones externas
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => handleSelectDashboardModulo('workshop')}
-                    className="dropdown-item"
-                    style={{
-                      width: '100%',
-                      padding: '8px 16px',
-                      textAlign: 'left',
-                      background: dashboardModulo === 'workshop' ? '#eee' : 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Workshop
-                  </button>
-                </li>
-              </ul>
-            )}
-          </div>
 
-          <div style={{ position: 'relative', display: 'inline-block' }}>
-            <button
-              onClick={toggleModulosDropdown}
-              className="nav-item"
-              style={{ fontWeight: activeSection === 'modulos' ? 'bold' : 'normal' }}
-              aria-haspopup="true"
-              aria-expanded={showModulosDropdown}
-            >
-              📂 Tablas ▼
+            {/* Dropdown: Dashboards */}
+            <div className="dropdown">
+              <button
+                onClick={toggleDashboardsDropdown}
+                className={`nav-item dropdown-toggle ${activeSection === 'dashboard' ? 'active' : ''}`}
+                aria-haspopup="true"
+                aria-expanded={showDashboardsDropdown}
+              >
+                📊 Dashboards ▼
+              </button>
+              {showDashboardsDropdown && (
+                <ul className="dropdown-menu" role="menu">
+                  <li>
+                    <button
+                      onClick={() => handleSelectDashboardModulo('generaciones')}
+                      className={`dropdown-item ${dashboardModulo === 'generaciones' ? 'active' : ''}`}
+                      role="menuitem"
+                    >
+                      Generaciones re/Start
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => handleSelectDashboardModulo('capacitaciones')}
+                      className={`dropdown-item ${dashboardModulo === 'capacitaciones' ? 'active' : ''}`}
+                      role="menuitem"
+                    >
+                      Capacitaciones externas
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => handleSelectDashboardModulo('workshop')}
+                      className={`dropdown-item ${dashboardModulo === 'workshop' ? 'active' : ''}`}
+                      role="menuitem"
+                    >
+                      Workshop
+                    </button>
+                  </li>
+                </ul>
+              )}
+            </div>
+
+            {/* Dropdown: Tablas */}
+            <div className="dropdown">
+              <button
+                onClick={toggleModulosDropdown}
+                className={`nav-item dropdown-toggle ${activeSection === 'modulos' ? 'active' : ''}`}
+                aria-haspopup="true"
+                aria-expanded={showModulosDropdown}
+              >
+                📂 Tablas ▼
+              </button>
+              {showModulosDropdown && (
+                <ul className="dropdown-menu" role="menu">
+                  <li>
+                    <button
+                      onClick={() => handleSelectModulo('generaciones')}
+                      className={`dropdown-item ${activeModulo === 'generaciones' ? 'active' : ''}`}
+                      role="menuitem"
+                    >
+                      Generaciones re/Start
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => handleSelectModulo('capacitaciones')}
+                      className={`dropdown-item ${activeModulo === 'capacitaciones' ? 'active' : ''}`}
+                      role="menuitem"
+                    >
+                      Capacitaciones externas
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => handleSelectModulo('reportes')}
+                      className={`dropdown-item ${activeModulo === 'reportes' ? 'active' : ''}`}
+                      role="menuitem"
+                    >
+                      Exportar datos (CSV)
+                    </button>
+                  </li>
+                </ul>
+              )}
+            </div>
+
+            <button onClick={handleSignOut} className="admin-logout-button">
+              🚪 Salir
             </button>
-            {showModulosDropdown && (
-              <ul
-                style={{
-                  position: 'absolute',
-                  top: '100%',
-                  left: 0,
-                  backgroundColor: 'white',
-                  boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-                  borderRadius: 4,
-                  padding: '8px 0',
-                  margin: 0,
-                  listStyle: 'none',
-                  minWidth: 180,
-                  zIndex: 1000,
-                }}
-              >
-                <li>
-                  <button
-                    onClick={() => handleSelectModulo('generaciones')}
-                    className="dropdown-item"
-                    style={{
-                      width: '100%',
-                      padding: '8px 16px',
-                      textAlign: 'left',
-                      background: activeModulo === 'generaciones' ? '#eee' : 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Generaciones re/Start
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => handleSelectModulo('capacitaciones')}
-                    className="dropdown-item"
-                    style={{
-                      width: '100%',
-                      padding: '8px 16px',
-                      textAlign: 'left',
-                      background: activeModulo === 'capacitaciones' ? '#eee' : 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Capacitaciones externas
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => handleSelectModulo('reportes')}
-                    className="dropdown-item"
-                    style={{
-                      width: '100%',
-                      padding: '8px 16px',
-                      textAlign: 'left',
-                      background: activeModulo === 'reportes' ? '#eee' : 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Exportar datos (CSV)
-                  </button>
-                </li>
-              </ul>
-            )}
-          </div>
-          <button onClick={handleSignOut} className="admin-logout-button">
-            🚪 Salir
-          </button>
-        </nav>
-      </header>
+          </nav>
+        </header>
 
-      <main className="admin-main">
-        {activeSection === 'inicio' && (
-          <div className="section-container content-wrapper">
-            <h2>🏫 Bienvenido al Panel de RRHH</h2>
-            <p> Aquí podrás ver información y datos sobre los participantes</p>
-          </div>
-        )}
+        <main className="admin-main">
+          {activeSection === 'inicio' && (
+            <div className="section-container content-wrapper">
+              <h2>🏫 Bienvenido al Panel de RRHH</h2>
+              <p>Aquí podrás ver información y datos sobre los participantes.</p>
+            </div>
+          )}
 
-        {activeSection === 'dashboard' && (
-          <div className="section-container content-wrapper">
-            {dashboardModulo === '' && <p>Por favor, selecciona un módulo en Dashboards.</p>}
-            {dashboardModulo === 'generaciones' && <DashboardGen />}
-            {dashboardModulo === 'capacitaciones' && <DashboardCapacitaciones />}
-            {dashboardModulo === 'workshop' && <DashboardWorkshop />}
-          </div>
-        )}
+          {activeSection === 'dashboard' && (
+            <div className="section-container content-wrapper">
+              {dashboardModulo === '' && <p>Por favor, selecciona un módulo en Dashboards.</p>}
+              {dashboardModulo === 'generaciones' && <DashboardGen />}
+              {dashboardModulo === 'capacitaciones' && <DashboardCapacitaciones />}
+              {dashboardModulo === 'workshop' && <DashboardWorkshop />}
+            </div>
+          )}
 
-        {activeSection === 'modulos' && (
-          <div className="section-container content-wrapper">
-            {!activeModulo && (
-              <>
-                <h2>📂 Selecciona un módulo</h2>
-                <p>Por favor, selecciona un módulo desde el menú desplegable para ver su contenido.</p>
-              </>
-            )}
+          {activeSection === 'modulos' && (
+            <div className="section-container content-wrapper">
+              {!activeModulo && (
+                <>
+                  <h2>📂 Selecciona un módulo</h2>
+                  <p>Por favor, selecciona un módulo desde el menú desplegable para ver su contenido.</p>
+                </>
+              )}
 
-            {activeModulo === 'generaciones' && <Generaciones />}
-            {activeModulo === 'capacitaciones' && <Capacitaciones />}
-            {activeModulo === 'reportes' && <Reportes />}
-          </div>
-        )}
-      </main>
-    </div>
+              {activeModulo === 'generaciones' && <Generaciones />}
+              {activeModulo === 'capacitaciones' && <Capacitaciones />}
+              {activeModulo === 'reportes' && <Reportes />}
+            </div>
+          )}
+        </main>
+      </div>
     </>
   );
 };

@@ -5,33 +5,22 @@
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  background: #f0f2f5;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* --- Contenedor principal --- */
-.dashboard-container {
+.rrhh-scope .dashboard-container {
   max-width: 1200px;
-  margin: 40px auto;
-  padding: 24px 32px;
-  padding-left: 16px;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-  min-height: 90vh;
+  margin: 24px auto;              /* menos margen para encajar en la card padre */
+  padding: 24px 24px;
+  background: var(--card-gradient);
+  color: var(--text-color);
+  border-radius: 16px;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+  min-height: auto;
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  transition: background-color 0.3s ease;
+  gap: 24px;
 }
 
 /* --- Título --- */
-.dashboard-container > h1 {
+.rrhh-scope .dashboard-container > h1 {
   font-weight: 100;
   font-size: 0.5rem;
   color: #1a202c;
@@ -43,7 +32,7 @@ body {
 }
 
 /* --- Banner KPIs (ajustado para ser más compacto) --- */
-.kpi-banner {
+.rrhh-scope .kpi-banner {
   display: flex;
   gap: 4px;
   flex-wrap: wrap;
@@ -52,7 +41,7 @@ body {
 }
 
 
-.kpi-card {
+.rrhh-scope .kpi-card {
   width: 120px;   /* ancho fijo */
   height: 120px;
   background: #fafafa;
@@ -73,14 +62,14 @@ body {
 }
 
 
-.kpi-card:hover {
+.rrhh-scope .kpi-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 12px 28px rgba(29, 209, 161, 0.25);
   background-color: #e0fff6;
   z-index: 10;
 }
 
-.kpi-card.activo {
+.rrhh-scope .kpi-card.activo {
   background-color: #1dd1a1;
   color: white;
   box-shadow: 0 14px 36px rgba(29, 209, 161, 0.4);
@@ -88,18 +77,18 @@ body {
   cursor: default;
 }
 
-.kpi-icon {
+.rrhh-scope .kpi-icon {
   font-size: 8px;         
   flex-shrink: 0;
   transition: color 0.3s ease;
   line-height:1.2;
 }
 
-.kpi-card.activo .kpi-icon {
+.rrhh-scope .kpi-card.activo .kpi-icon {
   color: #fff;
 }
 
-.kpi-info {
+.rrhh-scope .kpi-info {
   display: flex;
   justify-content: flex-start; 
   align-items: center; 
@@ -108,14 +97,14 @@ body {
   width: 50%;            
 }
 
-.kpi-value {
+.rrhh-scope .kpi-value {
   font-weight: 1200;
   font-size: 2rem;        
   letter-spacing: 2px;
   line-height: 0.5;
 }
 
-.kpi-title {
+.rrhh-scope .kpi-title {
   font-size: 0.8rem;          
   font-weight: 300;
   color: #666;
@@ -128,12 +117,12 @@ body {
   padding: 0;
 }
 
-.kpi-card.activo .kpi-title {
+.rrhh-scope .kpi-card.activo .kpi-title {
   color: #def7ec;
 }
 
 /* --- Controles filtro y búsqueda --- */
-.controles {
+.rrhh-scope .controles {
   display: flex;
   gap:18px;
   flex-wrap: wrap;
@@ -144,7 +133,7 @@ body {
   
 }
 
-.input-busqueda {
+.rrhh-scope .input-busqueda {
   flex: 1 1 320px;
   padding: 14px 20px;
   font-size: 18px;
@@ -156,26 +145,26 @@ body {
   box-shadow: inset 1px 1px 3px rgba(0,0,0,0.05);
 }
 
-.input-busqueda::placeholder {
+.rrhh-scope .input-busqueda::placeholder {
   color: #a0aec0;
   font-style: italic;
 }
 
-.input-busqueda:focus {
+.rrhh-scope .input-busqueda:focus {
   outline: none;
   border-color: #1dd1a1;
   box-shadow: 0 0 10px #87ecd1aa;
   background-color: #fff;
 }
 
-.botones-filtro {
+.rrhh-scope .botones-filtro {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.botones-filtro button {
+.rrhh-scope .botones-filtro button {
   background-color: #e2e8f0;
   border: none;
   padding: 10px 22px;
@@ -190,13 +179,13 @@ body {
   text-transform: uppercase;
 }
 
-.botones-filtro button:hover {
+.rrhh-scope .botones-filtro button:hover {
   background-color: #1dd1a1;
   color: white;
   transform: scale(1.05);
 }
 
-.botones-filtro button.activo {
+.rrhh-scope .botones-filtro button.activo {
   background-color: #10ac84;
   color: white;
   box-shadow: 0 6px 18px rgba(16, 172, 132, 0.6);
@@ -205,7 +194,7 @@ body {
 }
 
 /* --- Mensajes y errores --- */
-.error {
+.rrhh-scope .error {
   color: #e53e3e;
   font-weight: 700;
   font-size: 1.1rem;
@@ -214,7 +203,7 @@ body {
   user-select: none;
 }
 
-.info-mensaje {
+.rrhh-scope .info-mensaje {
   margin: 8px 0 16px 0;
   font-size: 14px;
   color: #718096;
@@ -224,13 +213,13 @@ body {
 }
 
 /* --- Gráficos y contenedores --- */
-.graficos {
+.rrhh-scope .graficos {
   display: flex;
   flex-direction: column;
   gap: 36px;
 }
 
-.grafico {
+.rrhh-scope .grafico {
   background-color: #fff;
   padding: 28px 32px;
   border-radius: 18px;
@@ -239,12 +228,12 @@ body {
   position: relative;
 }
 
-.grafico:hover {
+.rrhh-scope .grafico:hover {
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.1);
 }
 
 /* --- Mapa grande --- */
-.map-large {
+.rrhh-scope .map-large {
   background-color: #fff;
   padding: 28px 32px;
   border-radius: 18px;
@@ -252,7 +241,7 @@ body {
   position: relative;
 }
 
-.map-header {
+.rrhh-scope .map-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -260,7 +249,7 @@ body {
   user-select: none;
 }
 
-.btn-volver {
+.rrhh-scope .btn-volver {
   background-color: #1dd1a1;
   color: white;
   border: none;
@@ -273,13 +262,13 @@ body {
   box-shadow: 0 4px 10px rgba(29, 209, 161, 0.5);
 }
 
-.btn-volver:hover {
+.rrhh-scope .btn-volver:hover {
   background-color: #10ac84;
   transform: scale(1.05);
 }
 
 /* --- Lista de nombres --- */
-.lista-nombres {
+.rrhh-scope .lista-nombres {
   max-height: 300px;
   overflow-y: auto;
   background: #f7fafc;
@@ -293,17 +282,17 @@ body {
   user-select: text;
 }
 
-.lista-nombres:hover {
+.rrhh-scope .lista-nombres:hover {
   box-shadow: inset 0 2px 6px rgb(0 0 0 / 0.15);
 }
 
-.lista-nombres ul {
+.rrhh-scope .lista-nombres ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.lista-nombres li {
+.rrhh-scope .lista-nombres li {
   padding: 10px 0;
   border-bottom: 1px solid #e2e8f0;
   transition: background-color 0.2s ease;
@@ -311,26 +300,26 @@ body {
   user-select: text;
 }
 
-.lista-nombres li:hover {
+.rrhh-scope .lista-nombres li:hover {
   background-color: #e6fffa;
 }
 
 /* --- Scroll personalizado para lista de nombres --- */
-.lista-nombres {
+.rrhh-scope .lista-nombres {
   scrollbar-width: thin;
   scrollbar-color: #1dd1a1 #f7fafc;
 }
 
-.lista-nombres::-webkit-scrollbar {
+.rrhh-scope .lista-nombres::-webkit-scrollbar {
   width: 10px;
 }
 
-.lista-nombres::-webkit-scrollbar-track {
+.rrhh-scope .lista-nombres::-webkit-scrollbar-track {
   background: #f7fafc;
   border-radius: 14px;
 }
 
-.lista-nombres::-webkit-scrollbar-thumb {
+.rrhh-scope .lista-nombres::-webkit-scrollbar-thumb {
   background-color: #1dd1a1;
   border-radius: 14px;
   border: 2px solid #f7fafc;
@@ -348,49 +337,49 @@ body {
   }
 }
 
-.dashboard-container > h1,
-.kpi-banner,
-.controles,
-.graficos,
-.lista-nombres {
+.rrhh-scope .dashboard-container > h1,
+.rrhh-scope .kpi-banner,
+.rrhh-scope .controles,
+.rrhh-scope .graficos,
+.rrhh-scope .lista-nombres {
   animation: fadeInUp 0.5s ease forwards;
 }
 
-.kpi-card {
+.rrhh-scope .kpi-card {
   will-change: transform, box-shadow, background-color;
 }
 
-.btn-volver {
+.rrhh-scope .btn-volver {
   will-change: background-color, transform;
 }
 
 /* --- Responsive --- */
 @media (max-width: 900px) {
-  .kpi-banner {
+  .rrhh-scope .kpi-banner {
     justify-content: center;
   }
 
-  .botones-filtro {
+  .rrhh-scope .botones-filtro {
     justify-content: center;
   }
 }
 
 @media (max-width: 600px) {
-  .dashboard-container {
+  .rrhh-scope .dashboard-container {
     padding: 16px 20px;
   }
 
-  .input-busqueda {
+  .rrhh-scope .input-busqueda {
     font-size: 16px;
     padding: 12px 16px;
   }
 
-  .kpi-card {
+  .rrhh-scope .kpi-card {
     flex: 1 1 100%;
     min-width: auto;
   }
 
-  .botones-filtro button {
+  .rrhh-scope .botones-filtro button {
     flex: 1 1 48%;
   }
 }
