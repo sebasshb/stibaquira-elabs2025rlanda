@@ -1,24 +1,21 @@
-/* rrhh.css - SOLO ayudas visuales, sin pisar admin.css */
+/* rrhh.css — utilidades RRHH sin pisar admin.css */
 
-/* Estados activos en nav */
+/* Estado activo en nav (leve) */
 .nav-item.active {
   font-weight: 700;
   outline: 1px solid rgba(1, 3, 73, 0.22);
 }
 
-/* Dropdown base */
+/* Dropdown */
 .dropdown {
   position: relative;
   display: inline-block;
 }
-
 .dropdown-toggle {
   display: inline-flex;
   align-items: center;
   gap: 6px;
 }
-
-/* Menú flotante */
 .dropdown-menu {
   position: absolute;
   top: 100%;
@@ -28,7 +25,6 @@
   padding: 8px 0;
   list-style: none;
   z-index: 1000;
-
   background: var(--card-gradient);
   border: 1px solid var(--border-color);
   border-radius: 8px;
@@ -36,8 +32,6 @@
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
-
-/* Ítems */
 .dropdown-item {
   width: 100%;
   text-align: left;
@@ -49,56 +43,21 @@
   color: var(--text-color);
   transition: var(--transition);
 }
-
 .dropdown-item:hover,
 .dropdown-item.active {
   background: rgba(127, 127, 127, 0.12);
 }
 
-/* Acomodo del header (coincide con admin/student) */
-/* Centrado consistente del título del header solo en RRHH */
-.rrhh-scope .header-content {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 12px;
-  padding: 22px 2vw 16px;
-}
-
-.rrhh-scope .header-content .admin-title {
-  grid-column: 2;            /* siempre centrado */
-  text-align: center;
-}
-
-.rrhh-scope .header-content > :not(.admin-title) {
-  grid-column: 3;            /* ej. ThemeToggle / acciones */
-  justify-self: end;
-}
-
-/* Ampliar el “modal” de contenido en RRHH */
+/* WRAPPER y DASHBOARD a ancho homogéneo con admin */
 .rrhh-scope .content-wrapper {
   max-width: 1600px;
   width: 100%;
   margin: 0 auto;
 }
-
-
-/* Pequeño gap en nav */
-.admin-nav { gap: 12px; }
-
-/* Centrar título del header SOLO en RRHH */
-.rrhh-scope .admin-header .header-content { 
-  display: flex; 
-  align-items: center; 
-}
-.rrhh-scope .admin-title {
-  flex: 1 1 auto;
-  text-align: center;
-  margin: 0;
-}
-
-/* Forzar dashboards a usar todo el ancho disponible dentro de admin-main */
 .rrhh-scope .dashboard-container {
   max-width: 100%;
   width: 100%;
 }
+
+/* Pequeño gap en nav (sin forzar estilos globales) */
+.admin-nav { gap: 12px; }

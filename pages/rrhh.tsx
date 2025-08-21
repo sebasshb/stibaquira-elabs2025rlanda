@@ -113,7 +113,7 @@ const rrhhPage = () => {
       <div className="admin-container rrhh-scope">
         <header className="admin-header">
           <div className="header-content">
-            <h1 className="admin-title">Panel Recursos Humanos</h1>
+            <h1 className="admin-title">🧠Panel Recursos Humanos</h1>
             <ThemeToggle />
           </div>
 

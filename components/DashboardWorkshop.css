@@ -1,37 +1,39 @@
-/* DashboardWorkshop.css — versión escopada */
-.rrhh-scope .dashboard-container {
-  max-width: 1660px;  /* homogéneo con admin */
-  width: 100%;
-  margin: 24px auto;
-  padding: 24px;
-  background: var(--card-gradient);
-  color: var(--text-color);
-  border-radius: 16px;
-  box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+/* DashboardWorkshop.css — escopado a RRHH */
+.rrhh-scope .dashboard-container{
+  max-width:1660px;
+  width:100%;
+  margin:24px auto;
+  padding:24px;
+  background:var(--card-gradient);
+  color:var(--text-color);
+  border-radius:16px;
+  box-shadow:0 12px 24px rgba(0,0,0,0.08);
 }
 
-.rrhh-scope h1 {
-  text-align: center;
-  margin-bottom: 24px;
-  font-weight: 700;
-  color: var(--text-color);      /* antes: #222 */
+.rrhh-scope h1{
+  text-align:center;
+  margin-bottom:24px;
+  font-weight:700;
+  color:var(--text-color);
 }
 
-.rrhh-scope .kpi-card {
-  background: var(--card-bg);    /* antes: #fff */
+/* KPIs */
+.rrhh-scope .kpi-banner{ display:flex; gap:16px; justify-content:center; margin-bottom:24px; flex-wrap:wrap; }
+.rrhh-scope .kpi-card{
+  background:var(--card-bg);
+  border:1px solid var(--border-color);
+  border-radius:8px; padding:16px 20px; flex:1 1 200px; display:flex; align-items:center; gap:14px;
+  transition: box-shadow .3s ease;
 }
+.rrhh-scope .kpi-card.activo{ box-shadow:0 4px 12px rgba(0,0,0,.15); cursor:pointer; }
+.rrhh-scope .kpi-icon{ font-size:2.6rem; flex-shrink:0; }
+.rrhh-scope .kpi-info{ flex-grow:1; }
+.rrhh-scope .kpi-value{ font-size:1.7rem; font-weight:700; color:var(--text-color); }
+.rrhh-scope .kpi-title{ font-size:1rem; font-weight:600; color:var(--text-color); opacity:.75; }
 
-.rrhh-scope .kpi-value { color: var(--text-color); }  /* antes: #111 */
-.rrhh-scope .kpi-title { color: var(--text-color); opacity: .75; } /* antes: #666 */
-
-
-.rrhh-scope .kpi-banner { display:flex; gap:16px; justify-content:center; margin-bottom:24px; flex-wrap:wrap; }
-.rrhh-scope .kpi-card { background: var(--card-bg); border-radius:8px; padding:16px 20px; flex:1 1 200px; display:flex; align-items:center; gap:14px; transition: box-shadow .3s ease; }
-.rrhh-scope .kpi-card.activo { box-shadow: 0 4px 12px rgb(0 0 0 / .15); cursor:pointer; }
-.rrhh-scope .kpi-icon { font-size:2.6rem; flex-shrink:0; }
-.rrhh-scope .kpi-info { flex-grow:1; }
-.rrhh-scope .kpi-value { font-size:1.7rem; font-weight:700; color: var(--text-color); }
-.rrhh-scope .kpi-title { font-size:1rem; font-weight:600; color: var(--text-color); opacity:.75; }
-
-.rrhh-scope .controles { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px; }
-.rrhh-scope .input-busqueda { flex-grow:1; max-width:350px; padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); }
+/* Controles */
+.rrhh-scope .controles{ display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px; }
+.rrhh-scope .input-busqueda{
+  flex-grow:1; max-width:350px; padding:8px 12px; border-radius:8px;
+  border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-color);
+}
