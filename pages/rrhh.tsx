@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { signOut, fetchUserAttributes } from 'aws-amplify/auth';
-import '../public/styles/admin.css';        // Base global
-import '../components/rrhh.css';            // (lo dejamos; puedes retirarlo luego si ya no lo necesitas)
+import '../public/styles/admin.css';
+import '../components/rrhh.css';
 import { useRouter } from 'next/navigation';
 import ThemeToggle from '../src/app/context/ThemeToggle';
 import Generaciones from '../components/Generaciones';
@@ -17,6 +17,8 @@ import Head from 'next/head';
 const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutos
 
 const rrhhPage = () => {
+  const [ready, setReady] = useState(false); // 🔒 Gate de render
+
   const [activeSection, setActiveSection] = useState<'inicio' | 'dashboard' | 'modulos'>('inicio');
   const [activeModulo, setActiveModulo] = useState<'generaciones' | 'capacitaciones' | 'reportes' | null>(null);
   const [showModulosDropdown, setShowModulosDropdown] = useState(false);
@@ -47,6 +49,7 @@ const rrhhPage = () => {
           return;
         }
         setUserEmail(attrs.email);
+        setReady(true); // ✅ sesión válida
       } catch {
         router.push('/');
       }
@@ -103,6 +106,9 @@ const rrhhPage = () => {
     setDashboardModulo(modulo);
     setShowDashboardsDropdown(false);
   };
+
+  // ⛔️ No pintes nada hasta tener sesión verificada
+  if (!ready) return null;
 
   return (
     <>

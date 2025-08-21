@@ -24,6 +24,7 @@ interface NewUser {
 
 const AdminPage = () => {
   const router = useRouter();
+  const [ready, setReady] = useState(false); // 🔒 Gate de render
 
   // 🔒 Verificar sesión al montar (redirige si no hay usuario)
   useEffect(() => {
@@ -32,7 +33,9 @@ const AdminPage = () => {
         const attrs = await fetchUserAttributes();
         if (!attrs?.email) {
           router.push('/');
+          return;
         }
+        setReady(true); // ✅ sesión válida, ya podemos renderizar
       } catch {
         router.push('/');
       }
@@ -142,6 +145,9 @@ const AdminPage = () => {
       setIsCreatingUser(false);
     }
   };
+
+  // ⛔️ No pintes nada hasta tener sesión verificada
+  if (!ready) return null;
 
   return (
     <>
