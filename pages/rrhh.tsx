@@ -16,6 +16,11 @@ import Head from 'next/head';
 
 const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutos
 
+// 🔑 helper para borrar cookie de rol
+function clearRoleCookie() {
+  document.cookie = 'elabs_auth=; Max-Age=0; Path=/; SameSite=Lax; Secure';
+}
+
 const rrhhPage = () => {
   const [activeSection, setActiveSection] = useState<'inicio' | 'dashboard' | 'modulos'>('inicio');
   const [activeModulo, setActiveModulo] = useState<'generaciones' | 'capacitaciones' | 'reportes' | null>(null);
@@ -32,6 +37,7 @@ const rrhhPage = () => {
   const handleSignOut = useCallback(async () => {
     try {
       await signOut();
+      clearRoleCookie();  // 🔑 limpiar cookie al salir
       router.push('/');
     } catch (err) {
       console.error('Error al cerrar sesión:', err);

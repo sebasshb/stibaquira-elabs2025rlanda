@@ -10,6 +10,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import ThemeToggle from '../src/app/context/ThemeToggle'; // Nuevo import
 import Head from 'next/head'; // ✅ import nuevo
 
+// 🔑 helper para borrar cookie de rol
+function clearRoleCookie() {
+  document.cookie = 'elabs_auth=; Max-Age=0; Path=/; SameSite=Lax; Secure';
+}
+
 interface AnnouncementInput {
   id: string;
   content: string;
@@ -51,6 +56,7 @@ const AdminPage = () => {
   const handleSignOut = async () => {
     try {
       await signOut();
+      clearRoleCookie();     // 🔑 limpiar cookie al salir
       window.location.href = '/';
     } catch (err) {
       console.error('Error al cerrar sesión:', err);

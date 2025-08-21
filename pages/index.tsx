@@ -9,6 +9,15 @@ type Role = 'student' | 'admin' | 'rrhh';
 
 const API_AUTH_URL = 'https://s4gc7qoqd5.execute-api.us-east-1.amazonaws.com/auth'; // del script.js
 
+// 🔑 Helpers de cookie de rol
+function setRoleCookie(role: 'student'|'admin'|'rrhh') {
+  // 2 horas — ajusta si quieres
+  document.cookie = `elabs_auth=${role}; Max-Age=${2*60*60}; Path=/; SameSite=Lax; Secure`;
+}
+function clearRoleCookie() {
+  document.cookie = 'elabs_auth=; Max-Age=0; Path=/; SameSite=Lax; Secure';
+}
+
 const LoginPage = () => {
   const [role, setRole] = useState<Role>('student');
   const [email, setEmail] = useState('');
@@ -20,6 +29,7 @@ const LoginPage = () => {
   // 🧹 Limpieza local (sin red) + prefetch
   useEffect(() => {
     signOut().catch(() => {}); // limpia storage local de Amplify sin llamar a Cognito
+    clearRoleCookie();         // 🔑 limpiar cookie al abrir login
     router.prefetch('/student');
     router.prefetch('/admin');
   }, [router]);
@@ -72,6 +82,7 @@ const LoginPage = () => {
         // 🔐 Estudiante: API + DynamoDB (sin Cognito)
         const user = await loginStudentViaApi(username, password);
         if (!user?.email) throw new Error('Respuesta de autenticación inválida');
+        setRoleCookie('student');          // 🔑 cookie para middleware
         router.replace('/student');
         return;
       }
@@ -104,10 +115,16 @@ const LoginPage = () => {
         return;
       }
 
-      // Redirigir por rol
-      if (role === 'admin') router.replace('/admin');
-      else if (role === 'rrhh') router.replace('/rrhh'); // ruta futura
-      else setError('Rol no reconocido');
+      // Redirigir por rol + cookie
+      if (role === 'admin') {
+        setRoleCookie('admin');           // 🔑 cookie para middleware
+        router.replace('/admin');
+      } else if (role === 'rrhh') {
+        setRoleCookie('rrhh');            // 🔑 cookie para middleware
+        router.replace('/rrhh'); // ruta futura
+      } else {
+        setError('Rol no reconocido');
+      }
     } catch (err: any) {
       const name = err?.name || err?.__type || 'AuthError';
       const msg =
