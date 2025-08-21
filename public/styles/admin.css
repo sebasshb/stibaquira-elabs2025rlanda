@@ -1,3 +1,26 @@
+/* Centrado consistente del título en todos los headers */
+.admin-header .header-content {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr; /* [izq] [titulo] [acciones] */
+  align-items: center;
+  gap: 12px;
+  padding: 22px 2vw 16px 2vw;
+}
+
+/* El h1 del header SIEMPRE centrado */
+.admin-header .admin-title {
+  grid-column: 2;
+  text-align: center;
+  color: #fff; /* Título sobre header oscuro */
+}
+
+/* Cualquier otro elemento (por ejemplo el ThemeToggle) a la derecha */
+.admin-header .header-content > :not(.admin-title) {
+  grid-column: 3;
+  justify-self: end;
+}
+
+
 /* Variables de color y tipografía */
 :root {
   /* Light Theme */

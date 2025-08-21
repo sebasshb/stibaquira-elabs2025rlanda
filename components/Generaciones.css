@@ -51,8 +51,8 @@
   flex-grow: 1;
   max-width: 320px;
   font-size: 13px;
-  background-color: #f9fafb;
-  color: #2d3748;
+  background-color: var(--card-bg);  /* antes: #f9fafb */
+  color: var(--text-color);          /* antes: #2d3748 */
   box-shadow: inset 1px 1px 3px rgba(0,0,0,0.05);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -111,9 +111,15 @@
 /* ===== TABLA ===== */
 
 /* La tabla ocupa todo el ancho disponible */
-.tabla-container table { width: 100%; } /* antes: auto */
-
-
+/* La tabla usa TODO el ancho */
+.tabla-container table { width: 100%; }
+table {
+  width: 100%;          /* antes: auto */
+  border-collapse: collapse;
+  font-size: 13px;
+  table-layout: auto;
+  margin: 0 auto;
+}
 
 table {
   width: auto;
@@ -123,19 +129,16 @@ table {
   margin: 0 auto;
 }
 
-/* Encabezado de tabla: variables */
+/* Encabezado con variables (ok) */
 table thead th {
-  background-color: var(--card-bg);  /* antes: #f5f5f5 */
-  color: var(--primary-color);       /* antes: #4a2c82 */
+  background-color: var(--card-bg);
+  color: var(--primary-color);
 }
 
-table th:hover {
-  background-color: #ede7f6;
-}
+/* Hovers con variables (evita grises fijos; deja coherente con tema) */
+table th:hover { background-color: var(--card-bg); opacity: .9; }
+table th.sorted { background-color: var(--card-bg); opacity: 1; }
 
-table th.sorted {
-  background-color: #e1bee7;
-}
 
 table td {
   padding: 8px 10px; /* reducido */
@@ -150,13 +153,9 @@ table td {
   text-align: center;
 }
 
-table tr:hover {
-  background-color: #f5f5f5;
-}
+table tr:hover { background-color: transparent; }
 
-table tr:nth-child(even) {
-  background-color: #fafafa;
-}
+table tr:nth-child(even) { background-color: transparent; }
 
 table tr:nth-child(even):hover {
   background-color: #f0f0f0;

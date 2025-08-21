@@ -52,13 +52,13 @@
 
 
 .rrhh-scope .kpi-card {
-  width: 120px;   /* ancho fijo */
+  width: 120px;
   height: 120px;
-  background: #fafafa;
+  background: var(--card-bg);           /* antes: #fafafa */
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-  justify-content: center; /* centrar contenido verticalmente */
-  align-items:center;
+  justify-content: center;
+  align-items: center;
   display: flex;
   gap: 0;
   flex: none;
@@ -68,23 +68,20 @@
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
               box-shadow 0.3s ease,
               background-color 0.3s ease;
-  user-select: none;
 }
 
 
 .rrhh-scope .kpi-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 12px 28px rgba(29, 209, 161, 0.25);
-  background-color: #e0fff6;
-  z-index: 10;
+  background-color: var(--card-bg);     /* antes: #e0fff6 */
 }
 
 .rrhh-scope .kpi-card.activo {
-  background-color: #1dd1a1;
-  color: white;
-  box-shadow: 0 14px 36px rgba(29, 209, 161, 0.4);
+  background-color: var(--secondary-color); /* antes: #1dd1a1 */
+  color: #fff;
+  box-shadow: 0 14px 36px rgba(16, 172, 132, 0.35);
   transform: translateY(-6px);
-  cursor: default;
 }
 
 .rrhh-scope .kpi-icon {
@@ -115,16 +112,10 @@
 }
 
 .rrhh-scope .kpi-title {
-  font-size: 0.8rem;          
+  font-size: 0.8rem;
   font-weight: 300;
-  color: #666;
-  text-transform:capitalize;
-  letter-spacing: 0.04em;
-  user-select: none;
-  min-width: none;
-  white-space: nowrap;
-  flex-shrink: 0;
-  padding: 0;
+  color: var(--text-color);      /* antes: #666 */
+  opacity: .75;
 }
 
 .rrhh-scope .kpi-card.activo .kpi-title {
@@ -149,10 +140,10 @@
   font-size: 18px;
   border: 2px solid #cbd5e1;
   border-radius: 12px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  background-color: #f9fafb;
-  color: #2d3748;
+  background-color: var(--card-bg);     /* antes: #f9fafb */
+  color: var(--text-color);             /* antes: #2d3748 */
   box-shadow: inset 1px 1px 3px rgba(0,0,0,0.05);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .rrhh-scope .input-busqueda::placeholder {

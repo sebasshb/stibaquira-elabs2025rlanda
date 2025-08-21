@@ -21,36 +21,38 @@
   text-align: center;
 }
 
-
 .rrhh-scope .grafico { background:#fff; }
 
-/* --- Contenedor principal --- */
-.rrhh-scope .dashboard-container {
-  max-width: 1200px;
-  margin: 40px auto;
-  margin-left: 80px;
-  padding: 24px 32px;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-  min-height: 90vh;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  transition: background-color 0.3s ease;
-}
-
 /* --- Título --- */
+/* Título dashboard a variables (ya centrado) */
 .rrhh-scope .dashboard-container > h1 {
   font-weight: 600;
   font-size: 2rem;
-  color: #1a202c;
+  color: var(--text-color);   /* antes: #1a202c */
   user-select: none;
   text-align: center;
   letter-spacing: 1.2px;
   text-transform: uppercase;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
 }
+
+/* KPI title con variable */
+.rrhh-scope .kpi-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-color);   /* antes: #666 */
+  opacity: .75;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  user-select: none;
+}
+
+/* Input con variables */
+.rrhh-scope .input-busqueda {
+  background-color: var(--card-bg);  /* antes: #f9fafb */
+  color: var(--text-color);          /* antes: #2d3748 */
+}
+
 
 /* --- Banner KPIs (ajustado para ser más compacto) --- */
 .rrhh-scope .kpi-banner {

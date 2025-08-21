@@ -1,17 +1,6 @@
 /* DashboardWorkshop.css — versión escopada */
 .rrhh-scope .dashboard-container {
-  max-width: 1660px;  /* más amplio, consistente con admin */
-  width: 100%;
-  margin: 24px auto;
-  padding: 24px;
-  background: var(--card-gradient);
-  color: var(--text-color);
-  border-radius: 16px;
-  box-shadow: 0 12px 24px rgba(0,0,0,0.08);
-}
-
-.rrhh-scope .dashboard-container {
-  max-width: 1600px;
+  max-width: 1660px;  /* homogéneo con admin */
   width: 100%;
   margin: 24px auto;
   padding: 24px;
