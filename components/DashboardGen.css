@@ -1,0 +1,396 @@
+/* --- Reset básico y base --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f0f2f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Contenedor principal --- */
+.dashboard-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 24px 32px;
+  padding-left: 16px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  transition: background-color 0.3s ease;
+}
+
+/* --- Título --- */
+.dashboard-container > h1 {
+  font-weight: 100;
+  font-size: 0.5rem;
+  color: #1a202c;
+  user-select: none;
+  text-align: center;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+}
+
+/* --- Banner KPIs (ajustado para ser más compacto) --- */
+.kpi-banner {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: flex-start; 
+  align-items: flex-start;
+}
+
+
+.kpi-card {
+  width: 120px;   /* ancho fijo */
+  height: 120px;
+  background: #fafafa;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  justify-content: center; /* centrar contenido verticalmente */
+  align-items:center;
+  display: flex;
+  gap: 0;
+  flex: none;
+  min-width: 120px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s ease,
+              background-color 0.3s ease;
+  user-select: none;
+}
+
+
+.kpi-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(29, 209, 161, 0.25);
+  background-color: #e0fff6;
+  z-index: 10;
+}
+
+.kpi-card.activo {
+  background-color: #1dd1a1;
+  color: white;
+  box-shadow: 0 14px 36px rgba(29, 209, 161, 0.4);
+  transform: translateY(-6px);
+  cursor: default;
+}
+
+.kpi-icon {
+  font-size: 8px;         
+  flex-shrink: 0;
+  transition: color 0.3s ease;
+  line-height:1.2;
+}
+
+.kpi-card.activo .kpi-icon {
+  color: #fff;
+}
+
+.kpi-info {
+  display: flex;
+  justify-content: flex-start; 
+  align-items: center; 
+  flex-direction: row; 
+  gap: 0;  
+  width: 50%;            
+}
+
+.kpi-value {
+  font-weight: 1200;
+  font-size: 2rem;        
+  letter-spacing: 2px;
+  line-height: 0.5;
+}
+
+.kpi-title {
+  font-size: 0.8rem;          
+  font-weight: 300;
+  color: #666;
+  text-transform:capitalize;
+  letter-spacing: 0.04em;
+  user-select: none;
+  min-width: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.kpi-card.activo .kpi-title {
+  color: #def7ec;
+}
+
+/* --- Controles filtro y búsqueda --- */
+.controles {
+  display: flex;
+  gap:18px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;           
+  margin: 0 auto;  
+  
+}
+
+.input-busqueda {
+  flex: 1 1 320px;
+  padding: 14px 20px;
+  font-size: 18px;
+  border: 2px solid #cbd5e1;
+  border-radius: 12px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: #f9fafb;
+  color: #2d3748;
+  box-shadow: inset 1px 1px 3px rgba(0,0,0,0.05);
+}
+
+.input-busqueda::placeholder {
+  color: #a0aec0;
+  font-style: italic;
+}
+
+.input-busqueda:focus {
+  outline: none;
+  border-color: #1dd1a1;
+  box-shadow: 0 0 10px #87ecd1aa;
+  background-color: #fff;
+}
+
+.botones-filtro {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.botones-filtro button {
+  background-color: #e2e8f0;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #4a5568;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.2s ease;
+  user-select: none;
+  text-transform: uppercase;
+}
+
+.botones-filtro button:hover {
+  background-color: #1dd1a1;
+  color: white;
+  transform: scale(1.05);
+}
+
+.botones-filtro button.activo {
+  background-color: #10ac84;
+  color: white;
+  box-shadow: 0 6px 18px rgba(16, 172, 132, 0.6);
+  transform: scale(1.1);
+  cursor: default;
+}
+
+/* --- Mensajes y errores --- */
+.error {
+  color: #e53e3e;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-align: center;
+  margin: 20px 0;
+  user-select: none;
+}
+
+.info-mensaje {
+  margin: 8px 0 16px 0;
+  font-size: 14px;
+  color: #718096;
+  font-style: italic;
+  text-align: center;
+  user-select: none;
+}
+
+/* --- Gráficos y contenedores --- */
+.graficos {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.grafico {
+  background-color: #fff;
+  padding: 28px 32px;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.3s ease;
+  position: relative;
+}
+
+.grafico:hover {
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Mapa grande --- */
+.map-large {
+  background-color: #fff;
+  padding: 28px 32px;
+  border-radius: 18px;
+  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.12);
+  position: relative;
+}
+
+.map-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  user-select: none;
+}
+
+.btn-volver {
+  background-color: #1dd1a1;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 18px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.25s ease;
+  box-shadow: 0 4px 10px rgba(29, 209, 161, 0.5);
+}
+
+.btn-volver:hover {
+  background-color: #10ac84;
+  transform: scale(1.05);
+}
+
+/* --- Lista de nombres --- */
+.lista-nombres {
+  max-height: 300px;
+  overflow-y: auto;
+  background: #f7fafc;
+  border: 2px solid #cbd5e1;
+  border-radius: 14px;
+  padding: 16px 24px;
+  font-size: 1rem;
+  color: #2d3748;
+  box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.1);
+  transition: box-shadow 0.3s ease;
+  user-select: text;
+}
+
+.lista-nombres:hover {
+  box-shadow: inset 0 2px 6px rgb(0 0 0 / 0.15);
+}
+
+.lista-nombres ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lista-nombres li {
+  padding: 10px 0;
+  border-bottom: 1px solid #e2e8f0;
+  transition: background-color 0.2s ease;
+  cursor: default;
+  user-select: text;
+}
+
+.lista-nombres li:hover {
+  background-color: #e6fffa;
+}
+
+/* --- Scroll personalizado para lista de nombres --- */
+.lista-nombres {
+  scrollbar-width: thin;
+  scrollbar-color: #1dd1a1 #f7fafc;
+}
+
+.lista-nombres::-webkit-scrollbar {
+  width: 10px;
+}
+
+.lista-nombres::-webkit-scrollbar-track {
+  background: #f7fafc;
+  border-radius: 14px;
+}
+
+.lista-nombres::-webkit-scrollbar-thumb {
+  background-color: #1dd1a1;
+  border-radius: 14px;
+  border: 2px solid #f7fafc;
+}
+
+/* --- Animaciones sutiles --- */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard-container > h1,
+.kpi-banner,
+.controles,
+.graficos,
+.lista-nombres {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+.kpi-card {
+  will-change: transform, box-shadow, background-color;
+}
+
+.btn-volver {
+  will-change: background-color, transform;
+}
+
+/* --- Responsive --- */
+@media (max-width: 900px) {
+  .kpi-banner {
+    justify-content: center;
+  }
+
+  .botones-filtro {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard-container {
+    padding: 16px 20px;
+  }
+
+  .input-busqueda {
+    font-size: 16px;
+    padding: 12px 16px;
+  }
+
+  .kpi-card {
+    flex: 1 1 100%;
+    min-width: auto;
+  }
+
+  .botones-filtro button {
+    flex: 1 1 48%;
+  }
+}
