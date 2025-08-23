@@ -117,13 +117,16 @@ const rrhhPage = () => {
       </Head>
 
       <div className="admin-container rrhh-scope">
-        <header className="admin-header">
-          <div className="header-content">
-            <h1 className="admin-title">🧠Panel Recursos Humanos</h1>
-            <ThemeToggle />
-          </div>
+          <header className="admin-header">
+            <div className="header-content">
+              <a href="/" className="header-logo" aria-label="Morris &amp; Opazo - inicio">
+                <span className="sr-only">Morris &amp; Opazo</span>
+              </a>
+              <h1 className="admin-title">🧠Panel Recursos Humanos</h1>
+              <ThemeToggle />
+            </div>
+            <nav className="admin-nav">
 
-          <nav className="admin-nav">
             <button
               onClick={() => handleSetSection('inicio')}
               className={`nav-item ${activeSection === 'inicio' ? 'active' : ''}`}

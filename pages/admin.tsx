@@ -155,12 +155,16 @@ const AdminPage = () => {
         <title>Admin | Workshop M&amp;O</title>
       </Head>
     <div className="admin-container">
-      <header className="admin-header">
-        <div className="header-content">
-          <h1 className="admin-title">📚 Panel de Administración</h1>
-          <ThemeToggle /> {/* Añadido el toggle de tema */}
-        </div>
-        <nav className="admin-nav">
+        <header className="admin-header">
+          <div className="header-content">
+            <a href="/" className="header-logo" aria-label="Morris &amp; Opazo - inicio">
+              <span className="sr-only">Morris &amp; Opazo</span>
+            </a>
+            <h1 className="admin-title">📚 Panel de Administración</h1>
+            <ThemeToggle />
+          </div>
+          <nav className="admin-nav">
+
           <button onClick={() => setActiveSection('inicio')} className="nav-item">🏠 Inicio</button>
           <button onClick={() => setActiveSection('anuncios')} className="nav-item">📢 Anuncios</button>
           <button onClick={() => setActiveSection('archivos')} className="nav-item">📂 Archivos</button>

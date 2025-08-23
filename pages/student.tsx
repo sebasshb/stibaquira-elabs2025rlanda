@@ -253,10 +253,14 @@ const StudentPage = () => {
       <div className="admin-container">
         <header className="admin-header">
           <div className="header-content">
+            <a href="/" className="header-logo" aria-label="Morris &amp; Opazo - inicio">
+              <span className="sr-only">Morris &amp; Opazo</span>
+            </a>
             <h1 className="admin-title">📚 Panel del Estudiante</h1>
             <ThemeToggle />
           </div>
           <nav className="admin-nav">
+
             <button onClick={() => setActiveSection('inicio')} className="nav-item">🏠 Inicio</button>
             <button onClick={() => setActiveSection('anuncios')} className="nav-item">📢 Anuncios</button>
             <button onClick={() => setActiveSection('labs')} className="nav-item">🧑‍💻 Laboratorios</button>
