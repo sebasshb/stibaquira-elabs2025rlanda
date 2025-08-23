@@ -65,21 +65,34 @@ export default function MorrisNews() {
         <div className="mn-grid">
           {posts.map((p, i) => (
             <a
-              key={i}
-              className="mn-card"
-              href={p.link}
-              target="_blank"
-              rel="noreferrer"
+                key={i}
+                className="mn-card"
+                href={p.link}
+                target="_blank"
+                rel="noreferrer"
             >
-              <div className="mn-title">{p.title}</div>
-              {p.pubDate && (
-                <div className="mn-date">
-                  {new Date(p.pubDate).toLocaleDateString()}
+                {p.image ? (
+                <div className="mn-thumb-wrap">
+                    <img
+                    className="mn-thumb"
+                    src={p.image}
+                    alt={p.title || "miniatura"}
+                    loading="lazy"
+                    referrerPolicy="no-referrer"
+                    />
                 </div>
-              )}
-              <div className="mn-excerpt">Leer más…</div>
+                ) : null}
+
+                <div className="mn-title">{p.title}</div>
+                {p.pubDate && (
+                <div className="mn-date">
+                    {new Date(p.pubDate).toLocaleDateString()}
+                </div>
+                )}
+                <div className="mn-excerpt">Leer más…</div>
             </a>
-          ))}
+            ))}
+
         </div>
       )}
     </section>

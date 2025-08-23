@@ -1077,3 +1077,20 @@ body {
     50% { opacity: 1; }
   }
 }
+
+/* Miniaturas del feed */
+.morris-news .mn-thumb-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 9;        /* proporción estable */
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 0.6rem;
+  background: rgba(127,127,127,0.1); /* placeholder */
+}
+
+.morris-news .mn-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
