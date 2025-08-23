@@ -13,6 +13,8 @@ import '../public/styles/admin.css';
 import { useRouter } from 'next/navigation';
 import ThemeToggle from '../src/app/context/ThemeToggle';
 import Head from 'next/head';
+import dynamic from 'next/dynamic';
+const MorrisNews = dynamic(() => import('../components/MorrisNews'), { ssr: false });
 
 const notificationSound = 'https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3';
 
@@ -264,10 +266,16 @@ const StudentPage = () => {
 
         <main className="admin-main">
           {activeSection === 'inicio' && (
-            <div className="section-container">
-              <h2>🏫 Bienvenido al Panel del Estudiante</h2>
-              <p>Aquí podrás ver los anuncios y archivos compartidos por los administradores.</p>
-            </div>
+            <>
+              <div className="section-container">
+                <h2>🏫 Bienvenido al Panel del Estudiante</h2>
+                <p>Aquí podrás ver los anuncios y archivos compartidos por los administradores.</p>
+              </div>
+              {/* Novedades del blog (Morris & Opazo) */}
+              <div className="section-container">
+                <MorrisNews />
+              </div>  
+            </>
           )}
 
           {activeSection === 'anuncios' && (
