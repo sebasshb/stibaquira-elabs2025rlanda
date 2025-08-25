@@ -16,7 +16,7 @@ import Head from 'next/head';
 import dynamic from 'next/dynamic';
 const MorrisNews = dynamic(() => import('../components/MorrisNews'), { ssr: false });
 
-const notificationSound = 'https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3';
+const notificationSound = '/sounds/notification.mp3';
 
 const INACTIVITY_TIMEOUT = 5 * 60 * 1000;
 
@@ -59,6 +59,19 @@ const StudentPage = () => {
   const inactivityTimer = useRef<NodeJS.Timeout | null>(null);
   const lastActivityRef = useRef(Date.now());
   const router = useRouter();
+
+  const playBeep = () => {
+    try {
+      // Clona el <audio> base para permitir beeps “encadenados”
+      const a = audioRef.current?.cloneNode(true) as HTMLAudioElement | null;
+      if (a) {
+        a.play().catch(e => console.warn('Error al reproducir beep:', e));
+      }
+    } catch (e) {
+      console.warn('Error al clonar beep:', e);
+    }
+  };
+  
 
   const [userEmail, setUserEmail] = useState<string>('');
   const [userFullName, setUserFullName] = useState<string>('');
@@ -146,9 +159,34 @@ const StudentPage = () => {
   }, [handleSignOut]);
 
   useEffect(() => {
-    audioRef.current = new Audio(notificationSound);
-    audioRef.current.volume = 0.3;
+    const audio = new Audio(notificationSound);
+    audio.preload = 'auto';
+    audio.volume = 0.3;
+    audioRef.current = audio;
+  
+    // 🔓 Desbloquea al primer gesto del usuario
+    const unlock = async () => {
+      try {
+        await audio.play();
+        audio.pause();
+        audio.currentTime = 0;
+      } catch {}
+      window.removeEventListener('click', unlock);
+      window.removeEventListener('keydown', unlock);
+      window.removeEventListener('touchstart', unlock);
+    };
+  
+    window.addEventListener('click', unlock, { once: true });
+    window.addEventListener('keydown', unlock, { once: true });
+    window.addEventListener('touchstart', unlock, { once: true });
+  
+    return () => {
+      window.removeEventListener('click', unlock);
+      window.removeEventListener('keydown', unlock);
+      window.removeEventListener('touchstart', unlock);
+    };
   }, []);
+  
 
   const fetchAnuncios = React.useCallback(async () => {
     try {
@@ -188,7 +226,7 @@ const StudentPage = () => {
       .subscribe({
         next: ({ data }) => {
           if (data?.onCreateAnuncios) {
-            audioRef.current.play().catch(e => console.warn('Error al reproducir sonido:', e));
+            playBeep();
             setUltimoAnuncio({
               id: data.onCreateAnuncios.id,
               content: data.onCreateAnuncios.content || 'Nuevo anuncio'

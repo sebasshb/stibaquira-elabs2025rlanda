@@ -11,7 +11,41 @@ import { useRouter } from 'next/router';
 // 👇 Importo tu CSS global para que el loader herede variables/estilos
 import '../public/styles/admin.css';
 
-Amplify.configure(awsExports);
+// Mezcla aws-exports con env vars para AppSync y normaliza el endpoint
+const rawEndpoint =
+  (awsExports as any).aws_appsync_graphqlEndpoint ||
+  process.env.NEXT_PUBLIC_APPSYNC_ENDPOINT;
+
+const normalizeEndpoint = (url?: string) => {
+  if (!url || typeof url !== 'string') return url;
+  let u = url.trim();
+  // Corrige prefijos mal formados o duplicados
+  u = u.replace(/^hhttps:\/\//i, 'https://');
+  u = u.replace(/^https:\/\/https:\/\//i, 'https://');
+  return u;
+};
+
+const appSyncConfig = {
+  aws_appsync_graphqlEndpoint: normalizeEndpoint(rawEndpoint),
+  aws_appsync_region:
+    (awsExports as any).aws_appsync_region || process.env.NEXT_PUBLIC_AWS_REGION,
+  aws_appsync_authenticationType:
+    (awsExports as any).aws_appsync_authenticationType || 'API_KEY',
+  aws_appsync_apiKey:
+    (awsExports as any).aws_appsync_apiKey || process.env.NEXT_PUBLIC_APPSYNC_API_KEY,
+};
+
+// (Opcional) log 1 vez para verificar el endpoint en dev
+if (typeof window !== 'undefined' && !(window as any).__AMPLIFY_CFG_LOGGED__) {
+  console.info('[Amplify] AppSync endpoint:', appSyncConfig.aws_appsync_graphqlEndpoint);
+  (window as any).__AMPLIFY_CFG_LOGGED__ = true;
+}
+
+Amplify.configure({
+  ...awsExports,
+  ...appSyncConfig,
+});
+
 
 // Loader visual con tus clases y variables
 function LoadingScreen({ message = 'Validando sesión…' }: { message?: string }) {
