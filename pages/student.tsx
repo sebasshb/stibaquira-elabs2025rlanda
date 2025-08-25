@@ -195,23 +195,34 @@ const StudentPage = () => {
       const result = await client.graphql<GraphQLQuery<{ listAnuncios: AnunciosConnection }>>({
         query: listUltimos5Anuncios
       });
-      if (result.data?.listAnuncios?.items) {
-        const items = result.data.listAnuncios.items
-          .filter((item): item is Anuncios => item !== null)
-          .sort((a, b) => {
-            const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-            const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-            return dateB - dateA;
-          })
-          .slice(0, 5);
-        setAnuncios(items);
-      }
+  
+      const fromServer = (result.data?.listAnuncios?.items ?? [])
+        .filter((x): x is Anuncios => x !== null);
+  
+      setAnuncios(prev => {
+        // 1) Conserva lo que ya tenías (incluye lo recién llegado por suscripción)
+        const map = new Map<string, Anuncios>();
+        for (const a of prev) map.set(a.id, a);
+  
+        // 2) Superpone lo que llegó del server
+        for (const a of fromServer) map.set(a.id, a);
+  
+        // 3) Ordena por createdAt DESC y limita a 5
+        const merged = Array.from(map.values());
+        merged.sort((a, b) => {
+          const da = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const db = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          return db - da;
+        });
+        return merged.slice(0, 5);
+      });
     } catch (error) {
       console.error('Error al cargar anuncios:', error);
     } finally {
       setLoadingAnuncios(false);
     }
   }, []);
+  
 
   useEffect(() => {
     if (activeSection === 'anuncios') fetchAnuncios();
@@ -225,23 +236,52 @@ const StudentPage = () => {
       })
       .subscribe({
         next: ({ data }) => {
-          if (data?.onCreateAnuncios) {
-            playBeep();
-            setUltimoAnuncio({
-              id: data.onCreateAnuncios.id,
-              content: data.onCreateAnuncios.content || 'Nuevo anuncio'
+          const nuevo = data?.onCreateAnuncios;
+          if (!nuevo) return;
+  
+          // Sonido + modal
+          typeof playBeep === 'function'
+            ? playBeep()
+            : audioRef.current?.play().catch(e => console.warn('Error al reproducir sonido:', e));
+  
+          setUltimoAnuncio({
+            id: nuevo.id,
+            content: nuevo.content || 'Nuevo anuncio'
+          });
+  
+          // Actualiza la lista en caliente (sin esperar al server)
+          setAnuncios(prev => {
+            const map = new Map<string, Anuncios>(prev.map(a => [a.id, a]));
+            map.set(nuevo.id, {
+              id: nuevo.id,
+              content: nuevo.content ?? '',
+              createdAt: nuevo.createdAt ?? new Date().toISOString()
+            } as Anuncios);
+  
+            const merged = Array.from(map.values());
+            merged.sort((a, b) => {
+              const da = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+              const db = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+              return db - da;
             });
+            return merged.slice(0, 5);
+          });
+  
+          // (Opcional) Refresca del server unos segundos después para sincronizar
+          // con más items que hayan entrado casi a la vez:
+          setTimeout(() => {
             if (activeSection === 'anuncios') fetchAnuncios();
-          }
+          }, 3000);
         },
         error: (error) => {
           console.error('Error en suscripción:', error);
         }
       });
-    return () => {
-      subscription.unsubscribe();
-    };
+  
+    return () => subscription.unsubscribe();
   }, [activeSection, fetchAnuncios]);
+  
+  
 
   const handleCerrarAnuncio = () => setUltimoAnuncio(null);
 
