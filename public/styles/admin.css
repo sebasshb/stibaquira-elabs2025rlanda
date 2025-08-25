@@ -1197,3 +1197,55 @@ body {
   object-fit: cover;
   display: block;
 }
+
+/* === Modal Confirmar Acceso al Laboratorio === */
+.confirm-access-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1600;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.confirm-access-modal {
+  background: var(--card-gradient);
+  border-radius: var(--border-radius);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  padding: 1.6rem 1.4rem 1.4rem;
+  max-width: 540px;
+  width: 92%;
+  position: relative;
+  text-align: center;
+  border: 1px solid var(--border-color);
+}
+
+.confirm-access-modal h2 {
+  margin: 0 0 0.75rem 0;
+  color: var(--primary-color);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.confirm-access-modal p {
+  margin: 0.5rem 0;
+  color: var(--text-color);
+}
+
+.confirm-close-button {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-color);
+  padding: 0.25rem;
+}
+
+.confirm-close-button:hover {
+  color: var(--danger-color);
+}

@@ -31,6 +31,16 @@ const LAB_PROFILES = [
   { key: 'dataengineer', label: 'Data Engineer', image: '/labs/dataengineer/profile.png', labs: LABS_DE_DATA_ENGINEER },
 ];
 
+// 🔗 Mapeo Lab → OU (desde tu plataforma antigua)
+const labToOU: Record<string, string> = {
+  '/labs/dataengineer/lab1.md': 'Workshop RDS DE',
+  '/labs/dataengineer/lab2.md': 'Workshop Migration DE',
+  '/labs/dataengineer/lab3.md': 'Workshop Serverless DE',
+  '/labs/dataengineer/lab4.md': 'Workshop Athena Creation DE'
+};
+
+
+
 const StudentPage = () => {
   const [ready, setReady] = useState(false); // 🔒 Gate de render
 
@@ -51,6 +61,7 @@ const StudentPage = () => {
   const router = useRouter();
 
   const [userEmail, setUserEmail] = useState<string>('');
+  const [userFullName, setUserFullName] = useState<string>('');
   const [lightboxImage, setLightboxImage] = useState<{ src: string; alt: string } | null>(null);
 
   const handleSignOut = useCallback(async () => {
@@ -65,35 +76,56 @@ const StudentPage = () => {
   // 🔒 Verificar sesión al montar (Cognito o login API via localStorage)
   useEffect(() => {
     (async () => {
-      // 1) Intento Cognito
+      // 1) Cognito
       try {
         const attrs = await fetchUserAttributes();
         if (attrs?.email) {
           setUserEmail(attrs.email);
-          setReady(true); // ✅ sesión válida (Cognito)
+  
+          // Intenta obtener nombre completo desde Cognito
+          const cognitoFullName =
+            (attrs.name && attrs.name.trim()) ||
+            ([attrs.given_name, attrs.family_name].filter(Boolean).join(' ').trim()) ||
+            '';
+  
+          if (cognitoFullName) setUserFullName(cognitoFullName);
+  
+          setReady(true);
           return;
         }
       } catch {
-        // Puede ser sesión por API
+        // puede ser sesión por API
       }
-
-      // 2) Intento sesión por API (localStorage)
+  
+      // 2) Sesión por API (localStorage)
       try {
         const raw = localStorage.getItem('studentSession');
         const session = raw ? JSON.parse(raw) : null;
+  
         if (session?.email) {
           setUserEmail(session.email);
-          setReady(true); // ✅ sesión válida (API)
+  
+          // Trata de leer nombre de varias formas comunes
+          const sessionFullName =
+            (session.fullName && session.fullName.trim()) ||
+            (session.name && session.name.trim()) ||
+            ([session.firstName, session.lastName].filter(Boolean).join(' ').trim()) ||
+            '';
+  
+          if (sessionFullName) setUserFullName(sessionFullName);
+  
+          setReady(true);
           return;
         }
       } catch {
         // no-op
       }
-
+  
       // 3) Sin sesión válida
       router.push('/');
     })();
   }, [router]);
+  
 
   useEffect(() => {
     const setupInactivityTimer = () => {
@@ -184,6 +216,14 @@ const StudentPage = () => {
     });
   };
 
+  // Nombre a mostrar en el modal (fallback: parte del correo antes de @)
+const getDisplayName = () => {
+  if (userFullName && userFullName.trim()) return userFullName.trim();
+  if (userEmail) return userEmail.split('@')[0];
+  return 'Estudiante';
+};
+
+
   useEffect(() => {
     setSelectedProfile(null);
     setSelectedLab(null);
@@ -208,17 +248,60 @@ const StudentPage = () => {
   }, [selectedProfile, selectedLab]);
 
   const handleConfirmStartLab = async () => {
+    if (selectedProfile === null || selectedLab === null) return;
+  
     setStartLabStatus('loading');
     setErrorMsg('');
+  
     try {
+      const profile = LAB_PROFILES.find((p) => p.key === selectedProfile)!;
+      const lab = profile.labs[selectedLab];
+  
+      // separar nombre y apellido para el payload
+      const fullName = getDisplayName();
+      const [nombre, ...apellidosArr] = fullName.split(' ').filter(Boolean);
+      const apellido = apellidosArr.join(' ');
+  
+      const payload = {
+        nombre: nombre || fullName || 'Estudiante',
+        apellido: apellido || '',
+        correo: userEmail,
+        destination_ou: labToOU[lab.md] || 'Testing_Roberto'
+      };
+  
+      const resp = await fetch('https://koezp60c46.execute-api.us-east-1.amazonaws.com/assign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+  
+      const result = await resp.json();
+      if (!resp.ok) throw new Error(result?.message || `HTTP ${resp.status}`);
+  
+      if (!result?.url_acceso_temporal) {
+        throw new Error('No se recibió una URL de acceso válida');
+      }
+  
+      setStartLabStatus('success');
+      // abrir consola en pestaña nueva y cerrar modal
       setTimeout(() => {
-        setStartLabStatus('success');
+        window.open(result.url_acceso_temporal, '_blank');
+        setShowConfirmStart(false);
       }, 800);
     } catch (err: any) {
       setStartLabStatus('error');
-      setErrorMsg(err.message || 'Error al iniciar laboratorio');
+      // mensajes amigables
+      const msg = String(err?.message || err || 'Error al iniciar laboratorio');
+      if (msg.includes('404') || /No hay cuentas disponibles/i.test(msg)) {
+        setErrorMsg('❌ No hay cuentas disponibles en este momento. Intenta más tarde o elige otro laboratorio.');
+      } else if (/Failed to fetch|NetworkError/i.test(msg)) {
+        setErrorMsg('❌ Problema de conexión: verifica tu red o permisos CORS del endpoint.');
+      } else {
+        setErrorMsg(`❌ ${msg}`);
+      }
     }
   };
+  
 
   useEffect(() => {
     if (!lightboxImage) return;
@@ -241,6 +324,46 @@ const StudentPage = () => {
       document.body
     );
   };
+
+  const renderConfirmAccess = () => {
+    if (!showConfirmStart || typeof window === 'undefined' || selectedLab === null || !selectedProfile) return null;
+  
+    const profile = LAB_PROFILES.find((p) => p.key === selectedProfile)!;
+    const lab = profile.labs[selectedLab];
+    const displayName = getDisplayName();
+    const ou = labToOU[lab.md] || 'Testing_Roberto';
+  
+    return createPortal(
+      <div className="confirm-access-overlay" role="dialog" aria-modal="true" aria-label="Confirmar acceso al laboratorio" onClick={() => setShowConfirmStart(false)}>
+        <div className="confirm-access-modal" onClick={(e) => e.stopPropagation()}>
+          <button className="confirm-close-button" onClick={() => setShowConfirmStart(false)} aria-label="Cerrar">×</button>
+          <h2>Confirmar Acceso al Laboratorio</h2>
+  
+          <p>Bienvenido <strong>{displayName}</strong> al <strong>{lab.name}</strong></p>
+          <p>Ingresarás con el correo: <strong>{userEmail}</strong></p>
+          <p>Entorno de trabajo: <strong>{ou}</strong></p>
+  
+          <button
+            onClick={handleConfirmStartLab}
+            disabled={startLabStatus === 'loading'}
+            className="submit-btn"
+            style={{ minWidth: 180, marginTop: 10 }}
+          >
+            {startLabStatus === 'loading' ? 'Procesando…' : 'Enviar Solicitud'}
+          </button>
+  
+          {startLabStatus === 'success' && (
+            <p className="success-msg" style={{ marginTop: 10, color: 'var(--secondary-color)' }}>
+              ✅ ¡Éxito! Abriendo tu sesión temporal en AWS…
+            </p>
+          )}
+          {errorMsg && <p className="error-msg" style={{ marginTop: 10 }}>{errorMsg}</p>}
+        </div>
+      </div>,
+      document.body
+    );
+  };
+  
 
   // ⛔️ No pintes nada hasta tener sesión verificada
   if (!ready) return null;
@@ -452,6 +575,8 @@ const StudentPage = () => {
         )}
 
         {renderLightbox()}
+
+        {renderConfirmAccess()}
       </div>
     </>
   );
