@@ -20,6 +20,83 @@ const notificationSound = '/sounds/notification.mp3';
 
 const INACTIVITY_TIMEOUT = 5 * 60 * 1000;
 
+// Activará el uso del índice cuando lo creemos en AWS Console
+const USE_INDEX =
+  process.env.NEXT_PUBLIC_USE_ANUNCIO_INDEX === '1' ||
+  process.env.NEXT_PUBLIC_USE_ANUNCIO_INDEX === 'true';
+
+// Query del índice: byTypeCreatedAt (AppSync resolver contra GSI en DynamoDB)
+const ANUNCIOS_BY_TYPE = /* GraphQL */ `
+  query AnunciosByTypeCreatedAt(
+    $type: String!
+    $sortDirection: ModelSortDirection
+    $limit: Int
+  ) {
+    anunciosByTypeCreatedAt(
+      type: $type
+      sortDirection: $sortDirection
+      limit: $limit
+    ) {
+      items {
+        id
+        content
+        createdAt
+      }
+    }
+  }
+`;
+
+type AnunciosByTypeResp = {
+  anunciosByTypeCreatedAt?: {
+    items: (Anuncios | null)[];
+  } | null;
+};
+
+const mergeSortTop5 = (prev: Anuncios[], incoming: Anuncios[]) => {
+  const map = new Map<string, Anuncios>();
+  for (const a of prev) map.set(a.id, a);
+  for (const a of incoming) map.set(a.id, a);
+  const merged = Array.from(map.values());
+  merged.sort((a, b) => {
+    const da = a.createdAt ? Date.parse(a.createdAt) : 0;
+    const db = b.createdAt ? Date.parse(b.createdAt) : 0;
+    return db - da;
+  });
+  return merged.slice(0, 5);
+};
+
+
+// Query cruda con variables para paginar y traer createdAt
+const LIST_ANUNCIOS_PAGED = /* GraphQL */ `
+  query ListAnuncios($limit: Int, $nextToken: String) {
+    listAnuncios(limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        content
+        createdAt
+      }
+      nextToken
+    }
+  }
+`;
+
+// Parámetros de paginación
+const PAGE_SIZE = 50;   // ítems por página
+const MAX_PAGES = 3;    // hasta 150 ítems
+
+// Tipos fuertes para la respuesta y variables de la query
+type ListAnunciosResponse = {
+  listAnuncios?: {
+    items: (Anuncios | null)[];
+    nextToken?: string | null;
+  } | null;
+};
+type ListAnunciosVars = {
+  limit?: number | null;
+  nextToken?: string | null;
+};
+
+
 const LABS_DE_DATA_ENGINEER = [
   { name: 'Lab RDS',       md: '/labs/dataengineer/lab1.md', audio: '/labs/dataengineer/lab1.wav', image: '/labs/dataengineer/thumbnails/rds.png' },
   { name: 'Lab DMS',       md: '/labs/dataengineer/lab2.md', audio: '/labs/dataengineer/lab2.wav', image: '/labs/dataengineer/thumbnails/dms.png' },
@@ -189,33 +266,58 @@ const StudentPage = () => {
   
 
   const fetchAnuncios = React.useCallback(async () => {
+    setLoadingAnuncios(true);
+    const client = generateClient();
+  
     try {
-      setLoadingAnuncios(true);
-      const client = generateClient();
-      const result = await client.graphql<GraphQLQuery<{ listAnuncios: AnunciosConnection }>>({
-        query: listUltimos5Anuncios
-      });
+      // 1) Si el índice está activado (cuando lo creemos), úsalo
+      if (USE_INDEX) {
+        try {
+          const res: { data?: AnunciosByTypeResp | null } =
+            await client.graphql<GraphQLQuery<AnunciosByTypeResp>>({
+              query: ANUNCIOS_BY_TYPE,
+              variables: { type: 'ANUNCIO', sortDirection: 'DESC', limit: 5 },
+            });
   
-      const fromServer = (result.data?.listAnuncios?.items ?? [])
-        .filter((x): x is Anuncios => x !== null);
+          const fromIndex = (res.data?.anunciosByTypeCreatedAt?.items ?? [])
+            .filter((i): i is Anuncios => i !== null);
   
-      setAnuncios(prev => {
-        // 1) Conserva lo que ya tenías (incluye lo recién llegado por suscripción)
-        const map = new Map<string, Anuncios>();
-        for (const a of prev) map.set(a.id, a);
+          if (fromIndex.length > 0) {
+            setAnuncios(prev => mergeSortTop5(prev, fromIndex));
+            return;
+          }
+        } catch (e) {
+          console.warn('Índice no disponible aún; usando fallback paginado', e);
+          // cae al fallback
+        }
+      }
   
-        // 2) Superpone lo que llegó del server
-        for (const a of fromServer) map.set(a.id, a);
+      // 2) Fallback paginado (tu lógica actual, tipada)
+      let acc: Anuncios[] = [];
+      let nextToken: string | null | undefined = undefined;
+      let pages = 0;
   
-        // 3) Ordena por createdAt DESC y limita a 5
-        const merged = Array.from(map.values());
-        merged.sort((a, b) => {
-          const da = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-          const db = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-          return db - da;
-        });
-        return merged.slice(0, 5);
-      });
+      type GraphQLResult<T> = { data?: T | null };
+  
+      do {
+        const res: GraphQLResult<ListAnunciosResponse> =
+          await client.graphql<GraphQLQuery<ListAnunciosResponse>>({
+            query: LIST_ANUNCIOS_PAGED,
+            variables: { limit: PAGE_SIZE, nextToken } as ListAnunciosVars,
+          });
+  
+        const conn: ListAnunciosResponse['listAnuncios'] = res.data?.listAnuncios ?? null;
+  
+        const pageItems = (conn?.items ?? []).filter(
+          (i: Anuncios | null): i is Anuncios => i !== null
+        );
+  
+        acc = acc.concat(pageItems);
+        nextToken = conn?.nextToken ?? null;
+        pages += 1;
+      } while (pages < MAX_PAGES && nextToken);
+  
+      setAnuncios(prev => mergeSortTop5(prev, acc));
     } catch (error) {
       console.error('Error al cargar anuncios:', error);
     } finally {
@@ -225,8 +327,22 @@ const StudentPage = () => {
   
 
   useEffect(() => {
-    if (activeSection === 'anuncios') fetchAnuncios();
+    if (activeSection !== 'anuncios') return;
+  
+    let cancelled = false;
+  
+    const run = async () => {
+      await fetchAnuncios();                       // 1er fetch
+      // pequeño backoff para cubrir lecturas eventualmente inconsistentes
+      setTimeout(() => {
+        if (!cancelled) fetchAnuncios();           // 2do fetch (merge + orden ya lo hace tu función)
+      }, 1500);
+    };
+  
+    run();
+    return () => { cancelled = true; };
   }, [activeSection, fetchAnuncios]);
+  
 
   useEffect(() => {
     const client = generateClient();

@@ -10,6 +10,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import ThemeToggle from '../src/app/context/ThemeToggle'; // Nuevo import
 import Head from 'next/head'; // ✅ import nuevo
 
+const USE_INDEX =
+  process.env.NEXT_PUBLIC_USE_ANUNCIO_INDEX === '1' ||
+  process.env.NEXT_PUBLIC_USE_ANUNCIO_INDEX === 'true';
+
 interface AnnouncementInput {
   id: string;
   content: string;
@@ -79,16 +83,21 @@ const AdminPage = () => {
       const client = generateClient();
       const now = new Date();
       const timestamp = now.getTime();
+      
+      // ⬇️ NO mandes `type` (lo agrega el resolver). 
+      // Puedes también omitir `createdAt` para usar hora de servidor.
+      const input: any = {
+        id: `announce-${timestamp}`,
+        content
+        // createdAt: now.toISOString()  // opcional; mejor dejar que el backend lo ponga
+      };
+      
       const result = await client.graphql({
         query: createAnuncios,
-        variables: {
-          input: {
-            id: `announce-${timestamp}`,
-            content,
-            createdAt: now.toISOString()
-          }
-        }
+        variables: { input }
       });
+      
+      
 
       toast.success("¡Anuncio creado con éxito!");
       setNewAnnouncement('');
