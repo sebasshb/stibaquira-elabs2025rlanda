@@ -104,8 +104,15 @@ const LABS_DE_DATA_ENGINEER = [
   { name: 'Lab Athena',    md: '/labs/dataengineer/lab4.md', audio: '/labs/dataengineer/lab4.wav', image: '/labs/dataengineer/thumbnails/athena.png' },
 ];
 
+// (Recuerda reemplazar los datos con los tuyos)
+const LABS_DE_DEVOPS = [
+  { name: 'Lab EKS', md: '/labs/devops/eks.md', audio: '/labs/devops/lab1.wav', image: '/labs/devops/thumbnails/eks.png' },
+  { name: 'Lab ECS',  md: '/labs/devops/ecs.md', audio: '/labs/devops/lab2.wav', image: '/labs/devops/thumbnails/ecs.png' },
+];
+
 const LAB_PROFILES = [
   { key: 'dataengineer', label: 'Data Engineer', image: '/labs/dataengineer/profile.png', labs: LABS_DE_DATA_ENGINEER },
+  { key: 'devops', label: 'DevOps Engineer', image: '/labs/devops/profile.png', labs: LABS_DE_DEVOPS },
 ];
 
 // 🔗 Mapeo Lab → OU (desde tu plataforma antigua)
@@ -113,8 +120,14 @@ const labToOU: Record<string, string> = {
   '/labs/dataengineer/lab1.md': 'Workshop RDS DE',
   '/labs/dataengineer/lab2.md': 'Workshop Migration DE',
   '/labs/dataengineer/lab3.md': 'Workshop Serverless DE',
-  '/labs/dataengineer/lab4.md': 'Workshop Athena Creation DE'
+  '/labs/dataengineer/lab4.md': 'Workshop Athena Creation DE',
+
+  // --- NUEVO: Mapeo para los labs de DevOps ---
+  '/labs/devops/eks.md': 'Workshop EKS DOP',
+  '/labs/devops/lab2.md': 'Workshop ECS DOP',
 };
+
+
 
 
 
