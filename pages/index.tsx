@@ -128,7 +128,7 @@ const LoginPage = () => {
 
       <div className="login-container">
         <ThemeToggle />
-        <h2 className="login-title">Iniciar Sesión</h2>
+        <h2 className="login-title">Login</h2>
 
         {/* Selector de rol */}
         <div className="role-switch" style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 16 }}>
@@ -161,7 +161,7 @@ const LoginPage = () => {
         <div className="form-container">
           <input
             type="email"
-            placeholder={role === 'student' ? 'Usuario o correo' : 'Email'}
+            placeholder={role === 'student' ? 'Email' : 'Email'}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="input-field"
@@ -169,7 +169,7 @@ const LoginPage = () => {
           />
           <input
             type="password"
-            placeholder="Contraseña"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="input-field"
@@ -180,7 +180,7 @@ const LoginPage = () => {
             className="submit-btn"
             disabled={!email || !password || loading}
           >
-            {loading ? 'Ingresando…' : 'Iniciar sesión'}
+            {loading ? 'Loading...' : 'Login'}
           </button>
         </div>
 
@@ -192,7 +192,7 @@ const LoginPage = () => {
 
         {/* Ayuda visual del rol activo */}
         <p style={{ textAlign: 'center', marginTop: 10, fontSize: 12, opacity: 0.8 }}>
-          Rol seleccionado: <strong>{role.toUpperCase()}</strong>
+          Role: <strong>{role.toUpperCase()}</strong>
         </p>
       </div>
     </>
