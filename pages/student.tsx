@@ -15,6 +15,7 @@ import ThemeToggle from '../src/app/context/ThemeToggle';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
 const MorrisNews = dynamic(() => import('../components/MorrisNews'), { ssr: false });
+const AgentWidget = dynamic(() => import('../components/chat/AgentWidget'), { ssr: false });
 
 const notificationSound = '/sounds/notification.mp3';
 
@@ -126,9 +127,6 @@ const labToOU: Record<string, string> = {
   '/labs/devops/eks.md': 'Workshop EKS DOP',
   '/labs/devops/lab2.md': 'Workshop ECS DOP',
 };
-
-
-
 
 
 const StudentPage = () => {
@@ -722,7 +720,7 @@ const getDisplayName = () => {
                       className="start-lab-btn"
                       style={{
                         padding: '8px 75px', fontSize: 15,
-                        background: 'linear-gradient(to right, var(--secondary-color), var(--primary-color))',
+                        background: 'var(--start-lab-btn-gradient)',
                         color: '#fff', border: 'none', borderRadius: 9, fontWeight: 700, cursor: 'pointer',
                         boxShadow: '0 2px 8px var(--shadow-color)', minWidth: 120, minHeight: 40, marginLeft: 12
                       }}
@@ -784,6 +782,10 @@ const getDisplayName = () => {
         {renderLightbox()}
 
         {renderConfirmAccess()}
+
+        {/* Bot de soporte (Bedrock Agent) — flotante, no interfiere con el layout */}
+        <AgentWidget />
+
       </div>
     </>
   );
