@@ -19,7 +19,7 @@ const AgentWidget = dynamic(() => import('../components/chat/AgentWidget'), { ss
 
 const notificationSound = '/sounds/notification.mp3';
 
-const INACTIVITY_TIMEOUT = 5 * 60 * 1000;
+const INACTIVITY_TIMEOUT = 8 * 60 * 60 * 1000; // 8 horas
 
 // Activará el uso del índice cuando lo creemos en AWS Console
 const USE_INDEX =
@@ -736,7 +736,7 @@ const getDisplayName = () => {
                       {LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs[selectedLab].name}
                     </h3>
 
-                    <div style={{ width: '95%', justifyItems: 'left' ,  textAlign: 'justify', fontSize: 17, marginLeft: 'auto', marginRight: 'auto', overflow: 'hidden' }}>
+                    <div style={{ width: '90%', textAlign: 'justify', fontSize: 17, marginLeft: 'auto', marginRight: 'auto', overflow: 'hidden' }}>
                       <ReactMarkdown
                         components={{
                           a: ({ node, ...props }) => (
@@ -753,7 +753,7 @@ const getDisplayName = () => {
                                 }
                               }}
                               style={{
-                                maxWidth: '70%', display: 'block', margin: '40px auto', borderRadius: 12,
+                                maxWidth: '80%', display: 'block', margin: '40px auto', borderRadius: 12,
                                 boxShadow: '0 2px 8px var(--shadow-color)', cursor: 'zoom-in',
                               }}
                               alt={props.alt || 'imagen'}
