@@ -108,7 +108,7 @@ const LABS_DE_DATA_ENGINEER = [
 
 // (Recuerda reemplazar los datos con los tuyos)
 const LABS_DE_DEVOPS = [
-  { name: 'Lab EKS', md: '/labs/devops/eks.md', audio: '/labs/devops/lab1.wav', image: '/labs/devops/thumbnails/eks.png' },
+  { name: 'Lab EKS', md: '/labs/devops/eks.md', audio: '/labs/devops/eks.mp4', image: '/labs/devops/thumbnails/eks.png' },
   { name: 'Lab ECS',  md: '/labs/devops/ecs.md', audio: '/labs/devops/lab2.wav', image: '/labs/devops/thumbnails/ecs.png' },
 ];
 
@@ -732,11 +732,11 @@ const getDisplayName = () => {
                   </div>
 
                   <div className="section-container">
-                    <h3 style={{ marginBottom: 0, color: 'var(--secondary-color)', fontSize: 14 }}>
+                    <h3 style={{ textAlign: 'left', marginBottom: 0, color: 'var(--secondary-color)', fontSize: 14 }}>
                       {LAB_PROFILES.find((p) => p.key === selectedProfile)!.labs[selectedLab].name}
                     </h3>
 
-                    <div style={{ width: '90%', textAlign: 'justify', fontSize: 17, marginLeft: 'auto', marginRight: 'auto', overflow: 'hidden' }}>
+                    <div style={{ width: '95%', justifyItems: 'left' ,  textAlign: 'justify', fontSize: 17, marginLeft: 'auto', marginRight: 'auto', overflow: 'hidden' }}>
                       <ReactMarkdown
                         components={{
                           a: ({ node, ...props }) => (
