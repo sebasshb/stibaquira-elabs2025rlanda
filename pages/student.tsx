@@ -137,7 +137,7 @@ const StudentPage = () => {
   const [ultimoAnuncio, setUltimoAnuncio] = useState<{ content: string; id: string } | null>(null);
   const [anuncios, setAnuncios] = useState<Anuncios[]>([]);
   const [loadingAnuncios, setLoadingAnuncios] = useState(false);
-  const [activeSection, setActiveSection] = useState<'inicio' | 'anuncios' | 'labs'>('inicio');
+  const [activeSection, setActiveSection] = useState<'inicio' | 'anuncios' | 'labs' | 'novedades'>('inicio');
   const [selectedProfile, setSelectedProfile] = useState<string | null>(null);
   const [selectedLab, setSelectedLab] = useState<number | null>(null);
   const [markdown, setMarkdown] = useState<string>('');
@@ -592,6 +592,7 @@ const getDisplayName = () => {
           <nav className="admin-nav">
 
             <button onClick={() => setActiveSection('inicio')} className="nav-item">🏠 Inicio</button>
+            <button onClick={() => setActiveSection('novedades')} className="nav-item">📰 Novedades</button>
             <button onClick={() => setActiveSection('anuncios')} className="nav-item">📢 Anuncios</button>
             <button onClick={() => setActiveSection('labs')} className="nav-item">🧑‍💻 Laboratorios</button>
             <button onClick={handleSignOut} className="admin-logout-button">🚪 Salir</button>
@@ -605,10 +606,6 @@ const getDisplayName = () => {
                 <h2>🏫 Bienvenido al Panel del Estudiante</h2>
                 <p>Aquí podrás ver los anuncios y archivos compartidos por los administradores.</p>
               </div>
-              {/* Novedades del blog (Morris & Opazo) */}
-              <div className="section-container">
-                <MorrisNews />
-              </div>  
             </>
           )}
 
@@ -767,6 +764,12 @@ const getDisplayName = () => {
                   </div>
                 </div>
               )}
+            </div>
+          )}
+          {/* 🔄 NUEVA SECCIÓN: Novedades Morris & Opazo */}
+          {activeSection === 'novedades' && (
+            <div className="section-container">
+              <MorrisNews />
             </div>
           )}
         </main>
