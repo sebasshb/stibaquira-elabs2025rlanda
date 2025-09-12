@@ -5,12 +5,17 @@ import { callAgent } from "@/lib/agentApi";
 
 const LS_KEY = "elabs_agent_open";
 
-export default function AgentWidget() {
+type AgentWidgetProps = {
+  onLauncherMount?: (element: HTMLButtonElement | null) => void;
+};
+
+export default function AgentWidget({ onLauncherMount }: AgentWidgetProps) {
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState<boolean>(false);
   const [sessionId, setSessionId] = useState<string>();
   const [msgs, setMsgs] = useState<{ role: "user" | "agent"; html: string }[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -19,6 +24,13 @@ export default function AgentWidget() {
       if (saved === "1") setOpen(true);
     } catch {}
   }, []);
+
+  useEffect(() => {
+    // Cuando el componente se monta, si existe la prop, la llamamos con la ref del botón
+    if (onLauncherMount) {
+      onLauncherMount(launcherRef.current);
+    }
+  }, [onLauncherMount]);
 
   const toggle = () => {
     const next = !open;
@@ -43,6 +55,7 @@ export default function AgentWidget() {
     <>
       {/* Botón flotante (launcher) */}
       <button
+        ref={launcherRef}
         className="agent-launcher"
         aria-label={open ? "Cerrar chat de soporte" : "Abrir chat de soporte"}
         onClick={toggle}

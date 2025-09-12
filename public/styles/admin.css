@@ -1457,3 +1457,134 @@ body {
   }
   .agent-launcher { right: 16px; bottom: 16px; }
 }
+
+/* --- Estilos para el Tutorial Guiado --- */
+
+/* El fondo semitransparente que cubre toda la página */
+.tour-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1999; /* Justo debajo del tooltip */
+}
+
+/* La caja del tooltip */
+.tour-tooltip {
+  background: var(--card-gradient); /* <-- CAMBIO: Usar el gradiente de las tarjetas */
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  max-width: 300px;
+  min-width: 250px;
+  transition: all 0.3s ease-in-out;
+  backdrop-filter: blur(10px);      /* <-- AÑADIDO: Para el efecto glass */
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* La flecha del tooltip (apunta hacia arriba) */
+.tour-tooltip::before {
+  content: '';
+  position: absolute;
+  bottom: 100%; /* Se posiciona justo encima del tooltip */
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent transparent var(--card-bg) transparent; /* <-- CAMBIO: Usar el color sólido de las tarjetas */
+}
+
+/* Flecha por defecto (apunta hacia arriba, para tooltips ABAJO del elemento) */
+.tour-tooltip[data-placement="bottom"]::before {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-color: transparent transparent var(--card-bg) transparent;
+}
+
+/* NUEVO: Flecha para cuando el tooltip está ARRIBA del elemento */
+.tour-tooltip[data-placement="top"]::before {
+  top: 100%; /* Se posiciona en la parte de abajo del tooltip */
+  left: 50%;
+  transform: translateX(-50%);
+  border-color: var(--card-bg) transparent transparent transparent; /* La flecha apunta hacia abajo */
+}
+
+.tour-tooltip h4 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: var(--primary-color);
+  font-size: 1.1rem;
+}
+
+.tour-tooltip p {
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.tour-actions {
+  text-align: right;
+  margin-top: 10px;
+}
+
+.tour-button {
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tour-button:hover {
+  background: var(--secondary-color);
+}
+
+.tour-checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  margin-top: 16px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 12px;
+}
+
+.tour-checkbox-wrapper input[type="checkbox"] {
+  margin-right: 8px;
+  accent-color: var(--primary-color);
+}
+
+.tour-checkbox-wrapper label {
+  font-size: 0.9rem;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+/* Transformación horizontal por defecto (centrado) */
+.tour-tooltip[data-align="center"] {
+  transform: translateX(-50%);
+}
+.tour-tooltip[data-placement="top"][data-align="center"] {
+  transform: translate(-50%, -100%);
+}
+
+/* NUEVO: Transformación para alinear a la derecha */
+.tour-tooltip[data-align="right"] {
+  transform: translateX(-100%); /* Se desplaza a la izquierda */
+}
+.tour-tooltip[data-placement="top"][data-align="right"] {
+  transform: translate(-100%, -100%); /* Se desplaza a la izquierda y arriba */
+}
+
+/* NUEVO: Mover la flecha a la derecha cuando el tooltip está alineado a la derecha */
+.tour-tooltip[data-align="right"]::before {
+  left: auto; /* Anulamos el centrado */
+  right: 20px; /* La posicionamos cerca del borde derecho */
+  transform: none; /* Quitamos cualquier transform que tuviera */
+}

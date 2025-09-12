@@ -130,6 +130,32 @@ const labToOU: Record<string, string> = {
   '/labs/devops/lab2.md': 'Workshop ECS DOP',
 };
 
+const TOUR_STEPS = [
+  {
+    title: '🏠 Inicio',
+    content: 'Esta es tu pantalla de bienvenida principal. Aquí encontrarás un resumen de tu actividad.',
+  },
+  {
+    title: '📰 Novedades',
+    content: 'En esta sección podrás ver las últimas noticias y actualizaciones del blog de Morris & Opazo.',
+  },
+  {
+    title: '📢 Anuncios',
+    content: 'Aquí se listan los anuncios importantes publicados por los administradores en tiempo real.',
+  },
+  {
+    title: '🧑‍💻 Laboratorios',
+    content: '¡La sección principal! Accede a tus perfiles y guías de laboratorio desde aquí.',
+  },
+  {
+    title: '🤖 Asistente Craft',
+    content: 'Haz clic aquí para hablar con nuestro asistente de IA. Puede ayudarte con dudas sobre los laboratorios o crear tickets de soporte.',
+  },
+  {
+    title: '🚪 Salir',
+    content: 'Usa este botón para cerrar tu sesión de forma segura.',
+  },
+];
 
 const StudentPage = () => {
   const [ready, setReady] = useState(false); // 🔒 Gate de render
@@ -149,6 +175,15 @@ const StudentPage = () => {
   const inactivityTimer = useRef<NodeJS.Timeout | null>(null);
   const lastActivityRef = useRef(Date.now());
   const router = useRouter();
+
+  // --- Estados y referencias para el tutorial de inicio ---
+  const [isTourActive, setIsTourActive] = useState(false);
+  const [tourStep, setTourStep] = useState(0);
+  const [dontShowTourAgain, setDontShowTourAgain] = useState(false);
+  const tourRefs = useRef<(HTMLElement | null)[]>([]);
+  const [tourTooltipStyle, setTourTooltipStyle] = useState({});
+  const [tourPlacement, setTourPlacement] = useState('bottom'); // 'top' o 'bottom'
+  const [tourAlign, setTourAlign] = useState('center'); // 'center' o 'right'
 
   const playBeep = () => {
     try {
@@ -176,58 +211,70 @@ const StudentPage = () => {
     }
   }, [router]);
   
-  // 🔒 Verificar sesión al montar (Cognito o login API via localStorage)
-  useEffect(() => {
-    (async () => {
-      // 1) Cognito
-      try {
-        const attrs = await fetchUserAttributes();
-        if (attrs?.email) {
-          setUserEmail(attrs.email);
-  
-          // Intenta obtener nombre completo desde Cognito
-          const cognitoFullName =
-            (attrs.name && attrs.name.trim()) ||
-            ([attrs.given_name, attrs.family_name].filter(Boolean).join(' ').trim()) ||
-            '';
-  
-          if (cognitoFullName) setUserFullName(cognitoFullName);
-  
-          setReady(true);
-          return;
-        }
-      } catch {
-        // puede ser sesión por API
+// 🔒 Verificar sesión al montar y decidir si se muestra el tutorial
+useEffect(() => {
+  (async () => {
+    let sessionIsValid = false;
+
+    const checkAndTriggerTour = () => {
+      // --- Lógica del tutorial movida aquí ---
+      console.log('✅ Sesión válida, verificando si se debe mostrar el tutorial...');
+      const tourCompleted = localStorage.getItem('elab-tour-completed');
+      console.log('Valor de "elab-tour-completed" en localStorage:', tourCompleted);
+
+      if (!tourCompleted) {
+        console.log('🚀 No se encontró la clave. ¡Iniciando tutorial en 500ms!');
+        setTimeout(() => {
+          console.log('⏰ Timer finalizado. Llamando a setIsTourActive(true).');
+          setIsTourActive(true);
+        }, 500);
+      } else {
+        console.log('🛑 La clave "elab-tour-completed" fue encontrada. No se mostrará el tutorial.');
       }
-  
-      // 2) Sesión por API (localStorage)
+    };
+
+    // 1) Cognito
+    try {
+      const attrs = await fetchUserAttributes();
+      if (attrs?.email) {
+        setUserEmail(attrs.email);
+        const cognitoFullName =
+          (attrs.name && attrs.name.trim()) ||
+          ([attrs.given_name, attrs.family_name].filter(Boolean).join(' ').trim()) || '';
+        if (cognitoFullName) setUserFullName(cognitoFullName);
+        
+        setReady(true);
+        sessionIsValid = true;
+        checkAndTriggerTour(); // Llamamos al tour aquí
+      }
+    } catch { /* puede ser sesión por API */ }
+
+    // 2) Sesión por API (localStorage)
+    if (!sessionIsValid) {
       try {
         const raw = localStorage.getItem('studentSession');
         const session = raw ? JSON.parse(raw) : null;
-  
         if (session?.email) {
           setUserEmail(session.email);
-  
-          // Trata de leer nombre de varias formas comunes
           const sessionFullName =
             (session.fullName && session.fullName.trim()) ||
             (session.name && session.name.trim()) ||
-            ([session.firstName, session.lastName].filter(Boolean).join(' ').trim()) ||
-            '';
-  
+            ([session.firstName, session.lastName].filter(Boolean).join(' ').trim()) || '';
           if (sessionFullName) setUserFullName(sessionFullName);
-  
+
           setReady(true);
-          return;
+          sessionIsValid = true;
+          checkAndTriggerTour(); // O llamamos al tour aquí
         }
-      } catch {
-        // no-op
-      }
-  
-      // 3) Sin sesión válida
+      } catch { /* no-op */ }
+    }
+    
+    // 3) Si después de todo no hay sesión válida
+    if (!sessionIsValid) {
       router.push('/');
-    })();
-  }, [router]);
+    }
+  })();
+}, [router]);
   
 
   useEffect(() => {
@@ -532,6 +579,91 @@ const getDisplayName = () => {
     );
   };
 
+  useEffect(() => {
+    if (isTourActive && tourRefs.current[tourStep]) {
+      const targetNode = tourRefs.current[tourStep];
+      if (targetNode) {
+        const rect = targetNode.getBoundingClientRect();
+        const tooltipHeightEstimate = 180;
+        let newStyle: React.CSSProperties = {};
+        let placement = 'bottom';
+        let align = 'center';
+
+        // 1. Lógica VERTICAL (sin el transform)
+        if (rect.bottom + tooltipHeightEstimate > window.innerHeight) {
+          placement = 'top';
+          newStyle.top = `${rect.top - 10}px`;
+        } else {
+          placement = 'bottom';
+          newStyle.top = `${rect.bottom + 10}px`;
+        }
+
+        // 2. Lógica HORIZONTAL (sin cambios)
+        if (rect.left + rect.width / 2 > window.innerWidth / 2) {
+          align = 'right';
+          newStyle.left = `${rect.right}px`;
+        } else {
+          align = 'center';
+          newStyle.left = `${rect.left + rect.width / 2}px`;
+        }
+
+        setTourPlacement(placement);
+        setTourAlign(align);
+        setTourTooltipStyle({
+          position: 'absolute',
+          zIndex: 2000,
+          ...newStyle,
+        });
+      }
+    }
+  }, [isTourActive, tourStep]);
+
+  const handleTourNext = () => {
+    if (tourStep < TOUR_STEPS.length - 1) {
+      setTourStep(tourStep + 1);
+    } else {
+      // Es el último paso, finalizar
+      if (dontShowTourAgain) {
+        localStorage.setItem('elab-tour-completed', 'true');
+      }
+      setIsTourActive(false);
+    }
+  };
+
+  const renderTourTooltip = () => {
+    if (!isTourActive || typeof window === 'undefined') return null;
+
+    const currentStep = TOUR_STEPS[tourStep];
+
+    return createPortal(
+      <div className="tour-overlay">
+        <div className="tour-tooltip" style={tourTooltipStyle} data-placement={tourPlacement} data-align={tourAlign}>
+          <h4>{currentStep.title}</h4>
+          <p>{currentStep.content}</p>
+
+          {tourStep === TOUR_STEPS.length - 1 && (
+            <div className="tour-checkbox-wrapper">
+              <input
+                type="checkbox"
+                id="dontShowAgain"
+                checked={dontShowTourAgain}
+                onChange={(e) => setDontShowTourAgain(e.target.checked)}
+              />
+              <label htmlFor="dontShowAgain">No mostrar de nuevo</label>
+            </div>
+          )}
+
+          <div className="tour-actions">
+            <button onClick={handleTourNext} className="tour-button">
+              {tourStep < TOUR_STEPS.length - 1 ? 'Siguiente' : 'Finalizar'}
+            </button>
+          </div>
+        </div>
+      </div>,
+      document.body
+    );
+  };
+
   const renderConfirmAccess = () => {
     if (!showConfirmStart || typeof window === 'undefined' || selectedLab === null || !selectedProfile) return null;
   
@@ -590,12 +722,11 @@ const getDisplayName = () => {
             <ThemeToggle />
           </div>
           <nav className="admin-nav">
-
-            <button onClick={() => setActiveSection('inicio')} className="nav-item">🏠 Inicio</button>
-            <button onClick={() => setActiveSection('novedades')} className="nav-item">📰 Novedades</button>
-            <button onClick={() => setActiveSection('anuncios')} className="nav-item">📢 Anuncios</button>
-            <button onClick={() => setActiveSection('labs')} className="nav-item">🧑‍💻 Laboratorios</button>
-            <button onClick={handleSignOut} className="admin-logout-button">🚪 Salir</button>
+            <button ref={el => { tourRefs.current[0] = el; }} onClick={() => setActiveSection('inicio')} className="nav-item">🏠 Inicio</button>
+            <button ref={el => { tourRefs.current[1] = el; }} onClick={() => setActiveSection('novedades')} className="nav-item">📰 Novedades</button>
+            <button ref={el => { tourRefs.current[2] = el; }} onClick={() => setActiveSection('anuncios')} className="nav-item">📢 Anuncios</button>
+            <button ref={el => { tourRefs.current[3] = el; }} onClick={() => setActiveSection('labs')} className="nav-item">🧑‍💻 Laboratorios</button>
+            <button ref={el => { tourRefs.current[5] = el; }} onClick={handleSignOut} className="admin-logout-button">🚪 Salir</button>
           </nav>
         </header>
 
@@ -786,10 +917,12 @@ const getDisplayName = () => {
 
         {renderLightbox()}
 
+        {renderTourTooltip()}
+
         {renderConfirmAccess()}
 
         {/* Bot de soporte (Bedrock Agent) — flotante, no interfiere con el layout */}
-        <AgentWidget />
+        <AgentWidget onLauncherMount={el => { tourRefs.current[4] = el; }} />
 
       </div>
     </>
