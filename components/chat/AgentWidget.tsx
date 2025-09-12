@@ -16,6 +16,7 @@ export default function AgentWidget({ onLauncherMount }: AgentWidgetProps) {
   const [msgs, setMsgs] = useState<{ role: "user" | "agent"; html: string }[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const launcherRef = useRef<HTMLButtonElement>(null);
+  const logRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -31,6 +32,16 @@ export default function AgentWidget({ onLauncherMount }: AgentWidgetProps) {
       onLauncherMount(launcherRef.current);
     }
   }, [onLauncherMount]);
+
+  useEffect(() => {
+    if (logRef.current) {
+      // Usamos .scrollTo con 'smooth' para un efecto más agradable
+      logRef.current.scrollTo({
+        top: logRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  }, [msgs]); // Este efecto se ejecuta cada vez que el array 'msgs' cambia
 
   const toggle = () => {
     const next = !open;
@@ -71,7 +82,7 @@ export default function AgentWidget({ onLauncherMount }: AgentWidgetProps) {
             <button className="agent-close" onClick={toggle} aria-label="Cerrar">×</button>
           </div>
 
-          <div className="agent-log">
+          <div ref={logRef} className="agent-log">
             {msgs.map((m, i) => (
               <div key={i} className={`bubble ${m.role}`}>
                 <div dangerouslySetInnerHTML={{ __html: m.html }} />
