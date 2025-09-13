@@ -25,7 +25,7 @@ const LoginPage = () => {
   }, [router]);
 
   async function loginStudentViaApi(username: string, pass: string) {
-    // Referenciado de tu script.js (authenticate) + manejo de 401
+    // La llamada fetch no cambia
     const res = await fetch(API_AUTH_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -35,7 +35,6 @@ const LoginPage = () => {
       }),
     });
 
-    // Si no es ok, intentamos extraer mensaje y mapeamos 401
     let data: any = {};
     try { data = await res.json(); } catch {}
 
@@ -44,20 +43,12 @@ const LoginPage = () => {
       throw new Error(data?.message || `Error HTTP: ${res.status}`);
     }
 
-    // Esperamos un objeto .user con username, fullName, email, status (como en tu script.js)
-    const user = {
-      username: data?.user?.username,
-      fullName: data?.user?.fullName,
-      email: data?.user?.email,
-      status: data?.user?.status,
-      loginTime: new Date().toISOString(),
-      authSource: 'api',
-      role: 'student',
-    };
-
-    // Guardamos sesión local de estudiante
-    localStorage.setItem('studentSession', JSON.stringify(user));
-    return user;
+    // --- CAMBIO CLAVE ---
+    // Guardamos la respuesta COMPLETA de la Lambda, que ahora incluye el objeto 'session'.
+    localStorage.setItem('studentSession', JSON.stringify(data));
+    
+    // Devolvemos la respuesta completa.
+    return data;
   }
 
   const handleLogin = async () => {
@@ -70,8 +61,14 @@ const LoginPage = () => {
 
       if (role === 'student') {
         // 🔐 Estudiante: API + DynamoDB (sin Cognito)
-        const user = await loginStudentViaApi(username, password);
-        if (!user?.email) throw new Error('Respuesta de autenticación inválida');
+        // La variable ahora es 'data' para reflejar que es la respuesta completa.
+        const data = await loginStudentViaApi(username, password);
+        
+        // La validación ahora es más robusta: comprueba que existan el usuario y el sessionId.
+        if (!data?.user?.email || !data?.session?.sessionId) {
+          throw new Error('Respuesta de autenticación inválida');
+        }
+        
         router.replace('/student');
         return;
       }

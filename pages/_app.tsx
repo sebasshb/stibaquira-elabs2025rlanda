@@ -108,7 +108,10 @@ function RouteGuard({ children }: { children: React.ReactNode }) {
           try {
             const raw = typeof window !== 'undefined' ? localStorage.getItem('studentSession') : null;
             const session = raw ? JSON.parse(raw) : null;
-            if (session?.email) {
+            
+            // --- CAMBIO CLAVE ---
+            // Ahora validamos que exista tanto el email del usuario COMO el sessionId.
+            if (session?.user?.email && session?.session?.sessionId) {
               if (!cancelled) setReady(true);
               return;
             }

@@ -249,26 +249,28 @@ useEffect(() => {
       }
     } catch { /* puede ser sesión por API */ }
 
-    // 2) Sesión por API (localStorage)
+    // 2) Sesión por API (localStorage) - CORREGIDO
     if (!sessionIsValid) {
       try {
         const raw = localStorage.getItem('studentSession');
         const session = raw ? JSON.parse(raw) : null;
-        if (session?.email) {
-          setUserEmail(session.email);
-          const sessionFullName =
-            (session.fullName && session.fullName.trim()) ||
-            (session.name && session.name.trim()) ||
-            ([session.firstName, session.lastName].filter(Boolean).join(' ').trim()) || '';
+
+        // --- CAMBIO CLAVE ---
+        // Ahora buscamos el email DENTRO del objeto 'user' y verificamos que exista el sessionId
+        if (session?.user?.email && session?.session?.sessionId) { 
+          setUserEmail(session.user.email);
+          
+          // Y el nombre completo también está en 'user'
+          const sessionFullName = (session.user.fullName && session.user.fullName.trim()) || '';
           if (sessionFullName) setUserFullName(sessionFullName);
 
           setReady(true);
           sessionIsValid = true;
-          checkAndTriggerTour(); // O llamamos al tour aquí
+          checkAndTriggerTour();
         }
       } catch { /* no-op */ }
     }
-    
+        
     // 3) Si después de todo no hay sesión válida
     if (!sessionIsValid) {
       router.push('/');
