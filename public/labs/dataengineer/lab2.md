@@ -4,7 +4,7 @@ Nota Inicial: La VPC con RDS se levanta automáticamente desde el template de Cl
 
 Para descargar el script SQL necesario para este laboratorio, haz clic en el siguiente enlace: [Descargar script SQL para Lab 2](https://workshop-mo.s3.us-east-1.amazonaws.com/worldurank.sql)
 
-![image](https://raw.githubusercontent.com/sebasshb/LabDMSResources/refs/heads/main/LabDMSTemplateArch.png)
+![image](https://raw.githubusercontent.com/sebasshb/lab-imgs/refs/heads/main/DMSArch.png)
 
 # 1. Instalación de sqlcmd en CloudShell
 
@@ -945,4 +945,4 @@ Dentro del cluster en Redshift se utilizó los siguientes roles:
 
 Ha completado el laboratorio de migración de datos con AWS DMS.
 
-![image](https://raw.githubusercontent.com/sebasshb/LabDMSResources/refs/heads/main/LabDMSFinalArch.png)
+![image](https://raw.githubusercontent.com/sebasshb/lab-imgs/refs/heads/main/DMSFinalArch.png)

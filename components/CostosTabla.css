@@ -1,0 +1,174 @@
+/* --- Reset básico --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+/* --- Contenedor principal --- */
+.costos-container {
+  max-width: 1600px;
+  width: 100%;
+  font-family: Arial, sans-serif;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  margin: 0;
+}
+
+/* --- Títulos / Descripción --- */
+.costos-header {
+  font-weight: 200;
+  font-size: 1.5rem;
+  color: #001969;
+  text-align: center;
+  padding: auto;
+  margin-top: 0;
+}
+
+.costos-description {
+  text-align: center;
+  margin: 15px;
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+/* --- Controles de filtros --- */
+.controles-costos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.select-input {
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  font-size: 15px;
+  min-width: 160px;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+.boton-aplicar {
+  padding: 12px 22px;
+  border-radius: 12px;
+  border: 1px solid var(--secondary-color);
+  background-color: var(--secondary-color);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.3s;
+}
+
+.boton-aplicar:hover {
+  transform: scale(1.03);
+  opacity: 0.9;
+}
+
+/* --- Tabla --- */
+.costos-tabla-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.costos-tabla {
+  border-collapse: collapse;
+  width: auto;
+  min-width: 700px;
+  font-size: 16px;
+  text-align: center;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+.costos-tabla th,
+.costos-tabla td {
+  padding: 10px 15px;
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.costos-tabla th {
+  background-color: var(--card-bg);
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.costos-tabla tr:hover {
+  background-color: var(--hover-color);
+}
+
+/* Subencabezado / Totales */
+.costos-tabla-container h3 {
+  font-size: 1.3rem;
+  font-weight: 500;
+  text-align: center;
+  margin: 5px;
+}
+
+/* Detalle en tarjetas */
+.costos-detalle-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+
+.costos-detalle-card {
+  flex: 1;
+  min-width: 300px;
+  max-width: 48%;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+/* Hover en tarjetas */
+.costos-detalle-card:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Responsivo --- */
+@media (max-width: 900px) {
+  .costos-tabla {
+    font-size: 14px;
+    min-width: 100%;
+  }
+
+  .select-input {
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+
+  .boton-aplicar {
+    font-size: 14px;
+    padding: 10px 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .controles-costos {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .select-input,
+  .boton-aplicar {
+    flex: 1 1 100%;
+  }
+
+  .costos-tabla th,
+  .costos-tabla td {
+    padding: 8px 10px;
+  }
+}

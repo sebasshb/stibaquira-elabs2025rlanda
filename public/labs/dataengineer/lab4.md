@@ -2,92 +2,121 @@
 
 [Ver vídeo guía](https://workshopde-videos-lab.s3.us-east-1.amazonaws.com/lab_athena.mp4)
 
-**Objetivo General:**  Aprender a usar los servicios de almacenamiento y análisis de datos en AWS, ya sea Amazon S3 y Amazon Athena para guardar datos y realizar consultas SQL que permitan explorar y analizar información.
+**Objetivo General:**  Aprender a usar Amazon S3 y Amazon Athena para almacenar datos y realizar consultas SQL que permitan explorar y analizar información de forma rápida y eficiente
 
-**Introducción:**  S3 es un servicio de almacenamiento que permite guardar objetos de forma segura y escalable. La información se organiza en buckets y cada uno debe tener un nombre único a nivel global, es decir, no puede repetirse en ninguna otra cuenta de AWS del mundo. Además, por seguridad los buckets deben estar configurados para bloquear el acceso público. Esto evita que los datos sean visibles para cualquier persona y protege la privacidad de la información. 
+**Introducción:**  
 
-Athena es un servicio de consulta que permite analizar datos directamente desde Amazon S3 usando SQL. No requiere configurar ni administrar servidores, lo que facilita hacer consultas rápidas y flexibles. Athena es ideal para explorar grandes cantidades de datos almacenados en formato CSV, JSON, Parquet, entre otros. 
+   -  Amazon S3: Servicio de almacenamiento seguro y escalable. Los datos se organizan en buckets, que deben tener nombres únicos a nivel global. Por seguridad, los buckets deben bloquear el acceso público para proteger la privacidad de la información
 
-Cada vez que ejecutas una consulta en Athena, los resultados deben almacenarse en algún lugar, y por defecto, Athena los guarda en un bucket S3. Este paso es obligatorio porque Athena necesita escribirlos en un archivo que puedas revisar, descargar o reutilizar más adelante. Es por eso que en este laboratorio debes crear dos buckets S3 uno para los datos de origen que vas a consultar y otro para los resultados de las consultas que ejecutes con Athena.
+  - Amazon Athena: Servicio de consultas SQL que permite analizar datos directamente desde S3, sin necesidad de configurar servidores. Ideal para explorar grandes cantidades de datos en formatos como CSV, JSON o Parquet
+
+
+Cada vez que ejecutas una consulta en Athena, los resultados deben almacenarse, y por defecto, Athena los guarda en un bucket S3. Este paso es obligatorio. Por ello, en este laboratorio se crearán 2 buckets: uno para los datos y otro para los resultados
+
 
 ![S3](https://raw.githubusercontent.com/iscatalan/arquitecturas/refs/heads/main/Arquitectura%20Athena.png)
 
 **Tarea 1: Extraer los datos para el trabajo del laboratorio**
 
-- Debes descargar los datos books.csv con temática de libros: [Link de descarga](https://workshop-mo.s3.us-east-1.amazonaws.com/libros_laboratorio.csv)
+Descarga el archivo books.csv con temática de libros: [Link de descarga](https://workshop-mo.s3.us-east-1.amazonaws.com/libros_laboratorio.csv)
 
-**Tarea 2: Crear un bucket S3 para los datos del Laboratorio**
 
-- Debes ir a S3 y crear un nuevo bucket S3. Solo debes insertar un nombre para tu bucket, los demás valores debes dejarlos tal cual
+**Tarea 2: Crear 2 buckets S3 para el Laboratorio**
 
-![S3](https://raw.githubusercontent.com/iscatalan/arquitecturas/refs/heads/main/athena%20(16).jpg)
+En la Consola de AWS debes buscar S3. Ya adentro debes seleccionar "Crear Bucket"
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena.png)
 
-**Tarea 2.1: Debes cargar tus datos al bucket recién creado**
 
-- Tienes que abrir el bucket creado y seleccionar “Cargar”. Luego, "Agregar Archivos" para subir tu archivo con los datos
+Asígnale un nombre a tu bucket. Todos los demás parámetros debes dejarlos con los valores predeterminados
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(1).png)
 
-![S3](https://raw.githubusercontent.com/iscatalan/arquitecturas/refs/heads/main/athena%20(1).jpg)
 
-![S3](https://raw.githubusercontent.com/iscatalan/arquitecturas/refs/heads/main/athena%20(4).jpg)
+Selecciona "Crear Bucket"
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(2).png)
 
-**Tarea 3: Crear un bucket para guardar los resultados de las consultas de Athena**
 
-- Crea un nuevo bucket en S3, igual al que generaste en la tarea 2 en que solo lo nombraste y los demás valores los dejaste tal cual. Este bucket será utilizado exclusivamente para almacenar los resultados de las consultas de Athena
+Debes crear el segundo bucket para los resultados de Athena. Para ello repite los pasos anteriores. Tu panel de buckets debería verse así: 
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(3).png)
 
-![S3](https://raw.githubusercontent.com/iscatalan/arquitecturas/refs/heads/main/Captura%20de%20pantalla%202025-07-17%20215631.png) 
+**Tarea 3: Cargar los datos al bucket**
 
-**Tarea 4: Configurar la ubicación de los resultados de las consultas en Athena**
+Selecciona tu bucket que fue creado para guardar los datos
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(4).png)
+
+Ya adentro del bucket, presiona "Cargar"
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(5).png)
+
+Se te abrirá otra página en donde debes seleccionar "Agregar archivos". Ahí tienes que subir "libros_laboratorio.csv"
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(6).png)
+
+Para finalizar haz click en "Cargar". Debería verse así: 
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(7).png)
+
+
+**Tarea 4: Entrar a Athena y definir ubicación de resultados**
  
-- Debes ir a Athena y seleccionar la opción “Iniciar el editor de consultas”, asegurándote de que esté seleccionada la opción “Consulte sus datos con Trino SQL”.
-Trino SQL te permite consultar datos almacenados en S3 usando sentencias SQL, de manera rápida y sin necesidad de configurar servidores.
+En la consola de AWS busca "Athena" y selecciona el servicio
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(8).png)
 
-- Antes de crear la tabla, es necesario configurar la ubicación de los resultados de las consultas en S3. Para ello, deberás vincular esta configuración con el bucket que creaste en la tarea 3 (el dedicado exclusivamente a resultados de Athena).
+Elige "Consulte sus datos con Trino SQL" y haz click en "Iniciar el editor de consultas"
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(9).png) 
 
-![S3](https://raw.githubusercontent.com/iscatalan/arquitecturas/refs/heads/main/athena%20(5).jpg) 
+Antes de crear tu tabla y consulta es necesario configurar la ubicación de los resultados. Para ello debes ir a "Editar ajustes"
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(10).png)
 
-![S3](https://raw.githubusercontent.com/iscatalan/arquitecturas/refs/heads/main/athena%20(6).jpg) 
+Haz clic en “Browse S3” para buscar y seleccionar el bucket que creaste exclusivamente para los resultados de Athena
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(11).png)
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(12).png)
+
+Una vez elegido el bucket, asegúrate de guardar la configuración para que Athena almacene allí los resultados de todas tus consultas
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(13).png)
+
 
 **Tarea 5: Crear tabla en Athena**
-- Para crear una tabla en Athena, primero selecciona la opción “Datos del bucket S3”, lo que indica que la tabla se construirá a partir de los datos almacenados en ese bucket. A continuación, debes asignar un nombre a la tabla y luego seleccionar “Crear una base de datos” para nombrarla también. Mantén todos los demás campos y configuraciones tal como están por defecto
 
-![S3](https://raw.githubusercontent.com/iscatalan/arquitecturas/refs/heads/main/athena%20(10).jpg)
 
-- Luego, debes seleccionar el conjunto de datos y elegir el bucket de S3 donde previamente guardaste el archivo CSV que contiene la información para la tabla
+Con la configuración ya lista, procede a crear tu tabla en Athena. Para ello, selecciona la opción “Datos del bucket de S3”
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(14).png)
 
-![S3](https://raw.githubusercontent.com/iscatalan/arquitecturas/refs/heads/main/athena%20(11).jpg)
+Asígnale un nombre a la tabla
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(15).png)
 
-- Ahora, en el tipo de tabla, deja la opción por defecto que es “Apache Hive”, pero cambia el formato de archivo a CSV.
-El resto de las configuraciones deben mantenerse por defecto, sin realizar ningún cambio 
+Selecciona "Crear una base de datos" y otorgale un nombre
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(16).png)
 
-![S3](https://raw.githubusercontent.com/iscatalan/arquitecturas/refs/heads/main/athena%20(12).jpg)
+En la sección "Conjunto de datos", selecciona el bucket de S3 donde previamente cargaste tu archivo con los datos
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(17).png)
 
-- En los detalles de la tabla, debes nombrar todas las columnas correspondientes a los datos. Puedes agregarlas una por una o seleccionar la opción “Agregar columnas en bloque”, donde podrás ingresar todas las columnas de forma rápida usando el formato:
-<“nombre” tipo, “nombre” tipo, ...>
-Por ejemplo, en este caso deberás escribir:
-autor string, libro string, year int 
+En "Formato de datos", mantén Apache Hive como tipo de tabla y cambia el formato de archivo a CSV. Deja el resto con valores por defecto
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(18).png)
 
-![S3](https://raw.githubusercontent.com/iscatalan/arquitecturas/refs/heads/main/athena%20(13).jpg)
+En la sección “Detalles de la columna” debes nombrar cada columna y asignarle un tipo de dato, por ejemplo: autor string, libro string, year int. Esto indica a Athena cómo interpretar cada campo de tus datos al consultar la tabla
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(19).png)
 
-- Finalmente, podrás ver la vista previa de la consulta. Para concluir el proceso, simplemente selecciona “Crear tabla”
+Finalmente, revisa la vista previa de la consulta de la tabla y, para completar el proceso haz clic en “Crear tabla”
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(20).png)
 
-![S3](https://raw.githubusercontent.com/iscatalan/arquitecturas/refs/heads/main/athena%20(14).jpg)
 
-**Tarea 6: Realizar consultas de tipo SQL en Athena**
-- Antes de comenzar a realizar las consultas SQL, debes asegurarte de tener seleccionada la base de datos y la tabla correspondientes. Esto garantiza que las consultas se ejecuten sobre la tabla correcta
+**Tarea 6: Ejecutar consultas en Athena** 
 
-![S3](https://raw.githubusercontent.com/iscatalan/arquitecturas/refs/heads/main/athena%20(15).jpg)
+Antes de ejecutar las consultas verifica en el panel izquierdo que tengas seleccionadas la base de datos y la tabla correspondientes. Esto asegura que las consultas se realicen sobre la tabla correcta
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(21).png)
 
-- Ya configurado lo anterior puedes comenzar a realizar consultas SQL y responder a las siguientes preguntas:
+Con la configuración lista, ya puedes comenzar a ejecutar consultas SQL para explorar tus datos, por ejemplo:
   
-  **1.¿Cuáles son todos los libros en la base de datos?** 
+  **1. ¿Cuáles son todos los libros en la base de datos?** 
   
   *Respuesta:*
 
   SELECT * FROM tablalibros;
 
-![S3](https://raw.githubusercontent.com/iscatalan/arquitecturas/refs/heads/main/Captura%20de%20pantalla%202025-07-17%20233322.png)
+ Para ello, escribe la consulta en el editor y haz clic en "Ejecutar". Tal como se muestra a continuación: 
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(22).png)
 
-![S3](https://raw.githubusercontent.com/iscatalan/arquitecturas/refs/heads/main/Captura%20de%20pantalla%202025-07-17%20233952.png)
+Al ejecutar la consulta, los resultados se mostrarán directamente debajo del editor en forma de tabla, con las columnas y filas correspondientes a los datos consultados
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(23).png)
+
+Continúa explorando los datos ejecutando consultas SQL para responder las siguientes preguntas, por ejemplo: 
 
   **2. ¿Qué libros escribió “Dean Koontz”?**
 
@@ -99,8 +128,22 @@ autor string, libro string, year int
   
   WHERE autor = 'Dean Koontz';
 
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(24).png)
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(25).png)
 
-  **3.¿Qué libros fueron publicados después del año 2000?**
+
+  **3. ¿Qué libros escribió “Dean Koontz”?**
+
+  *Respuesta:*
+  
+  SELECT * 
+  
+  FROM tablalibros
+  
+  WHERE autor = 'Dean Koontz';
+
+
+  **4. ¿Qué libros fueron publicados después del año 2000?**
 
    *Respuesta:*
 
@@ -110,7 +153,7 @@ autor string, libro string, year int
   
   WHERE year > 2000;
 
-  **4. ¿Cuáles son todos los autores únicos que hay en la base de datos?**
+  **5. ¿Cuáles son todos los autores únicos que hay en la base de datos?**
 
    *Respuesta:*
 
@@ -118,7 +161,7 @@ autor string, libro string, year int
   
   FROM tablalibros;
 
-  **5. ¿Cuáles son los libros ordenados desde el más antiguo al más reciente?**
+  **6. ¿Cuáles son los libros ordenados desde el más antiguo al más reciente?**
 
   *Respuesta:*
 
@@ -129,7 +172,7 @@ autor string, libro string, year int
   ORDER BY year ASC;
 
 
-  **6. ¿Qué libros fueron publicados en el año 1999?**
+  **7. ¿Qué libros fueron publicados en el año 1999?**
 
    *Respuesta:*
 
@@ -140,11 +183,6 @@ autor string, libro string, year int
   WHERE year = 1999;
 
 
-
-
-*Comentario adicional*: Para eliminar una tabla en SQL se utiliza el comando DROP TABLE nombre_tabla, mientras que para eliminar una base de datos se usa DROP DATABASE nombre_base_de_datos. Es importante tener en cuenta que, antes de eliminar una base de datos, se deben eliminar todas las tablas que contiene. De lo contrario, se generará un error.
-
-  
 
 **¡Felicidades, has completado el laboratorio!**
 
