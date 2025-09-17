@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import DOMPurify from "dompurify";
-import { marked } from 'marked';
 
 const LS_KEY = "elabs_agent_open";
 
@@ -103,17 +102,9 @@ export default function AgentWidget({
 
       // 4. Actualiza el estado con la respuesta
       setSessionId(data.sessionId);
-
-      // 1. Convierte la respuesta Markdown a HTML usando la nueva librería
-      const unsafeHtml = await marked(data.outputHtml || '');
-
-      // 2. Sanea el HTML resultante por seguridad (como ya hacías)
-      const safeHtml = DOMPurify.sanitize(unsafeHtml, { USE_PROFILES: { html: true } });
-
-      // 3. Actualiza el estado con el HTML seguro y ya formateado
       setMsgs(m => [
         ...m,
-        { role: "agent", html: safeHtml }
+        { role: "agent", html: DOMPurify.sanitize(data.outputHtml, { USE_PROFILES: { html: true } }) }
       ]);
 
     } catch (error) {
