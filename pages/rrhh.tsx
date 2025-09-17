@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { signOut, fetchUserAttributes } from 'aws-amplify/auth';
+import { signOut, fetchUserAttributes, fetchAuthSession } from 'aws-amplify/auth';
 import '../public/styles/admin.css';
 import '../components/rrhh.css';
 import { useRouter } from 'next/navigation';
@@ -15,8 +15,12 @@ import DashboardWorkshop from '../components/DashboardWorkshop';
 import CostosTabla from '../components/CostosTabla';
 import CostosGrafico from '../components/CostosGrafico'
 import Head from 'next/head';
+import dynamic from 'next/dynamic'; // <-- Añadir dynamic
 
-const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutos
+// Importa el AgentWidget de forma dinámica para evitar problemas de render en servidor (SSR)
+const AgentWidget = dynamic(() => import('../components/chat/AgentWidget'), { ssr: false });
+
+const INACTIVITY_TIMEOUT = 8 * 60 * 60 * 1000;  // 8 Horas
 
 const rrhhPage = () => {
   const [ready, setReady] = useState(false); // 🔒 Gate de render
@@ -339,6 +343,25 @@ const rrhhPage = () => {
             </div>
           )}
         </main>
+
+        <AgentWidget 
+          // 🚨 
+          apiEndpoint={process.env.NEXT_PUBLIC_RRHH_AGENT_API!}
+          
+          // Para RRHH, obtenemos el token JWT de la sesión de Cognito
+          getAuthHeaderValue={async () => {
+            try {
+              const session = await fetchAuthSession();
+              return session.tokens?.idToken?.toString() ?? null;
+            } catch {
+              return null;
+            }
+          }}
+          
+          // Para RRHH, la Lambda extrae la identidad del token, no necesita el sessionId en el body
+          sendSessionIdInBody={false}
+        />
+
       </div>
     </>
   );

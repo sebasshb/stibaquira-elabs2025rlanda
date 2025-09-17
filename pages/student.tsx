@@ -924,7 +924,27 @@ const getDisplayName = () => {
         {renderConfirmAccess()}
 
         {/* Bot de soporte (Bedrock Agent) — flotante, no interfiere con el layout */}
-        <AgentWidget onLauncherMount={el => { tourRefs.current[4] = el; }} />
+        <AgentWidget
+          // 🚨 REEMPLAZA esta URL por la de tu API para ESTUDIANTES
+          apiEndpoint={process.env.NEXT_PUBLIC_AGENT_API!}
+          
+          // Para Estudiante, obtenemos el sessionId del localStorage
+          getAuthHeaderValue={async () => {
+            try {
+              const raw = localStorage.getItem('studentSession');
+              const session = raw ? JSON.parse(raw) : null;
+              return session?.session?.sessionId ?? null;
+            } catch {
+              return null;
+            }
+          }}
+          
+          // Para Estudiante, la Lambda sí espera el sessionId en el body
+          sendSessionIdInBody={true}
+
+          // Esta prop se mantiene igual para el tour guiado
+          onLauncherMount={el => { tourRefs.current[4] = el; }}
+        />
 
       </div>
     </>

@@ -1,4 +1,4 @@
-## Laboratorio ETL con AWS Glue
+# Laboratorio ETL con AWS Glue
 
 [Ver vídeo guía](https://workshopde-videos-lab.s3.us-east-1.amazonaws.com/Lab_glue.mp4)
 

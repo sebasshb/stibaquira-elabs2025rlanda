@@ -1449,6 +1449,17 @@ body {
 .bubble p { margin: 0; }
 .bubble strong { font-weight: 700; }
 
+/* === FIX: Ajuste para listas dentro de las burbujas del chat === */
+.bubble ul,
+.bubble ol {
+  /* Mueve las viñetas/números DENTRO del flujo del texto */
+  list-style-position: inside;
+
+  /* Elimina el padding extra que los navegadores añaden a las listas,
+     ya que la burbuja ya tiene su propio padding. */
+  padding-left: 0;
+}
+
 /* Móvil: pantalla completa */
 @media (max-width: 640px) {
   .agent-panel {
