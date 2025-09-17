@@ -23,7 +23,11 @@ Descarga el archivo books.csv con temática de libros: [Link de descarga](https:
 
 **Tarea 2: Crear 2 buckets S3 para el Laboratorio**
 
-En la Consola de AWS debes buscar S3. Ya adentro debes seleccionar "Crear Bucket"
+En la Consola de AWS debes buscar S3 y hacer click en el servicio
+
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(27).png)
+
+Ya adentro de S3 debes seleccionar "Crear Bucket". Tal como se muestra a continuación: 
 ![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena.png)
 
 

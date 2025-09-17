@@ -18,7 +18,7 @@ En la consola de AWS, en el buscador superior escribe DynamoDB y haz clic en el 
 En el menú lateral izquierdo haz click en "Explorar Elementos". Para así llegar directamente a los elementos de la tabla. Para ello selecciona "Usuarios" 
 ![Serverless](https://raw.githubusercontent.com/iscatalan/labserverlesspic/refs/heads/main/LabServerless2.png)
 
-Verás que la tabla ya contiene 20 usuarios, algunos con contraseña y otros sin. El objetivo de este laboratorio será crear más usuarios mediante nuestras pruebas con Lambda y API Gateway.
+Verás que la tabla ya contiene 20 usuarios, algunos con contraseña y otros sin. El objetivo de este laboratorio será crear más usuarios mediante nuestras pruebas con Lambda y API Gateway
 ![Serverless](https://raw.githubusercontent.com/iscatalan/labserverlesspic/refs/heads/main/LabServerless3.png)
 
 
@@ -33,38 +33,38 @@ Haz clic en Crear función
 Selecciona "Crear desde cero" y luego nombrar tu función
 ![Serverless](https://raw.githubusercontent.com/iscatalan/labserverlesspic/refs/heads/main/LabServerless6.png) 
 
-Para tiempo de ejecución selecciona "Python 3.13" 
+Para tiempo de ejecución selecciona "Python 3.13" y en Arquitectura deja el valor otorgado por defecto
 ![Serverless](https://raw.githubusercontent.com/iscatalan/labserverlesspic/refs/heads/main/LabServerless7.png)
 
 En "Permisos" expande la sección apretando "Cambiar el rol de ejecución predeterminado". Luego selecciona "Uso de un rol existente" 
 ![Serverless](https://raw.githubusercontent.com/iscatalan/labserverlesspic/refs/heads/main/LabServerless8.png)
 
 
-En este laboratorio, el rol ya está creado previamente. Debes seleccionar el rol cuyo nombre contenga LambdaExecutionRole.
-![Serverless](https://raw.githubusercontent.com/iscatalan/labserverlesspic/refs/heads/main/LabServerless9.png)
-Este rol le otorga a tu función Lambda los permisos necesarios para interactuar con DynamoDB, específicamente para insertar y consultar elementos en la tabla "Usuarios"
+En este laboratorio, el rol ya está creado previamente. Debes seleccionar el rol cuyo nombre contenga "LambdaExecutionRole"
+![Serverless](https://raw.githubusercontent.com/iscatalan/labserverlesspic/refs/heads/main/LabAthena%20(26).png)
+Este rol le otorga a tu función Lambda los permisos necesarios para interactuar con DynamoDB, específicamente para insertar y consultar elementos en la tabla "Usuarios".
 
 
-Para terminar selecciona "Crear una función
+Para terminar selecciona "Crear una función"
 ![Serverless](https://raw.githubusercontent.com/iscatalan/labserverlesspic/refs/heads/main/LabServerless10.png)
 
 
 **Tarea 3: Escribir el código de la función Lambda**
 
-### [Descarga el script aquí](https://workshop-mo.s3.us-east-1.amazonaws.com/script_lambda.py)
+## [Descarga el script aquí](https://workshop-mo.s3.us-east-1.amazonaws.com/script_lambda.py)
 
-Tu función Lambda ya está creada. El siguiente paso es agregar el código del script que permitirá realizar las operaciones GET y POST de este laboratorio
+Tu función Lambda ya está creada. El siguiente paso es agregar el código del script que permitirá realizar las operaciones GET y POST de este laboratorio.
 
 Primero debes eliminar el código predeterminado
 ![Serverless](https://raw.githubusercontent.com/iscatalan/labserverlesspic/refs/heads/main/LabServerless.png)
 
 Luego debes insertar el script en el bloque de código. Una vez insertado debes presionar "Deploy" para aplicar los cambios
-![Serverless](https://raw.githubusercontent.com/iscatalan/labserverlesspic/refs/heads/main/LabServerless%20(1).png)
+![Serverless](https://raw.githubusercontent.com/iscatalan/labserverlesspic/refs/heads/main/LabServerless%20(1)1111.png)
 
 
 **Tarea 4: Probar la función Lambda** 
 
-Para probar nuestra función debes ir a la sección "Probar" y seleccionar "Crear un nuevo evento"
+Para probar la función, dirígete a la sección "Probar" y mantén seleccionada la opción "Crear un nuevo evento" que aparece de forma predeterminada 
 ![Serverless](https://raw.githubusercontent.com/iscatalan/labserverlesspic/refs/heads/main/LabServerless%20(2).png)
 
 En la sección Evento de prueba (JSON), primero elimina la plantilla que aparece por defecto. El objetivo es que el evento quede escrito en formato clave–valor, es decir, con los datos que realmente vas a enviar a la función
@@ -83,7 +83,7 @@ Primero selecciona el método que usarás para la prueba. En este caso, elige "h
 ![Serverless](https://raw.githubusercontent.com/iscatalan/labserverlesspic/refs/heads/main/LabServerless%20(4).png) 
 
 Haz clic en el botón Probar para ejecutar el primer evento. Al hacerlo, se mostrará el detalle de la ejecución de la función Lambda, donde podrás ver el resultado de la consulta:
-- Si el usuario tiene contraseña, aparecerá reflejado en la respuesta con el valor "True
+- Si el usuario tiene contraseña, aparecerá reflejado en la respuesta con el valor "True"
 
 - Si el usuario no tiene contraseña, quedará indicado con valor "False" 
 
@@ -118,13 +118,13 @@ Nuevamente en la consola vuelve a DynamoDB y a la tabla "Usuarios". Ahí podrás
 
 **Tarea 5: Crear una API en API Gateway**
 
-En el buscador de la consola escribe API Gateway y entra al servicio
+En el buscador de la consola escribe API Gateway e ingresa al servicio
 ![Serverless](https://raw.githubusercontent.com/iscatalan/labserverlesspic/refs/heads/main/LabServerless%20(11).png) 
 
 Selecciona "Crear una API"
 ![Serverless](https://raw.githubusercontent.com/iscatalan/labserverlesspic/refs/heads/main/LabServerless%20(12).png)
 
-Elige "API REST" y "crear"
+Elige "API REST" y "Crear"
 ![Serverless](https://raw.githubusercontent.com/iscatalan/labserverlesspic/refs/heads/main/LabServerless%20(13).png)
 
 Nombra tu API (ej: APIUsuarios) y deja las demás opciones por defecto, luego "Crear API"
@@ -136,7 +136,7 @@ Con la API creada debes crear un recurso en API Gateway. Esto le indica a la API
 Nombra tu recurso y deja los demás elementos por defecto, luego selecciona "Crear recurso"
 ![Serverless](https://raw.githubusercontent.com/iscatalan/labserverlesspic/refs/heads/main/LabServerless%20(1)22.png)
 
-Una vez creado el recurso, puedes comenzar a configurar las rutas mediante “Crear método”. Asegúrate de tener seleccionado el recurso y elige "Crear método"
+Una vez creado el recurso, puedes comenzar a configurar las rutas mediante “Crear método”. Asegúrate de tener seleccionado el recurso y haz click en "Crear método"
 ![Serverless](https://raw.githubusercontent.com/iscatalan/labserverlesspic/refs/heads/main/LabServerless%20(17).png)
 
 Para el tipo de método selecciona "GET"
@@ -162,7 +162,7 @@ Selecciona “Nueva etapa”, asigna un nombre y haz clic en "Implementar" para 
 
 
 
-*Deploy significa publicar oficialmente tu API. Antes del deploy, todo (recursos, rutas, métodos e integraciones) está solo guardado como borrador Al hacer el deploy, las rutas se activan y se genera un Invoke URL que puedes usar para probar la API en el navegador, Postman o desde código*
+*Deploy significa publicar oficialmente tu API. Antes del deploy, todo (recursos, rutas, métodos e integraciones) está solo guardado como borrador Al hacer el deploy, las rutas se activan y se genera un Invoke URL que puedes usar para probar la API en el navegador, Postman o desde código.*
 
 
 
@@ -175,6 +175,8 @@ Copia tú "URL de invocación"
 Para probar el método GET y consultar si un usuario tiene contraseña en la tabla "Usuarios" debes abrir tu navegador. Y, pegar la URL de invocación con la siguiente estructura:
 
 *InvokeURL/nombreRecurso?username=<"nombre del usuario">*
+
+
 Esto mostrará en pantalla true o false, según si el usuario tiene contraseña registrada.
 
 En este ejemplo, el usuario Hugo sí tiene contraseña. Para confirmarlo, vuelve a la consola y revisa la tabla "Usuarios" en DynamoDB, como se muestra a continuación: 

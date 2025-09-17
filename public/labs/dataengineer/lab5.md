@@ -24,8 +24,11 @@ Como buena práctica debes crear 4 buckets. Esto sirve para que en el flujo ETL 
 - Bucket 4: (Target de nuestro segundo ETL Job): Aquí se guardará los resultados de las transformaciones y limpieza que haremos a nuestros datos
 
 
-Entonces como primer paso debes ir a S3 para crear tu primer bucket: 
-![S3](https://raw.githubusercontent.com/iscatalan/LabGlue/refs/heads/main/labglue1.png)
+Como primer paso debes buscar S3 en la barra de búsqueda de la consola de AWS y hacer click en el servicio
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(27).png)
+
+Ya adentro de S3 selecciona "Crear bucket"
+![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena.png)
 
 Asigna un nombre a tu bucket y deja los demás ajustes con los valores por defecto
 ![S3](https://raw.githubusercontent.com/iscatalan/LabGlue/refs/heads/main/LabGlue2.png)
@@ -53,33 +56,44 @@ En AWS, los permisos entre servicios son fundamentales para que puedan interactu
 
 Para ello debes ir a IAM y crear un nuevo rol con los siguiente:
 
-1) Crear un nuevo rol y seleccionar Glue como caso de uso
+1) En el buscador de la consola de AWS escribe "IAM" e ingresa al servicio
+![IAM](https://raw.githubusercontent.com/iscatalan/LabGlue/refs/heads/main/LabAthena%20(28).png)
+
+2) Crear un nuevo rol y seleccionar Glue como caso de uso
 ![IAM](https://raw.githubusercontent.com/iscatalan/LabGlue/refs/heads/main/LabGlue8.png)
 ![IAM](https://raw.githubusercontent.com/iscatalan/LabGlue/refs/heads/main/LabGlue9.png)
 
-2) Otorgar al rol la política AmazonS3FullAccess
+3) Otorgar al rol la política AmazonS3FullAccess
 ![IAM](https://raw.githubusercontent.com/iscatalan/LabGlue/refs/heads/main/LabGlue10.png)
 
-3) Entrar al rol creado y agregar una política en modo JSON para otorgar permisos más específicos
+4) Entrar al rol creado y agregar una política en modo JSON para otorgar permisos más específicos
 ![IAM](https://raw.githubusercontent.com/iscatalan/LabGlue/refs/heads/main/LabGlue11.png) 
 
-4) La política debe incluir s3:GetObject y s3:PutObject para todos los buckets. Se recomienda repetir la declaración de los buckets dos veces: Con * para que Glue pueda acceder a todos los objetos dentro del bucket. Y sin * para que Glue pueda acceder al bucket en sí, no solo a los objetos internos.
+5) La política debe incluir s3:GetObject y s3:PutObject para todos los buckets. Se recomienda repetir la declaración de los buckets dos veces: Con * para que Glue pueda acceder a todos los objetos dentro del bucket. Y sin * para que Glue pueda acceder al bucket en sí, no solo a los objetos internos
 
-5) También debe incluir los permisos para que Glue pueda crear nuevas y actualizar las tablas del catálogo de Glue
+6) La política también debe incluir los permisos necesarios para que Glue pueda crear y actualizar las tablas del Data Catalog
 
 ![IAM](https://raw.githubusercontent.com/iscatalan/LabGlue/refs/heads/main/LabGlue19.png)
 ![IAM](https://raw.githubusercontent.com/iscatalan/LabGlue/refs/heads/main/LabGlue52.png)
+
+7) Nombra tu nueva política y haz click en "Guardar los cambios"
 ![IAM](https://raw.githubusercontent.com/iscatalan/LabGlue/refs/heads/main/LabGlue21.png) 
 
 **Tarea 4: Crear nuestra base de datos en Glue**
 
 La base de datos servirá para almacenar la información de nuestros procesos ETL. Es el lugar donde se registran y crean las tablas y los datos transformados
 
-Debes ir a Glue y debajo de Data Catalog seleccionar "Databases" 
+En el buscador de la consola de AWS busca Glue y selecciona el servicio
+![ETL](https://raw.githubusercontent.com/iscatalan/LabGlue/refs/heads/main/LabAthena%20(29).png)
+
+
+En el panel izquierdo de Glue, dentro de la sección Data Catalog, selecciona Databases
 ![ETL](https://raw.githubusercontent.com/iscatalan/LabGlue/refs/heads/main/LabGlue14.png)
 
-Luego, crear tu Base de datos. Debes nombrarla y seleccionar "Create database" 
+Luego, crear tu Base de datos. Para ello debes hacer click en "Add Database"
 ![ETL](https://raw.githubusercontent.com/iscatalan/LabGlue/refs/heads/main/LabGlue15.png)
+
+Debes nombrarla y seleccionar "Create database" 
 ![ETL](https://raw.githubusercontent.com/iscatalan/LabGlue/refs/heads/main/LabGlue16.png)
 
 
