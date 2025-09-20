@@ -1609,7 +1609,7 @@ body {
 .copy-code-button {
   position: absolute;
   top: -5px;
-  right: 0px;
+  right: 2px;
   
   /* Hacemos el botón cuadrado y centramos el icono */
   width: 36px;
