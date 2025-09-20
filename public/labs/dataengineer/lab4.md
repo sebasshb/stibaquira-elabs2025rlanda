@@ -111,8 +111,9 @@ Con la configuración lista, ya puedes comenzar a ejecutar consultas SQL para ex
   **1. ¿Cuáles son todos los libros en la base de datos?** 
   
   *Respuesta:*
-
+  ```bash
   SELECT * FROM tablalibros;
+  ```
 
  Para ello, escribe la consulta en el editor y haz clic en "Ejecutar". Tal como se muestra a continuación: 
 ![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(22).png)
@@ -126,11 +127,13 @@ Continúa explorando los datos ejecutando consultas SQL para responder las sigui
 
   *Respuesta:*
   
+  ```bash
   SELECT * 
   
   FROM tablalibros
   
   WHERE autor = 'Dean Koontz';
+  ```
 
 ![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(24).png)
 ![S3](https://raw.githubusercontent.com/iscatalan/labathenapics/refs/heads/main/LabAthena%20(25).png)
@@ -139,56 +142,64 @@ Continúa explorando los datos ejecutando consultas SQL para responder las sigui
   **3. ¿Qué libros escribió “Dean Koontz”?**
 
   *Respuesta:*
-  
+
+  ```bash
   SELECT * 
   
   FROM tablalibros
   
   WHERE autor = 'Dean Koontz';
+  ```
 
 
   **4. ¿Qué libros fueron publicados después del año 2000?**
 
    *Respuesta:*
-
+  ```bash
   SELECT * 
   
   FROM tablalibros
   
   WHERE year > 2000;
+  ```
 
   **5. ¿Cuáles son todos los autores únicos que hay en la base de datos?**
 
    *Respuesta:*
 
+  ```bash
   SELECT DISTINCT autor 
   
   FROM tablalibros;
+  ```
 
   **6. ¿Cuáles son los libros ordenados desde el más antiguo al más reciente?**
 
   *Respuesta:*
 
+  ```bash
   SELECT * 
   
   FROM tablalibros
   
   ORDER BY year ASC;
+  ```
 
 
   **7. ¿Qué libros fueron publicados en el año 1999?**
 
    *Respuesta:*
-
+  ```bash
   SELECT libro, year
   
   FROM tablalibros
   
   WHERE year = 1999;
+  ```
 
 
 
-**¡Felicidades, has completado el laboratorio!**
+## ¡Felicidades, has completado el laboratorio!
 
 
 

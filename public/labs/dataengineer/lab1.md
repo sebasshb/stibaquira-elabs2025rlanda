@@ -33,9 +33,9 @@ por medio del Puerto 1433.
 
 ####
 
-    * Nombre del grupo de seguridad: RDS-SecurityGroup
-    * Descripción: (Puedes dejarla en blanco)
-    * VPC: Elige Lab-VPC.
+* Nombre del grupo de seguridad: RDS-SecurityGroup
+* Descripción: (Puedes dejarla en blanco)
+* VPC: Elige Lab-VPC.
 
 ![image](https://raw.githubusercontent.com/sebasshb/Laboratorio-RDS/refs/heads/main/Captura001.png)
 
@@ -43,14 +43,14 @@ por medio del Puerto 1433.
 
 ####
 
-    * Regla 1:
-        * Tipo: Todo el tráfico
-        * Origen: 0.0.0.0/0
-    * Regla 1:
-        * Tipo: MSSQL
-        * Protocolo: TCP
-        * Rango de puertos: 1433 (se pondrá automáticamente)
-        * Origen: 0.0.0.0/0
+ * Regla 1:
+     * Tipo: Todo el tráfico
+     * Origen: 0.0.0.0/0
+ * Regla 1:
+     * Tipo: MSSQL
+     * Protocolo: TCP
+     * Rango de puertos: 1433 (se pondrá automáticamente)
+     * Origen: 0.0.0.0/0
 
 ##
 
@@ -82,9 +82,9 @@ Ahora procedemos a crear un Subnet Group para la Instancia RDS que vamos a despl
 
 ####
 
-    * Name: RDS-SubnetGroup
-    * Description: (Opcional pero recomendable)
-    * VPC: Elige Lab-VPC.
+ * Name: RDS-SubnetGroup
+ * Description: (Opcional pero recomendable)
+ * VPC: Elige Lab-VPC.
 
 ![image](https://raw.githubusercontent.com/sebasshb/Laboratorio-RDS/refs/heads/main/Captura01.png)
 
@@ -92,8 +92,8 @@ Ahora procedemos a crear un Subnet Group para la Instancia RDS que vamos a despl
 
 ####
 
-    * Availability Zones: Elige us-east-1a y us-east-1b.
-    * Subnets: Elige tus dos subnets correspondientes a las zonas de disponibilidad seleccionadas.
+ * Availability Zones: Elige us-east-1a y us-east-1b.
+ * Subnets: Elige tus dos subnets correspondientes a las zonas de disponibilidad seleccionadas.
 
 6. Finalmente, haz clic en "Create".
 
@@ -118,9 +118,9 @@ Ahora procedemos a crear un Subnet Group para la Instancia RDS que vamos a despl
 
 ####
 
-    * Choose a database creation method: Selecciona Standard create.
-    * Engine type: Selecciona Microsoft SQL Server.
-    * Database management type: Deja Amazon RDS tal cual como está.
+ * Choose a database creation method: Selecciona Standard create.
+ * Engine type: Selecciona Microsoft SQL Server.
+ * Database management type: Deja Amazon RDS tal cual como está.
 
 ![image](https://raw.githubusercontent.com/sebasshb/Laboratorio-RDS/refs/heads/main/Captura4.png)
 
@@ -140,10 +140,10 @@ Ahora procedemos a crear un Subnet Group para la Instancia RDS que vamos a despl
 
 ####
 
-    * DB instance identifier: lab-database
-    * Master username: Deja admin.
-    * Credentials Management: Pon Self Managed.
-    * Master password: #LabDBase3! (Confirma la contraseña)
+* DB instance identifier: lab-database
+* Master username: Deja admin.
+* Credentials Management: Pon Self Managed.
+* Master password: #LabDBase3! (Confirma la contraseña)
 
 ![image](https://raw.githubusercontent.com/sebasshb/Laboratorio-RDS/refs/heads/main/Captura7.png)
 
@@ -151,8 +151,8 @@ Ahora procedemos a crear un Subnet Group para la Instancia RDS que vamos a despl
 
 ####
 
-    * DB instance class: Deja db.t3.micro.
-    * Storage type: Deja General Purpose SSD (gp2) (lo que te pone por default).
+* DB instance class: Deja db.t3.micro.
+* Storage type: Deja General Purpose SSD (gp2) (lo que te pone por default).
 
 ![image](https://raw.githubusercontent.com/sebasshb/Laboratorio-RDS/refs/heads/main/Captura8.png)
 
@@ -160,11 +160,11 @@ Ahora procedemos a crear un Subnet Group para la Instancia RDS que vamos a despl
 
 ####
 
-    * Compute resource: Deja la opción Don't connect to an EC2 compute resource.
-    * Virtual private cloud (VPC): Pon tu Lab-VPC.
-    * DB Subnet Group: Deja la que creamos antes (RDS-SubnetGroup).
-    * Public access: Habilita la opción (Yes).
-    * VPC security group (firewall): Elige Choose existing y selecciona el RDS-SecurityGroup que creamos.
+* Compute resource: Deja la opción Don't connect to an EC2 compute resource.
+* Virtual private cloud (VPC): Pon tu Lab-VPC.
+* DB Subnet Group: Deja la que creamos antes (RDS-SubnetGroup).
+* Public access: Habilita la opción (Yes).
+* VPC security group (firewall): Elige Choose existing y selecciona el RDS-SecurityGroup que creamos.
 
 ![image](https://raw.githubusercontent.com/sebasshb/Laboratorio-RDS/refs/heads/main/Captura9.png)
 

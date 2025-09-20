@@ -206,8 +206,9 @@ Ahí podrás confirmar si es que se ha insertado una nueva fila con los datos de
 
 
 
-**¡Felicidades, has completado el laboratorio!**
+# ¡Felicidades, has completado el laboratorio!
 
+##
 
 **DESAFÍO FINAL: Crea tu propia API con GET y POST**
 

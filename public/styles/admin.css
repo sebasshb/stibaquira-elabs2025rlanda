@@ -1599,3 +1599,58 @@ body {
   right: 20px; /* La posicionamos cerca del borde derecho */
   transform: none; /* Quitamos cualquier transform que tuviera */
 }
+
+/* === Estilos para Bloques de Código con Botón de Copiar (VERSIÓN CON ICONO) === */
+.code-block-wrapper {
+  position: relative;
+  margin-bottom: 1.5em;
+}
+
+.copy-code-button {
+  position: absolute;
+  top: -5px;
+  right: 0px;
+  
+  /* Hacemos el botón cuadrado y centramos el icono */
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+
+  background-color: rgba(0,0,0,0.1); /* Fondo sutil */
+  color: var(--text-color); /* El color del icono será el del texto */
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  
+  opacity: 0.7;
+  transition: all 0.2s ease-in-out;
+}
+
+.code-block-wrapper:hover .copy-code-button {
+  opacity: 1;
+  background-color: rgba(0,0,0,0.2);
+}
+
+.copy-code-button:hover {
+  border-color: var(--chat-header-gradient);
+}
+
+.copy-code-button.copied {
+  background-color: #28a745;
+  border-color: #28a745;
+  color: #fff; /* Color del icono check en blanco */
+  opacity: 1;
+  transform: scale(1.05); /* Pequeño efecto de crecimiento */
+}
+
+/* El SVG hereda el color y se ajusta */
+.copy-code-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Aseguramos que el <pre> tenga espacio para el botón */
+.markdown-content pre {
+  padding-top: 40px !important;
+}

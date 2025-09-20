@@ -185,7 +185,7 @@ Esto te permitirá visualizar las primeras filas y tener una idea de cómo está
 
 
 4) Para dimensionar el problema, puedes contar cuántos registros contienen este valor con la siguiente consulta: 
-
+   ```bash
    SELECT
 
    COUNT_IF(type = 'Not Given') AS not_given_type,
@@ -207,11 +207,12 @@ Esto te permitirá visualizar las primeras filas y tener una idea de cómo está
    COUNT_IF(listed_in = 'Not Given') AS not_given_listed_in
 
    FROM "AwsDataCatalog"."glue-db-movies"."tabla-netflix"; (Adaptar según tus datos)
+   ```
 
    ![ETL](https://raw.githubusercontent.com/iscatalan/LabGlue/refs/heads/main/LabGlue38.png)
 
 5) Luego con una query revisa la cantidad de datos duplicados:
-
+   ```bash
    SELECT *
 
    FROM "AwsDataCatalog"."glue-db-movies"."tabla-netflix"
@@ -229,6 +230,7 @@ Esto te permitirá visualizar las primeras filas y tener una idea de cómo está
    )  
 
    ORDER BY title;
+   ```
 
    ![ETL](https://raw.githubusercontent.com/iscatalan/LabGlue/refs/heads/main/LabGlue39.png)
 
@@ -306,7 +308,7 @@ Ya con una buena estructura en los datos, es posible realizar consultas que perm
 1) ¿Cuántas películas y series se agregaron cada año?
   
    *Respuesta:*
-
+   ```bash
    SELECT 
   
    year_added_netflix,
@@ -322,17 +324,18 @@ Ya con una buena estructura en los datos, es posible realizar consultas que perm
    GROUP BY year_added_netflix, type
   
    ORDER BY year_added_netflix asc;
+   ```
 
 
 
    **Ejemplo de la primera consulta:** ![ETL](https://raw.githubusercontent.com/iscatalan/LabGlue/refs/heads/main/LabServerless%20(2).png)
 
-   ****
+##
 
 2) ¿Cómo se distribuyen las películas y series por país?
 
    *Respuesta:*
-
+   ```bash
    SELECT 
    
    country,
@@ -348,13 +351,14 @@ Ya con una buena estructura en los datos, es posible realizar consultas que perm
    GROUP BY country, type
    
    ORDER BY total DESC
+   ```
 
    ****
-
+##
 3) ¿Cuáles son las películas y series clasificadas como comedias?
 
    *Respuesta:*
-
+   ```bash
    SELECT 
    
    title,
@@ -372,12 +376,13 @@ Ya con una buena estructura en los datos, es posible realizar consultas que perm
    WHERE listed_in LIKE '%Comedies%'
    
    ORDER BY release_year DESC
+   ```
 
    ***** 
 4) ¿Cómo evolucionan las tendencias de producción a lo largo del tiempo usando el año de estreno?
 
    *Respuesta:*
-
+   ```bash
    SELECT 
    
    release_year,
@@ -393,9 +398,10 @@ Ya con una buena estructura en los datos, es posible realizar consultas que perm
    GROUP BY release_year, type
    
    ORDER BY release_year ASC;
+   ```
 
 
-**DESAFÍO: REALIZAR CONSULTAS Y RESPONDER LAS SIGUIENTES PREGUNTAS:**
+# DESAFÍO: REALIZAR CONSULTAS Y RESPONDER LAS SIGUIENTES PREGUNTAS:
 
 **Directores**
 
@@ -414,7 +420,7 @@ Ya con una buena estructura en los datos, es posible realizar consultas que perm
 Así, puedes seguir explorando los datos mediante consultas según las preguntas que se te ocurran
 
 
-**¡Felicidades, has completado el laboratorio!**
+## ¡Felicidades, has completado el laboratorio!**
 
 
 

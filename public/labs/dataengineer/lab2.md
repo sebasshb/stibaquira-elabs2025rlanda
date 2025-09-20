@@ -36,6 +36,9 @@ sudo curl https://packages.microsoft.com/config/rhel/7/prod.repo | sudo tee /etc
 ```bash
 sudo yum install -y mssql-tools msodbcsql17 
 ```
+
+##
+
 si te pide aceptar license terms, escribe ‘yes’ en el input.
 
 ##
@@ -209,8 +212,8 @@ En la AWS Management Console:
 
 ###
 
-    * Type: All traffic
-    * Source: 0.0.0.0/0
+  * Type: All traffic
+  * Source: 0.0.0.0/0
 
 ###
 
@@ -218,8 +221,8 @@ En la AWS Management Console:
 
 ###
 
-    * Type: RDP
-    * Source: 0.0.0.0/0
+  * Type: RDP
+  * Source: 0.0.0.0/0
 
 ##
 
