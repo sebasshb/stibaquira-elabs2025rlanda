@@ -907,14 +907,15 @@ const getDisplayName = () => {
           )}
         </main>
 
-        {ultimoAnuncio && (
+        {ultimoAnuncio && typeof window !== 'undefined' && createPortal(
           <div className="announcement-overlay">
             <div className="announcement-modal">
               <button onClick={handleCerrarAnuncio} className="announcement-close-button" aria-label="Cerrar anuncio">×</button>
               <h3>¡Nuevo Anuncio!</h3>
               <p className="announcement-content">{ultimoAnuncio.content}</p>
             </div>
-          </div>
+          </div>,
+          document.body
         )}
 
         {renderLightbox()}
