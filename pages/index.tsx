@@ -177,7 +177,7 @@ const LoginPage = () => {
             className="submit-btn"
             disabled={!email || !password || loading}
           >
-            {loading ? 'Loading...' : 'Login'}
+            {loading ? 'Loading...' : 'Iniciar Sesión'}
           </button>
         </div>
 
