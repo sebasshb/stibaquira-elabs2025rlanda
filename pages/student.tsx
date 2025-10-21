@@ -108,7 +108,7 @@ const LABS_DE_DATA_ENGINEER = [
   { name: 'Lab Kinesis',  md: '/labs/dataengineer/lab6.md', audio: '/labs/dataengineer/lab6.mp3', image: '/labs/dataengineer/thumbnails/kinesis.png' },
 ];
 
-// (Recuerda reemplazar los datos con los tuyos)
+// Laboratorios por perfil
 const LABS_DE_DEVOPS = [
   { name: 'Lab EKS', md: '/labs/devops/eks.md', audio: '/labs/devops/eks.mp3', image: '/labs/devops/thumbnails/eks.png' },
   { name: 'Lab ECS',  md: '/labs/devops/ecs.md', audio: '/labs/devops/lab2.wav', image: '/labs/devops/thumbnails/ecs.png' },
@@ -119,7 +119,7 @@ const LAB_PROFILES = [
   { key: 'devops', label: 'DevOps Engineer', image: '/labs/devops/profile.png', labs: LABS_DE_DEVOPS },
 ];
 
-// 🔗 Mapeo Lab → OU (desde tu plataforma antigua)
+// 🔗 Mapeo Lab → OU
 const labToOU: Record<string, string> = {
   '/labs/dataengineer/lab1.md': 'Workshop RDS DE',
   '/labs/dataengineer/lab2.md': 'Workshop Migration DE',
@@ -769,7 +769,7 @@ const getDisplayName = () => {
   return (
     <>
       <Head>
-        <title>Student | Workshop M&amp;O</title>
+        <title>Estudiante | Workshop M&amp;O</title>
       </Head>
       <div className="admin-container">
         <header className="admin-header">
@@ -914,7 +914,7 @@ const getDisplayName = () => {
                         boxShadow: '0 2px 8px var(--shadow-color)', minWidth: 120, minHeight: 40, marginLeft: 12
                       }}
                     >
-                      🚀 Start Lab
+                      🚀 Iniciar Lab
                     </button>
                   </div>
 

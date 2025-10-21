@@ -161,7 +161,7 @@ const AdminPage = () => {
   return (
     <>
       <Head>
-        <title>Admin | Workshop M&amp;O</title>
+        <title>Administrador | Workshop M&amp;O</title>
       </Head>
     <div className="admin-container">
         <header className="admin-header">
