@@ -125,7 +125,7 @@ const LoginPage = () => {
 
       <div className="login-container">
         <ThemeToggle />
-        <h2 className="login-title">Login</h2>
+        <h2 className="login-title">Iniciar Sesión</h2>
 
         {/* Selector de rol */}
         <div className="role-switch" style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 16 }}>
@@ -135,7 +135,7 @@ const LoginPage = () => {
             className={`role-chip ${role === 'student' ? 'selected' : ''}`}
             aria-pressed={role === 'student'}
           >
-            Student
+            Estudiante
           </button>
           <button
             type="button"
@@ -143,7 +143,7 @@ const LoginPage = () => {
             className={`role-chip ${role === 'admin' ? 'selected' : ''}`}
             aria-pressed={role === 'admin'}
           >
-            Admin
+            Administrador
           </button>
           <button
             type="button"
@@ -166,7 +166,7 @@ const LoginPage = () => {
           />
           <input
             type="password"
-            placeholder="Password"
+            placeholder="Contraseña"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="input-field"
@@ -177,7 +177,7 @@ const LoginPage = () => {
             className="submit-btn"
             disabled={!email || !password || loading}
           >
-            {loading ? 'Loading...' : 'Login'}
+            {loading ? 'Iniciando...' : 'Enviar'}
           </button>
         </div>
 
@@ -188,7 +188,7 @@ const LoginPage = () => {
         )}
 
         {/* Ayuda visual del rol activo */}
-        <p style={{ textAlign: 'center', marginTop: 10, fontSize: 12, opacity: 0.8 }}>
+        <p style={{ textAlign: 'center', marginTop: 10, fontSize: 11, opacity: 0.2 }}>
           Role: <strong>{role.toUpperCase()}</strong>
         </p>
       </div>

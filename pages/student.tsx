@@ -104,12 +104,13 @@ const LABS_DE_DATA_ENGINEER = [
   { name: 'Lab DMS',       md: '/labs/dataengineer/lab2.md', audio: '/labs/dataengineer/lab2.wav', image: '/labs/dataengineer/thumbnails/dms.png' },
   { name: 'Lab Serverless',md: '/labs/dataengineer/lab3.md', audio: '/labs/dataengineer/lab3.wav', image: '/labs/dataengineer/thumbnails/serverless.png' },
   { name: 'Lab Athena',    md: '/labs/dataengineer/lab4.md', audio: '/labs/dataengineer/lab4.wav', image: '/labs/dataengineer/thumbnails/athena.png' },
-  { name: 'Lab Glue ETL',    md: '/labs/dataengineer/lab5.md', audio: '/labs/dataengineer/lab5.wav', image: '/labs/dataengineer/thumbnails/glue.png' },
+  { name: 'Lab Glue ETL',  md: '/labs/dataengineer/lab5.md', audio: '/labs/dataengineer/lab5.wav', image: '/labs/dataengineer/thumbnails/glue.png' },
+  { name: 'Lab Kinesis',  md: '/labs/dataengineer/lab6.md', audio: '/labs/dataengineer/lab6.mp3', image: '/labs/dataengineer/thumbnails/kinesis.png' },
 ];
 
 // (Recuerda reemplazar los datos con los tuyos)
 const LABS_DE_DEVOPS = [
-  { name: 'Lab EKS', md: '/labs/devops/eks.md', audio: '/labs/devops/eks.mp4', image: '/labs/devops/thumbnails/eks.png' },
+  { name: 'Lab EKS', md: '/labs/devops/eks.md', audio: '/labs/devops/eks.mp3', image: '/labs/devops/thumbnails/eks.png' },
   { name: 'Lab ECS',  md: '/labs/devops/ecs.md', audio: '/labs/devops/lab2.wav', image: '/labs/devops/thumbnails/ecs.png' },
 ];
 
@@ -125,6 +126,7 @@ const labToOU: Record<string, string> = {
   '/labs/dataengineer/lab3.md': 'Workshop Serverless DE',
   '/labs/dataengineer/lab4.md': 'Workshop Athena Creation DE',
   '/labs/dataengineer/lab5.md': 'Workshop Glue DE',
+  '/labs/dataengineer/lab6.md': 'Workshop Kinesis DE',
 
   // --- NUEVO: Mapeo para los labs de DevOps ---
   '/labs/devops/eks.md': 'Workshop EKS DOP',
