@@ -106,6 +106,7 @@ const LABS_DE_DATA_ENGINEER = [
   { name: 'Lab Athena',    md: '/labs/dataengineer/lab4.md', audio: '/labs/dataengineer/lab4.wav', image: '/labs/dataengineer/thumbnails/athena.png' },
   { name: 'Lab Glue ETL',  md: '/labs/dataengineer/lab5.md', audio: '/labs/dataengineer/lab5.wav', image: '/labs/dataengineer/thumbnails/glue.png' },
   { name: 'Lab Kinesis',  md: '/labs/dataengineer/lab6.md', audio: '/labs/dataengineer/lab6.mp3', image: '/labs/dataengineer/thumbnails/kinesis.png' },
+  { name: 'Lab OpenSearch',  md: '/labs/dataengineer/lab7.md', audio: '/labs/dataengineer/lab7.mp3', image: '/labs/dataengineer/thumbnails/opensearch.png' },
 ];
 
 // Laboratorios por perfil
@@ -127,8 +128,9 @@ const labToOU: Record<string, string> = {
   '/labs/dataengineer/lab4.md': 'Workshop Athena Creation DE',
   '/labs/dataengineer/lab5.md': 'Workshop Glue DE',
   '/labs/dataengineer/lab6.md': 'Workshop Kinesis DE',
+  '/labs/dataengineer/lab7.md': 'Workshop OpenSearch DE',
 
-  // --- NUEVO: Mapeo para los labs de DevOps ---
+  // Mapeo para los labs de DevOps ---
   '/labs/devops/eks.md': 'Workshop EKS DOP',
   '/labs/devops/lab2.md': 'Workshop ECS DOP',
 };
